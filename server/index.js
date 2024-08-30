@@ -1,6 +1,7 @@
 import connectdb from "./mongoDB/index.js";
 import { app } from "./app.js";
 
+
 //--------db connection and server running--------
 connectdb().then(() => {
     app.listen(process.env.PORT || 8000, () => {
