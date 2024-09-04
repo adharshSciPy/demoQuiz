@@ -1,24 +1,24 @@
 import React from 'react'
-import Logo from "../assets/Idea_2.png"
+
 import './landing.css'
 import { Link } from 'react-router-dom'
 
 function LandingPage() {
     return (
-        <div>
+        <div className='body'>
             <div className='container'>
-            <h1>Welcome to Questionare Platform</h1>
+            
                 <div className='dashboard'>
                     
-                    <div className='head'><h1>Best Questionare Platform</h1></div>
-                    <div className='dashimage'><img src={Logo} alt='logo' /></div>
+                   
+                   
                     <div className='button'>
                         <form  className="landingForm">
                         <div className="select-form">
                           <label className='label-Role' htmlFor="role">Role</label>  
                           <select className="" aria-label="role" aria-describedby="role">
                             <option selected value={1}>Admin</option>
-                            <option selected value={2}>User</option>
+                            <option selected value={2}>Student</option>
 
                           </select>
                         </div>
@@ -35,7 +35,7 @@ function LandingPage() {
                         </div>
 
                         <div className="signup-div">
-                            <p className='paragraph'>If not user</p>
+                            <p className='paragraph'>Create Your Account</p>
                             <Link className='signup-link' to="/signup">SignUp</Link>
 
                         </div>
@@ -46,6 +46,8 @@ function LandingPage() {
                         
 
                     </div>
+                    <div className='head'><h1>Welcome to Eduapp</h1>
+                    <p>Dive into a diverse world of quizzes with Eduapp. Whether you're a tech enthusiast or just love trivia, our app offers a rich blend of technical and non-technical questions to challenge and entertain you.</p></div>
                 </div>
             </div>
             <footer className="footer">
