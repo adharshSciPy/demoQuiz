@@ -1,6 +1,9 @@
 import mongoose, { Schema } from "mongoose";
 
 const questionSchema = new Schema({
+    category: {
+        type: String
+    },
     question: {
         type: String
     },
@@ -15,6 +18,9 @@ const questionSchema = new Schema({
     },
     option4: {
         type: String
+    },
+    score: {
+        type: Number
     },
     correctAns: {
         type: String
