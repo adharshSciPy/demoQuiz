@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 
 import adminRouter from './routes/adminRouter.js'
 import userRouter from './routes/userRouter.js';
+import questionRouter from './routes/questionRouter.js';
 
 dotenv.config()
 
@@ -21,5 +22,6 @@ app.use(cookieParser())
 
 app.use('/api/v1/admin', adminRouter)
 app.use('/api/v1/user', userRouter)
+app.use('/api/v1/question', questionRouter)
 
 export { app }
