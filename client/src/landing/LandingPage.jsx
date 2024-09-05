@@ -1,6 +1,6 @@
 import React from 'react'
 
-import './landing.css'
+import '../assets/css/landing.css'
 import { Link } from 'react-router-dom'
 
 function LandingPage() {
@@ -14,14 +14,7 @@ function LandingPage() {
                    
                     <div className='button'>
                         <form  className="landingForm">
-                        <div className="select-form">
-                          <label className='label-Role' htmlFor="role">Role</label>  
-                          <select className="" aria-label="role" aria-describedby="role">
-                            <option selected value={1}>Admin</option>
-                            <option selected value={2}>Student</option>
-
-                          </select>
-                        </div>
+                       
                         <div className="email">
                             <label htmlFor="email" className="label-email">Email</label>
                             <input className='input-email' type="email" placeholder='Enter your Email' />
@@ -36,7 +29,7 @@ function LandingPage() {
 
                         <div className="signup-div">
                             <p className='paragraph'>Create Your Account</p>
-                            <Link className='signup-link' to="/signup">SignUp</Link>
+                            <Link className='signup-link' to="/signup">Sign Up</Link>
 
                         </div>
 

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import './landing.css'
+import '../assets/css/landing.css'
 import { Link } from 'react-router-dom'
 
 function SignUp() {
