@@ -26,12 +26,9 @@ function SignUp() {
                             <label htmlFor="password" className="label-password">Password</label>
                             <input className='input-password' type="password" placeholder='Enter your password' />
                         </div>
-                        <div className="password">
-                            <label htmlFor="password" className="label-confirm-password">Confirm password</label>
-                            <input className='input-password' type="password" placeholder='Enter your password' />
-                        </div>
+                
                         <div className="btn-div">
-                            <button type="submit" className="btn-submit">Sign In</button>
+                            <button type="submit" className="btn-submit">Sign Up</button>
                         </div>
 
                         <div className="signup-div">
