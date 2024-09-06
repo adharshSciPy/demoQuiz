@@ -1,116 +1,95 @@
-.body{
+/* Body Styling */
+.body {
   background-image: url('../img/quizbg.png');
-width: 100%;height: 100vh;
-background-size: cover;
-background-repeat: no-repeat;
+  width: 100%;
+  height: 100vh;
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Adjusts spacing to fit content */
 }
-
 
 /* General Container Styling */
 .container {
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
-  width: 100vw;
+  width: 100%;
   height: 100%;
-  
 }
 
 /* Dashboard Styling */
 .dashboard {
   display: flex;
+  flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
-  /* padding: 5rem; */
   gap: 10px;
-  width: 100%;
-  max-height: 100vh;
- 
+  width: 80%;
+  max-width: 1200px;
+  margin: auto;
+  padding: 40px 20px;
 }
 
-.dashboard h1 {
-  font-size: 3rem;
-  
-}
-.head{
+/* Head Section */
+.head {
   color: #ffffff;
-  width: 40%;
+  width: 50%;
+  padding: 20px;
 }
 
-/* Media Query for screens smaller than 768px */
-@media (max-width: 768px) {
-  .dashboard {
-    flex-direction: column;
-    padding: 3rem;
-  }
-
-  .dashboard h1 {
-    font-size: 2.5rem;
-  }
+.head h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
 }
 
-/* Media Query for screens smaller than 600px */
-@media (max-width: 600px) {
-  .dashboard {
-    padding: 2rem;
-  }
-
-  .dashboard h1 {
-    font-size: 2rem;
-    text-align: center;
-  }
+.head p {
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
-/* Button Container Styling */
+/* Button Section */
 .button {
+  width: 45%;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 40px;
-  width: 25%;
   border-radius: 8px;
-   /* Add a semi-transparent overlay with a blur effect */
-   background-color: rgba(255, 255, 255, 0.5); /* White with 50% transparency */
-   backdrop-filter: blur(10px); /* Adjust the blur intensity */
-  
- 
-  
+  background-color: rgba(255, 255, 255, 0.7); /* White with 70% transparency */
+  backdrop-filter: blur(5px); /* Light blur effect */
 }
 
-/* Landing Form Styling */
 .landingForm {
   width: 100%;
-  max-width: 400px;
   padding: 20px;
   border-radius: 8px;
- 
+  background-color: #ffffff;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Adjustments for Form Fields */
-.select-form,
-.email,.name,
-.password {
+.email,
+.password,
+.name{
   margin-bottom: 15px;
- 
 }
 
-/* Label Styling */
-.label-Role,
 .label-email,
-.label-name,
-.label-password {
+.label-password,
+.label-name {
   font-weight: bold;
   margin-bottom: 5px;
   display: block;
   color: #333;
 }
 
-/* Input and Select Field Styling */
-.input-email,.input-name,
+/* Input Fields */
+.input-email,
 .input-password,
-select {
+.input-name {
   width: 100%;
   padding: 10px;
   font-size: 14px;
@@ -119,18 +98,7 @@ select {
   box-sizing: border-box;
 }
 
-select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background-color: #ffffff;
-  background-image: url('data:image/svg+xml;base64,...'); /* Custom arrow, optional */
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  background-size: 12px;
-}
-
-/* Button Styling */
+/* Submit Button */
 .btn-submit {
   width: 100%;
   padding: 10px;
@@ -147,30 +115,7 @@ select {
   background-color: #275a5d;
 }
 
-/* Responsive adjustments for form */
-@media (max-width: 768px) {
-  .landingForm {
-    padding: 15px;
-  }
-
-  .btn-submit {
-    font-size: 15px;
-    padding: 9px;
-  }
-}
-
-@media (max-width: 600px) {
-  .landingForm {
-    padding: 10px;
-  }
-
-  .btn-submit {
-    font-size: 14px;
-    padding: 8px;
-  }
-}
-
-/* Signup Div Styling */
+/* Signup Div */
 .signup-div {
   display: flex;
   justify-content: center;
@@ -179,14 +124,12 @@ select {
   font-size: 14px;
 }
 
-/* Paragraph Styling */
 .paragraph {
   margin: 0;
   margin-right: 5px;
   color: #333;
 }
 
-/* Signup Link Styling */
 .signup-link {
   color: #007bff;
   text-decoration: none;
@@ -199,25 +142,90 @@ select {
   text-decoration: underline;
 }
 
-/* Responsive adjustments for signup div */
-@media (max-width: 768px) {
-  .signup-div {
+/* Footer Styling */
+
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .dashboard {
     flex-direction: column;
+    padding: 20px;
+  }
+
+  .head {
+    width: 100%;
     text-align: center;
   }
 
-  .paragraph {
-    margin-bottom: 5px;
-    margin-right: 0;
-  }
-
-  .signup-link {
-    font-size: 15px;
+  .button {
+    width: 80%;
+    margin-top: 20px;
   }
 }
 
-@media (max-width: 600px) {
-  .signup-link {
-    font-size: 16px;
+@media (max-width: 768px) {
+  .body{
+    
+      background-size: cover; /* Ensure the background covers the whole screen */
+      background-position: center;
+      background-attachment: scroll;
+      /* display: flex;
+      flex-direction: column-reverse; */
+    
+  }
+  .dashboard {
+    padding: 10px;
+  }
+
+  .head h1 {
+    font-size: 2rem;
+  }
+
+  .head p {
+    font-size: 0.95rem;
+  }
+
+  .button {
+    width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .body{
+    background-size: cover; /* Ensure the background covers the whole screen */
+    background-position: center;
+    background-attachment: scroll;
+   
+  }
+  .dashboard{
+    width: 100%;
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  .head h1 {
+    font-size: 1.8rem;
+  }
+
+  .head p {
+    font-size: 0.85rem;
+  }
+
+  .button {
+    width: 100%;
+   
+  }
+
+  .landingForm {
+    padding: 15px;
+    opacity: 70%;
+  }
+
+  .btn-submit {
+    font-size: 15px;
+    padding: 9px;
+    
+  }
+  .btn-div{
+    opacity: 100%;
   }
 }

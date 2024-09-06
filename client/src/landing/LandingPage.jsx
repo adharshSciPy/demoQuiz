@@ -2,6 +2,7 @@ import React from 'react'
 
 import '../assets/css/landing.css'
 import { Link } from 'react-router-dom'
+import Footer from '../footer/Footer'
 
 function LandingPage() {
     return (
@@ -43,11 +44,8 @@ function LandingPage() {
                     <p>Dive into a diverse world of quizzes with Eduapp. Whether you're a tech enthusiast or just love trivia, our app offers a rich blend of technical and non-technical questions to challenge and entertain you.</p></div>
                 </div>
             </div>
-            <footer className="footer">
-            <div className="right-panel">
-          Scipy Technologies
-        </div>
-            </footer>
+
+           <Footer/>
         </div>
     )
 }
