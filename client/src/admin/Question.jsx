@@ -1,7 +1,11 @@
 import React from 'react';
 
+
 const Question = () => {
   return (
+    
+     
+
     <div className="container mt-5">
       <form>
         {/* Question Type */}
@@ -79,6 +83,7 @@ const Question = () => {
         </button>
       </form>
     </div>
+    
   );
 };
 
