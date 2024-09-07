@@ -1,6 +1,7 @@
 /* General Styles */
 * {
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 /* Main Background */
