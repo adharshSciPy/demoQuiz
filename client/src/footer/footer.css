@@ -5,4 +5,7 @@
     color: white;
     font-size: 14px;
     margin-top: 2rem;
+    position: absolute;
+    width: 100vw;
+    bottom: 0;
   }

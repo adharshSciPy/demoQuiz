@@ -6,7 +6,7 @@ function Footer() {
     <div>
        <footer className="footer">
             <div className="right-panel">
-          Scipy Technologies
+          Scipy Technologies &copy; 2024
         </div>
             </footer>
     </div>
