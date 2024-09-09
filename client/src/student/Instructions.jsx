@@ -21,7 +21,7 @@ const Instructions = ({ onStartQuiz }) => {
             <li className="mb-2 ms-5">Attempt to answer all the questions; unanswered questions will be marked as incorrect.</li>
             <li className="mb-2 ms-5">Once you complete the quiz, your score will be calculated based on the number of correct answers.</li>
             <li className="mb-2 ms-5">Try to stay focused and avoid distractions, as there is no pause option.</li>
-            {/* <li className="mb-2 ms-5">Do not refresh the page during the quiz, as it will reset your progress.</li> */}
+            <li className="mb-2 ms-5">Do not refresh the page during the quiz, as it will reset your progress.</li>
           </ul>
           <h5>Good luck, and give your best effort!</h5>
           <div className="d-flex justify-content-center mt-4">
