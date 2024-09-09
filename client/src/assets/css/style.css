@@ -5,3 +5,8 @@
 .lft{
     margin-left: 45%;
 }
+@media (max-width: 576px) {
+    .lft{
+        margin-left: 0;
+    }
+}
