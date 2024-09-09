@@ -1,10 +1,26 @@
-import React from 'react'
-
+import {React,useState} from 'react'
+import axios from 'axios'
 import '../assets/css/landing.css'
 import { Link } from 'react-router-dom'
 import Footer from '../footer/Footer'
 
 function LandingPage() {
+    let field={
+        email:"",
+        password:""
+    }
+    const [form,setForm]=useState(field)
+    const handleSignin=async ()=>{
+        try {
+            const response =await axios.post(`http://localhost:8000/api/v1/user/login`,form)
+            console.log(response)
+            
+        } catch (error) {
+            alert(error)
+        }
+
+    }
+
     return (
         <div className='body'>
             <div className='container'>
@@ -25,7 +41,7 @@ function LandingPage() {
                             <input className='input-password' type="password" placeholder='Enter your password' />
                         </div>
                         <div className="btn-div">
-                            <button type="submit" className="btn-submit">Sign In</button>
+                            <button type="submit" className="btn-submit"onClick={handleSignin}>Sign In</button>
                         </div>
 
                         <div className="signup-div">

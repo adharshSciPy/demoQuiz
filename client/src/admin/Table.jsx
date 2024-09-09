@@ -9,7 +9,7 @@ function ReportTable() {
 
 
      <Table striped>
-  <thead>
+  <thead >
     <tr>
       <th>#</th>
       <th>User Name</th>
@@ -19,7 +19,7 @@ function ReportTable() {
       <th>Performance Category</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody >
     <tr>
       <td>1</td>
       <td>Mark</td>
@@ -102,6 +102,7 @@ function ReportTable() {
       <td>Non-Technical</td>
     </tr>
   </tbody>
+  <br />
 </Table>
 
  
