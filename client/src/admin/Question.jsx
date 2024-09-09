@@ -1,12 +1,13 @@
 import React from 'react';
 
 
+
 const Question = () => {
   return (
     
      
 
-    <div className="container mt-5">
+    <div className="container mt-5 mb-5" >
       <form>
         {/* Question Type */}
         <div className="mb-4">
