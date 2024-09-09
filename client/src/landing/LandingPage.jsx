@@ -1,69 +1,87 @@
-import {React,useState} from 'react'
-import axios from 'axios'
-import '../assets/css/landing.css'
-import { Link } from 'react-router-dom'
-import Footer from '../footer/Footer'
+import React, { useState } from 'react';
+import axios from 'axios';
+import '../assets/css/landing.css';
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import Footer from '../footer/Footer';
 
 function LandingPage() {
-    let field={
-        email:"",
-        password:""
+  let field = {
+    email: "",
+    password: ""
+  };
+
+  const [form, setForm] = useState(field);
+  const navigate = useNavigate(); // Initialize the useNavigate hook
+
+  const handleSignin = async (e) => {
+    e.preventDefault(); // Prevent the form from submitting the traditional way
+    try {
+      const response = await axios.post(`http://localhost:8000/api/v1/user/login`, form);
+      console.log(response);
+
+      // If login is successful, navigate to /studentdashboard
+      if (response.status === 200) {
+        navigate('/studentdashboard');
+      }
+      
+    } catch (error) {
+      alert(error.response?.data?.message || error.message); // Show more meaningful error message if available
     }
-    const [form,setForm]=useState(field)
-    const handleSignin=async ()=>{
-        try {
-            const response =await axios.post(`http://localhost:8000/api/v1/user/login`,form)
-            console.log(response)
-            
-        } catch (error) {
-            alert(error)
-        }
+  };
 
-    }
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    });
+  };
 
-    return (
-        <div className='body'>
-            <div className='container'>
-            
-                <div className='dashboard'>
-                    
-                   
-                   
-                    <div className='button'>
-                        <form  className="landingForm">
-                       
-                        <div className="email">
-                            <label htmlFor="email" className="label-email">Email</label>
-                            <input className='input-email' type="email" placeholder='Enter your Email' />
-                        </div>
-                        <div className="password">
-                            <label htmlFor="password" className="label-password">Password</label>
-                            <input className='input-password' type="password" placeholder='Enter your password' />
-                        </div>
-                        <div className="btn-div">
-                            <button type="submit" className="btn-submit"onClick={handleSignin}>Sign In</button>
-                        </div>
-
-                        <div className="signup-div">
-                            <p className='paragraph'>Create Your Account</p>
-                            <Link className='signup-link' to="/signup">Sign Up</Link>
-
-                        </div>
-
-
-                        </form>
-                        
-                        
-
-                    </div>
-                    <div className='head'><h1>Welcome to Eduapp</h1>
-                    <p>Dive into a diverse world of quizzes with Eduapp. Whether you're a tech enthusiast or just love trivia, our app offers a rich blend of technical and non-technical questions to challenge and entertain you.</p></div>
-                </div>
-            </div>
-
-           <Footer/>
+  return (
+    <div className='body'>
+      <div className='container'>
+        <div className='dashboard'>
+          <div className='button'>
+            <form className="landingForm" onSubmit={handleSignin}>
+              <div className="email">
+                <label htmlFor="email" className="label-email">Email</label>
+                <input
+                  className='input-email'
+                  type="email"
+                  name="email"
+                  placeholder='Enter your Email'
+                  value={form.email}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="password">
+                <label htmlFor="password" className="label-password">Password</label>
+                <input
+                  className='input-password'
+                  type="password"
+                  name="password"
+                  placeholder='Enter your password'
+                  value={form.password}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="btn-div">
+                <button type="submit" className="btn-submit">Sign In</button>
+              </div>
+              <div className="signup-div">
+                <p className='paragraph'>Create Your Account</p>
+                <Link className='signup-link' to="/signup">Sign Up</Link>
+              </div>
+            </form>
+          </div>
+          <div className='head'>
+            <h1>Welcome to Eduapp</h1>
+            <p>Dive into a diverse world of quizzes with Eduapp. Whether you're a tech enthusiast or just love trivia, our app offers a rich blend of technical and non-technical questions to challenge and entertain you.</p>
+          </div>
         </div>
-    )
+      </div>
+      <Footer />
+    </div>
+  );
 }
 
-export default LandingPage
+export default LandingPage;
