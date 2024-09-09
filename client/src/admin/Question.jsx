@@ -7,7 +7,7 @@ const Question = () => {
     
      
 
-    <div className="container mt-5 mb-5" >
+    <div className="container mt-5 pb-5 " >
       <form>
         {/* Question Type */}
         <div className="mb-4">

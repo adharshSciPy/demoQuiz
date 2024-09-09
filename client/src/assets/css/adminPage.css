@@ -10,7 +10,7 @@
 .main {
   background: linear-gradient(to right, #82A9E5, #6095DE);
   min-height: 100vh;
-  overflow: scroll;
+  /* overflow: scroll; */
   
 }
 
