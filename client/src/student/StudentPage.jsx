@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import NavbarStudent from '../navbar/NavbarStudent';
-import Footer from '../footer/Footer';
+
 import '../assets/css/adminPage.css';
 import Quiz from './Quiz';
 import Instructions from './Instructions';
@@ -21,7 +21,22 @@ function StudentPage() {
       ) : (
         <Instructions onStartQuiz={handleStartQuiz} />  // Render Instructions by default
       )}
-      <Footer />
+    
+      <footer className="foote1r"  style={{
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    padding: '8px',
+    textAlign: 'center',
+    color: 'white',
+    fontSize: '14px',
+    marginTop: '2rem',
+    
+    width: '100vw',
+    
+  }}>
+            <div className="right-panel">
+          Scipy Technologies &copy; 2024
+        </div>
+            </footer>
     </div>
   );
 }

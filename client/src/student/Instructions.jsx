@@ -1,4 +1,5 @@
 import React from 'react';
+import '../assets/css/instruction.css'
 const Instructions = ({ onStartQuiz }) => {
   return (
     <div className="d-flex justify-content-center mt-3">
