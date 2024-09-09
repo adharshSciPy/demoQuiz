@@ -1,7 +1,7 @@
 import React from 'react';
 const Instructions = ({ onStartQuiz }) => {
   return (
-    <div className="d-flex justify-content-center">
+    <div className="d-flex justify-content-center mt-3">
       <div className="w-75 p-4 bg-light border rounded shadow">
         <header className="mb-4 text-center">
           <h1 className="display-4">Quiz Instructions</h1>

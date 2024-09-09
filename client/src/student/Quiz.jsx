@@ -11,6 +11,9 @@ const Quiz = () => {
   // State to track the questions that have been answered
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
 
+  // State for the selected answer
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+
   // Array of questions with options
   const questions = [
     {
@@ -59,7 +62,15 @@ const Quiz = () => {
 
       // Move to the next question
       setCurrentQuestionIndex(currentQuestionIndex + 1);
+
+      // Clear the selected answer for the next question
+      setSelectedAnswer(null);
     }
+  };
+
+  // Function to handle answer selection
+  const handleAnswerSelect = (option) => {
+    setSelectedAnswer(option);
   };
 
   return (
@@ -84,7 +95,15 @@ const Quiz = () => {
                 <div className="mb-4 d-flex flex-column align-items-start lft">
                   {questions[currentQuestionIndex].options.map((option, index) => (
                     <div className="form-check d-flex align-items-center mb-2" key={index}>
-                      <input className="form-check-input me-2" type="radio" name="options" id={`option${index}`} value={option} />
+                      <input
+                        className="form-check-input me-2"
+                        type="radio"
+                        name="options"
+                        id={`option${index}`}
+                        value={option}
+                        checked={selectedAnswer === option}
+                        onChange={() => handleAnswerSelect(option)}
+                      />
                       <label className="form-check-label" htmlFor={`option${index}`}>
                         {option}
                       </label>
