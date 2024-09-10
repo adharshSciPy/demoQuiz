@@ -17,7 +17,7 @@ const userSchema = new Schema({
         type: Number,
         default: defaultRole
     },
-    score: {
+    totalScore: {
         type: Number
     }
 }, { timestamps: true })
