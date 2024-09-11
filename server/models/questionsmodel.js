@@ -20,7 +20,8 @@ const questionSchema = new Schema({
         type: String
     },
     score: {
-        type: Number
+        type: Number,
+        default: 1
     },
     correctAns: {
         type: String

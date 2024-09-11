@@ -56,7 +56,7 @@ const registerUser = async (req, res) => {
             return res.status(500).json({ message: "User registration failed" });
         }
 
-        return res.status(201).json({ message: "User Registration Successful", data: createdUser });
+        return res.status(200).json({ message: "User Registration Successful", data: createdUser });
     } catch (err) {
         return res
             .status(500)
@@ -89,11 +89,20 @@ const loginUser = async (req, res) => {
             return res.status(404).json({ message: "Email doesn't exist" });
         }
 
+        // Check if the user has already logged in
+        if (user.hasLoggedIn) {
+            return res.status(403).json({ message: "You have already logged in once. Further logins are restricted." });
+        }
+
         // Verify password
         const isPasswordCorrect = await user.isPasswordCorrect(password);
         if (!isPasswordCorrect) {
             return res.status(401).json({ message: "Incorrect password" });
         }
+
+        // Mark user as logged in
+        user.hasLoggedIn = true;
+        await user.save();
 
         // Generate tokens
         const accessToken = await user.generateAccessToken();
@@ -107,11 +116,12 @@ const loginUser = async (req, res) => {
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
-        return res.status(200).json({ message: "Validation Successful", token: accessToken });
+        return res.status(200).json({ message: "Login successful", token: accessToken });
     } catch (err) {
         return res.status(500).json({ message: `Internal Server Error due to ${err.message}` });
     }
 };
+
 
 // user/refresh
 // desc: To create new access token once it has expired (for all user roles -> Admin, Company and User)
@@ -236,7 +246,7 @@ const getQuestions = async (req, res) => {
 
 const submitQuiz = async (req, res) => {
     try {
-        const { userId } = req.body;
+        const { userId } = req.params;
         const { answers } = req.body; // User ID and an array of { questionId, selectedOption }
 
         if (!answers || answers.length === 0) {
@@ -312,5 +322,5 @@ export {
     refreshAccessToken,
     logoutUser,
     getQuestions,
-    submitQuiz
+    submitQuiz  
 };
