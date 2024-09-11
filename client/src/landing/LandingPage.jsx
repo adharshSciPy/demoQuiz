@@ -3,6 +3,10 @@ import axios from 'axios';
 import '../assets/css/landing.css';
 import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import Footer from '../footer/Footer';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 
 function LandingPage() {
   let field = {
@@ -12,6 +16,8 @@ function LandingPage() {
 
   const [form, setForm] = useState(field);
   const navigate = useNavigate(); // Initialize the useNavigate hook
+
+  const notifyError = (message) => toast.error(message); // Pass dynamic error message
 
   const handleSignin = async (e) => {
     e.preventDefault(); // Prevent the form from submitting the traditional way
@@ -25,7 +31,8 @@ function LandingPage() {
       }
       
     } catch (error) {
-      alert(error.response?.data?.message || error.message); // Show more meaningful error message if available
+      // Show the error message
+      notifyError(error.response?.data?.message );
     }
   };
 
@@ -38,6 +45,14 @@ function LandingPage() {
 
   return (
     <div className='body'>
+         <ToastContainer position="bottom-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        pauseOnHover />
       <div className='container'>
         <div className='dashboard'>
           <div className='button'>
@@ -80,6 +95,7 @@ function LandingPage() {
         </div>
       </div>
       <Footer />
+     
     </div>
   );
 }
