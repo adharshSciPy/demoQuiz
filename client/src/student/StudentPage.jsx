@@ -21,22 +21,12 @@ function StudentPage() {
       ) : (
         <Instructions onStartQuiz={handleStartQuiz} />  // Render Instructions by default
       )}
-    
-      <footer className="foote1r"  style={{
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    padding: '8px',
-    textAlign: 'center',
-    color: 'white',
-    fontSize: '14px',
-    marginTop: '2rem',
-    
-    width: '100vw',
-    
-  }}>
-            <div className="right-panel">
+
+      <footer className="footer">
+        <div className="right-panel">
           Scipy Technologies &copy; 2024
         </div>
-            </footer>
+      </footer>
     </div>
   );
 }

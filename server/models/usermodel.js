@@ -17,7 +17,7 @@ const userSchema = new Schema({
         type: Number,
         default: defaultRole
     },
-    score: {
+    totalScore: {
         type: Number
     },
     hasLoggedIn: {
@@ -27,7 +27,7 @@ const userSchema = new Schema({
 }, { timestamps: true })
 
 //hashing password
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function (next) {  
     if (!this.isModified('password')) return next();
     try {
         this.password = await bcrypt.hash(this.password, 10)
@@ -54,7 +54,7 @@ userSchema.methods.generateAccessToken = async function () {
 
 // generate refresh token
 userSchema.methods.generateRefreshToken = async function () {
-    return jwt.sign(
+    return jwt.sign(          
         {
             id: this._id,
             email: this.email,

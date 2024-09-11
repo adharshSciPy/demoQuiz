@@ -56,7 +56,7 @@ const registerUser = async (req, res) => {
             return res.status(500).json({ message: "User registration failed" });
         }
 
-        return res.status(201).json({ message: "User Registration Successful", data: createdUser });
+        return res.status(200).json({ message: "User Registration Successful", data: createdUser });
     } catch (err) {
         return res
             .status(500)
@@ -246,7 +246,7 @@ const getQuestions = async (req, res) => {
 
 const submitQuiz = async (req, res) => {
     try {
-        const { userId } = req.body;
+        const { userId } = req.params;
         const { answers } = req.body; // User ID and an array of { questionId, selectedOption }
 
         if (!answers || answers.length === 0) {
@@ -322,5 +322,5 @@ export {
     refreshAccessToken,
     logoutUser,
     getQuestions,
-    submitQuiz
+    submitQuiz  
 };
