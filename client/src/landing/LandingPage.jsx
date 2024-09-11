@@ -11,6 +11,7 @@ function LandingPage() {
   };
 
   const [form, setForm] = useState(field);
+  const [errorMessage, setErrorMessage] = useState(""); // State to track error message
   const navigate = useNavigate(); // Initialize the useNavigate hook
 
   const handleSignin = async (e) => {
@@ -25,7 +26,8 @@ function LandingPage() {
       }
       
     } catch (error) {
-      alert(error.response?.data?.message || error.message); // Show more meaningful error message if available
+      // Set error message to display if login fails
+      setErrorMessage(error.response?.data?.message || "Invalid email or password. Please try again.");
     }
   };
 
@@ -64,6 +66,14 @@ function LandingPage() {
                   onChange={handleChange}
                 />
               </div>
+              
+              {/* Show error message if there is one */}
+              {errorMessage && (
+                <div className="error-message" style={{ color: 'red', fontSize: '0.9rem', marginTop: '10px' }}>
+                  {errorMessage}
+                </div>
+              )}
+              
               <div className="btn-div">
                 <button type="submit" className="btn-submit">Sign In</button>
               </div>
