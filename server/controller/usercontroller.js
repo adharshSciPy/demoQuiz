@@ -1,72 +1,69 @@
+
 import { User } from "../models/usermodel.js";
 import { Admin } from "../models/adminmodel.js";
 import { Question } from "../models/questionsmodel.js";
-
 import jwt from "jsonwebtoken";
 import { passwordValidator } from "../utils/passwordValidator.js";
 
 // @POST
 // user/register
-// desc: Api for creating new admins
+// desc: API for creating new users
 const registerUser = async (req, res) => {
     const { fullName, email, password } = req.body;
 
     try {
-        // sanitiasing inputs
-        const isEmptyFields = [fullName, email, password].some(
-            (field) => field === "" || field === undefined
-        );
-        if (isEmptyFields) {
-            return res.status(401).json({ message: "All fields are required" });
+        // Sanitizing inputs
+        if (!fullName || !email || !password) {
+            return res.status(400).json({ message: "All fields are required" });
         }
 
-        //validate password
-        const isValidPassword = passwordValidator(password);
+        if (!email.trim()) {
+            return res.status(400).json({ message: "Email cannot be empty" });
+        }
 
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: "Invalid email format" });
+        }
+
+        // Validate password
+        const isValidPassword = passwordValidator(password);
         if (!isValidPassword) {
-            return res.status(401).json({
-                message:
-                    "Password must be at least 8 characters long and include at least one lowercase letter, one uppercase letter, and one number",
+            return res.status(400).json({
+                message: "Password must be at least 8 characters long and include at least one lowercase letter, one uppercase letter, and one number",
             });
         }
 
-        //prevent duplicate accounts
-        const isAlreadyExistingUser = await User.findOne({ email: email });
-        const isAlreadyExistingAdmin = await Admin.findOne({ email: email });
-        if (
-            isAlreadyExistingUser ||
-            isAlreadyExistingAdmin
-        ) {
+        // Prevent duplicate accounts
+        const existingUser = await User.findOne({ email });
+        const existingAdmin = await Admin.findOne({ email });
+        if (existingUser || existingAdmin) {
             return res.status(409).json({ message: "Email is already in use" });
         }
 
-        //user creation
-        const role = process.env.USER_ROLE;
-        const user = await User.create({
-            fullName,
-            email,
-            password,
-            role
-        });
-        const createdUser = await User.findOne({ _id: user._id }).select(
-            "-password"
-        );
+        // User creation
+        const role = process.env.USER_ROLE || 'user'; // Default to 'user' if environment variable is not set
+        const user = await User.create({ fullName, email, password, role });
 
+        const createdUser = await User.findById(user._id).select("-password");
         if (!createdUser) {
             return res.status(500).json({ message: "User registration failed" });
         }
 
-        return res.status(200).json({ message: "User Registration Successful", data: createdUser });
+        return res.status(201).json({ message: "User Registration Successful", data: createdUser });
     } catch (err) {
-        return res
-            .status(500)
-            .json({ message: `Internal Server due to ${err.message}` });
+        if (err.code === 11000) {
+            return res.status(409).json({ message: "Email is already in use" });
+        }
+        console.error("Error during registration:", err);
+        return res.status(500).json({ message: `Internal Server Error: ${err.message}` });
     }
 };
 
 // @POST
 // user/login
-// desc:Login api of admin with credentials
+// desc: Login API for user with credentials
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
@@ -111,20 +108,21 @@ const loginUser = async (req, res) => {
         // Set refresh token in cookie
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            secure: true,
+            secure: process.env.NODE_ENV === 'production', // Secure only in production
             sameSite: 'None',
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
         return res.status(200).json({ message: "Login successful", token: accessToken });
     } catch (err) {
-        return res.status(500).json({ message: `Internal Server Error due to ${err.message}` });
+        console.error("Error during login:", err);
+        return res.status(500).json({ message: `Internal Server Error: ${err.message}` });
     }
 };
 
-
+// @POST
 // user/refresh
-// desc: To create new access token once it has expired (for all user roles -> Admin, Company and User)
+// desc: To create new access token once it has expired
 const refreshAccessToken = async (req, res) => {
     const { refreshToken } = req.cookies;
 
@@ -143,7 +141,7 @@ const refreshAccessToken = async (req, res) => {
             }
 
             let user;
-            const role = Number(decoded.role)
+            const role = Number(decoded.role);
 
             // Retrieve user based on role from decoded token
             if (!role) {
@@ -155,10 +153,10 @@ const refreshAccessToken = async (req, res) => {
 
             switch (role) {
                 case adminRole:
-                    user = await Admin.findOne({ _id: decoded.id });
+                    user = await Admin.findById(decoded.id);
                     break;
                 case userRole:
-                    user = await User.findOne({ _id: decoded.id });
+                    user = await User.findById(decoded.id);
                     break;
                 default:
                     return res.status(404).json({ message: "Invalid role" });
@@ -171,12 +169,12 @@ const refreshAccessToken = async (req, res) => {
             // Generate new access token
             const accessToken = await user.generateAccessToken();
 
-            // Respond with success message and new access token
             return res.status(200).json({ message: "User validation successful", data: accessToken });
         });
 
     } catch (err) {
-        return res.status(500).json({ message: `Internal server error due to ${err.message}` });
+        console.error("Error during token refresh:", err);
+        return res.status(500).json({ message: `Internal Server Error: ${err.message}` });
     }
 };
 
@@ -188,72 +186,75 @@ const logoutUser = async (req, res) => {
         const { refreshToken } = req.cookies;
 
         if (!refreshToken) {
-            return res.status(204).json({ message: "Invalid Cookie" });
+            return res.status(204).json({ message: "No refresh token found" });
         }
 
         res.clearCookie("refreshToken", {
             httpOnly: true,
-            secure: true, // Secure only in production
+            secure: process.env.NODE_ENV === 'production', // Secure only in production
             sameSite: "None",
         });
 
         return res.status(200).json({ message: "Logout successful" });
     } catch (err) {
         console.error("Error during logout:", err);
-        return res
-            .status(500)
-            .json({ message: `Internal Server Error: ${err.message}` });
+        return res.status(500).json({ message: `Internal Server Error: ${err.message}` });
     }
 };
 
-//@GET
+// @GET
 // get the questions from admin
 const getQuestions = async (req, res) => {
-    const { page = 1, limit = 1 } = req.query;
+    const { page = 1, limit = 10 } = req.query;
     const pageNumber = parseInt(page, 10);
-    // skip logic
-    const skip = (pageNumber - 1) * limit;
+    const limitNumber = parseInt(limit, 10);
+    const skip = (pageNumber - 1) * limitNumber;
+
     try {
         // Pagination logic for quiz questions
         const totalQuestions = await Question.countDocuments({});
-        const totalPages = Math.ceil(totalQuestions / limit);
+        const totalPages = Math.ceil(totalQuestions / limitNumber);
         const hasNextPage = pageNumber < totalPages;
 
         // Find questions with pagination
-        const question = await Question.find({})
+        const questions = await Question.find({})
             .select("question option1 option2 option3 option4")
             .skip(skip)
-            .limit(limit);
+            .limit(limitNumber);
 
-        if (question.length === 0) {
-            return res.status(404).json({ message: "No more questions available" });
+        if (questions.length === 0) {
+            return res.status(404).json({ message: "No questions available" });
         }
 
         // Respond with question data and pagination info
         return res.status(200).json({
-            message: "Question fetched successfully",
+            message: "Questions fetched successfully",
             data: {
-                question: question[0], // Since we're fetching one question at a time
+                questions,
                 hasNextPage,
                 total: totalQuestions,
                 currentPage: pageNumber,
             },
         });
     } catch (error) {
-        res.status(500).json({ message: `Internal Server Error due to : ${error.message}` })
+        console.error("Error fetching questions:", error);
+        return res.status(500).json({ message: `Internal Server Error: ${error.message}` });
     }
-}
+};
 
+// @POST
+// user/submit-quiz
+// desc: Submit quiz answers and calculate score
 const submitQuiz = async (req, res) => {
     try {
         const { userId } = req.params;
-        const { answers } = req.body; // User ID and an array of { questionId, selectedOption }
+        const { answers } = req.body;
 
         if (!answers || answers.length === 0) {
             return res.status(400).json({ message: "No answers submitted" });
         }
 
-        // Find all questions submitted by the user
+        // Find all questions
         const questionIds = answers.map(answer => answer.questionId);
         const questions = await Question.find({ _id: { $in: questionIds } });
 
@@ -261,10 +262,10 @@ const submitQuiz = async (req, res) => {
             return res.status(404).json({ message: "Questions not found" });
         }
 
-        // Calculate score by comparing the user's answers with the correct ones
+        // Calculate score
         let score = 0;
         const totalQuestions = questions.length;
-        const evaluation = answers.map((answer) => {
+        const evaluation = answers.map(answer => {
             const question = questions.find(q => q._id.toString() === answer.questionId);
             const isCorrect = question.correctAns === answer.selectedOption;
             if (isCorrect) score += 1;
@@ -277,7 +278,7 @@ const submitQuiz = async (req, res) => {
             };
         });
 
-        // Convert the score to a percentage (assuming each question carries 1 point)
+        // Convert the score to a percentage
         const percentageScore = (score / totalQuestions) * 100;
 
         // Classify the score based on the range
@@ -292,27 +293,20 @@ const submitQuiz = async (req, res) => {
             performance = 'Very Low';
         }
 
-        // Save result to the database if necessary (depends on your use case)
-        const result = new User({
-            userId,
-            score,
-            performance,  // Save performance category
-        });
-        await result.save();
-
         // Respond with the score and detailed evaluation
         return res.status(200).json({
             message: "Quiz submitted successfully",
             data: {
                 score,
                 percentageScore,
-                performance, // Include performance category in the response
+                performance,
                 totalQuestions,
-                evaluation, // Detailed breakdown of each question and user's answer
+                evaluation,
             }
         });
     } catch (error) {
-        res.status(500).json({ message: `Internal Server Error due to: ${error.message}` });
+        console.error("Error submitting quiz:", error);
+        return res.status(500).json({ message: `Internal Server Error: ${error.message}` });
     }
 };
 
@@ -322,5 +316,6 @@ export {
     refreshAccessToken,
     logoutUser,
     getQuestions,
-    submitQuiz  
+    submitQuiz
 };
+
