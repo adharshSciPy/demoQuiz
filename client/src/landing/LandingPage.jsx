@@ -9,6 +9,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 function LandingPage() {
+
+  const notifyError = (message) => toast.error(message);
+
   let field = {
     email: "",
     password: ""
@@ -18,7 +21,6 @@ function LandingPage() {
   const [errorMessage, setErrorMessage] = useState(""); // State to track error message
   const navigate = useNavigate(); // Initialize the useNavigate hook
 
-  const notifyError = (message) => toast.error(message); // Pass dynamic error message
 
   const handleSignin = async (e) => {
     e.preventDefault(); // Prevent the form from submitting the traditional way
@@ -30,10 +32,11 @@ function LandingPage() {
       if (response.status === 200) {
         navigate('/studentdashboard');
       }
-      
+
     } catch (error) {
-        // Set error message to display if login fails
-        setErrorMessage(error.response?.data?.message || "Invalid email or password. Please try again.");
+      // Set error message to display if login fails
+      setErrorMessage(error.response?.data?.message || "Invalid email or password. Please try again.");
+      notifyError(error.response?.data?.message)
     }
   };
 
@@ -46,7 +49,7 @@ function LandingPage() {
 
   return (
     <div className='body'>
-         <ToastContainer position="bottom-right"
+      <ToastContainer position="bottom-right"
         autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
@@ -80,14 +83,14 @@ function LandingPage() {
                   onChange={handleChange}
                 />
               </div>
-              
-              {/* Show error message if there is one */}
-              {errorMessage && (
+
+             
+              {/* {errorMessage && (
                 <div className="error-message" style={{ color: 'red', fontSize: '0.9rem', marginTop: '10px' }}>
                   {errorMessage}
                 </div>
-              )}
-              
+              )} */}
+
               <div className="btn-div">
                 <button type="submit" className="btn-submit">Sign In</button>
               </div>
@@ -104,7 +107,7 @@ function LandingPage() {
         </div>
       </div>
       <Footer />
-     
+
     </div>
   );
 }

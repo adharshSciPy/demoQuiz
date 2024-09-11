@@ -18,7 +18,7 @@ function SignUp() {
     try {
       const response = await axios.post('http://localhost:8000/api/v1/user/register', form);
       console.log(response);
-      if (response.status === 200) {
+      if (response) {
         // Navigate to login page after successful signup
         navigate('/');
       }

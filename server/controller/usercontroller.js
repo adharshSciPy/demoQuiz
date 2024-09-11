@@ -256,7 +256,9 @@ const submitQuiz = async (req, res) => {
 
         // Find all questions
         const questionIds = answers.map(answer => answer.questionId);
+        console.log("questionsId", questionIds)
         const questions = await Question.find({ _id: { $in: questionIds } });
+        console.log("question each", questions)
 
         if (questions.length === 0) {
             return res.status(404).json({ message: "Questions not found" });
@@ -264,12 +266,23 @@ const submitQuiz = async (req, res) => {
 
         // Calculate score
         let score = 0;
+        let technicalCorrect = 0;
+        let nonTechnicalCorrect = 0;
         const totalQuestions = questions.length;
         const evaluation = answers.map(answer => {
             const question = questions.find(q => q._id.toString() === answer.questionId);
             const isCorrect = question.correctAns === answer.selectedOption;
-            if (isCorrect) score += 1;
+            if (isCorrect) {
+                score += 1;
+                // Track correct answers by category
+                if (question.category === "Technical") {
+                    technicalCorrect += 1;
+                } else if (question.category === "NonTechnical") {
+                    nonTechnicalCorrect += 1;
+                }
+            }
             return {
+                category: question.category,
                 questionId: answer.questionId,
                 question: question.question,
                 selectedOption: answer.selectedOption,
@@ -277,6 +290,15 @@ const submitQuiz = async (req, res) => {
                 isCorrect
             };
         });
+
+        // Determine user's strength based on correct answers by category
+        let strength = "Equal";
+        if (technicalCorrect > nonTechnicalCorrect) {
+            strength = "Technical";
+        } else if (nonTechnicalCorrect > technicalCorrect) {
+            strength = "NonTechnical";
+        }
+
 
         // Convert the score to a percentage
         const percentageScore = (score / totalQuestions) * 100;
@@ -293,6 +315,17 @@ const submitQuiz = async (req, res) => {
             performance = 'Very Low';
         }
 
+        // Save score, performance, and strength in the user's record
+        const user = await User.findOne(userId);
+        if (user) {
+            user.score = score;
+            user.performance = performance;
+            user.userStrength = strength;
+            await user.save();
+        } else {
+            return res.status(404).json({ message: "User not found" });
+        }
+
         // Respond with the score and detailed evaluation
         return res.status(200).json({
             message: "Quiz submitted successfully",
@@ -302,6 +335,7 @@ const submitQuiz = async (req, res) => {
                 performance,
                 totalQuestions,
                 evaluation,
+                userStrength: strength
             }
         });
     } catch (error) {

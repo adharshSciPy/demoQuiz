@@ -17,13 +17,20 @@ const userSchema = new Schema({
         type: Number,
         default: defaultRole
     },
-    totalScore: {
-        type: Number
-    },
     hasLoggedIn: {
         type: Boolean,
         default: false
+    },
+    score: {
+        type: Number
+    },
+    performance: {
+        type: String
+    },
+    userStrength: {
+        type: String
     }
+
 }, { timestamps: true })
 
 //hashing password
@@ -54,7 +61,7 @@ userSchema.methods.generateAccessToken = async function () {
 
 // generate refresh token
 userSchema.methods.generateRefreshToken = async function () {
-    return jwt.sign(          
+    return jwt.sign(
         {
             id: this._id,
             email: this.email,
