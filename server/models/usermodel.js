@@ -19,6 +19,10 @@ const userSchema = new Schema({
     },
     totalScore: {
         type: Number
+    },
+    hasLoggedIn: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true })
 

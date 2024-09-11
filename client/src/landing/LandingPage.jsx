@@ -3,6 +3,10 @@ import axios from 'axios';
 import '../assets/css/landing.css';
 import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import Footer from '../footer/Footer';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 
 function LandingPage() {
   let field = {
@@ -11,7 +15,10 @@ function LandingPage() {
   };
 
   const [form, setForm] = useState(field);
+  const [errorMessage, setErrorMessage] = useState(""); // State to track error message
   const navigate = useNavigate(); // Initialize the useNavigate hook
+
+  const notifyError = (message) => toast.error(message); // Pass dynamic error message
 
   const handleSignin = async (e) => {
     e.preventDefault(); // Prevent the form from submitting the traditional way
@@ -25,7 +32,8 @@ function LandingPage() {
       }
       
     } catch (error) {
-      alert(error.response?.data?.message || error.message); // Show more meaningful error message if available
+        // Set error message to display if login fails
+        setErrorMessage(error.response?.data?.message || "Invalid email or password. Please try again.");
     }
   };
 
@@ -38,6 +46,14 @@ function LandingPage() {
 
   return (
     <div className='body'>
+         <ToastContainer position="bottom-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        pauseOnHover />
       <div className='container'>
         <div className='dashboard'>
           <div className='button'>
@@ -64,6 +80,14 @@ function LandingPage() {
                   onChange={handleChange}
                 />
               </div>
+              
+              {/* Show error message if there is one */}
+              {errorMessage && (
+                <div className="error-message" style={{ color: 'red', fontSize: '0.9rem', marginTop: '10px' }}>
+                  {errorMessage}
+                </div>
+              )}
+              
               <div className="btn-div">
                 <button type="submit" className="btn-submit">Sign In</button>
               </div>
@@ -80,6 +104,7 @@ function LandingPage() {
         </div>
       </div>
       <Footer />
+     
     </div>
   );
 }

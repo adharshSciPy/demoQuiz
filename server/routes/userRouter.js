@@ -8,6 +8,6 @@ userRouter.route('/login').post(loginUser)
 userRouter.route('/refresh').get(refreshAccessToken)
 userRouter.route('/logout').post(logoutUser)
 userRouter.route('/getQuestions').get(getQuestions)
-userRouter.route('/quizSubmit').post(submitQuiz)
+userRouter.route('/quizSubmit/:id').post(submitQuiz)
 
 export default userRouter
