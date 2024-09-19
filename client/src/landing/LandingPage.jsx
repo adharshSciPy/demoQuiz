@@ -5,10 +5,15 @@ import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import Footer from '../footer/Footer';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useAuth from '../hooks/useAuth';
 
 
 
 function LandingPage() {
+
+  const { loggedInUserId } = useAuth();
+  console.log("loginid", loggedInUserId)
+
 
   const notifyError = (message) => toast.error(message);
 
@@ -84,7 +89,7 @@ function LandingPage() {
                 />
               </div>
 
-             
+
               {/* {errorMessage && (
                 <div className="error-message" style={{ color: 'red', fontSize: '0.9rem', marginTop: '10px' }}>
                   {errorMessage}

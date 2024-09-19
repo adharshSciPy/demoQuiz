@@ -250,6 +250,8 @@ const submitQuiz = async (req, res) => {
         const { userId } = req.params;
         const { answers } = req.body;
 
+        console.log("UESRID", userId)
+
         if (!answers || answers.length === 0) {
             return res.status(400).json({ message: "No answers submitted" });
         }
@@ -316,7 +318,8 @@ const submitQuiz = async (req, res) => {
         }
 
         // Save score, performance, and strength in the user's record
-        const user = await User.findOne(userId);
+        const user = await User.findById(userId);
+        console.log("quizsubmit", user)
         if (user) {
             user.score = score;
             user.performance = performance;
