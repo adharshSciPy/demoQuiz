@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 import '../assets/css/landing.css';
 import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
@@ -6,13 +6,15 @@ import Footer from '../footer/Footer';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import useAuth from '../hooks/useAuth';
+import { setLogin } from '../features/slice/authSlice'
+import { useDispatch } from 'react-redux';
 
 
 
 function LandingPage() {
+    const dispatch = useDispatch()
+    const { loggedInUserId, isLoggedIn } = useAuth();
 
-  const { loggedInUserId } = useAuth();
-  console.log("loginid", loggedInUserId)
 
 
   const notifyError = (message) => toast.error(message);
@@ -26,6 +28,12 @@ function LandingPage() {
   const [errorMessage, setErrorMessage] = useState(""); // State to track error message
   const navigate = useNavigate(); // Initialize the useNavigate hook
 
+  useEffect(() => {
+    if (isLoggedIn && loggedInUserId) {
+      navigate(`/admindashboard`);
+    }
+  }, [isLoggedIn, loggedInUserId, navigate]);
+
 
   const handleSignin = async (e) => {
     e.preventDefault(); // Prevent the form from submitting the traditional way
@@ -33,9 +41,11 @@ function LandingPage() {
       const response = await axios.post(`http://localhost:8000/api/v1/admin/login`, form);
       console.log(response);
 
-      // If login is successful, navigate to /studentdashboard
+      
       if (response.status === 200) {
+        dispatch(setLogin({ accessToken: response?.data?.token }))
         navigate('/admindashboard');
+       
       }
 
     } catch (error) {
