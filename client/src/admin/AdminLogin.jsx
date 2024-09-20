@@ -76,6 +76,7 @@ function LandingPage() {
         <div className='dashboard'>
           <div className='button'>
             <form className="landingForm" onSubmit={handleSignin}>
+                <h6 className='mainhead'>Admin Login</h6>
               <div className="email">
                 <label htmlFor="email" className="label-email">Email</label>
                 <input

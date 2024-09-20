@@ -39,6 +39,28 @@
   width: 50%;
   padding: 20px;
 }
+.mainhead {
+  position: relative;
+  display: inline-block;
+  color: #0056b3; /* Text color */
+   /* Adjust text size if needed */
+}
+
+.mainhead::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: #0056b3; /* Line color */
+  transition: width 0.4s ease-in-out; /* Smooth animation */
+}
+
+.mainhead:hover::after {
+  width: 100%; /* Full width on hover */
+}
+
 
 .head h1 {
   font-size: 2.5rem;
@@ -120,7 +142,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 10px;
   font-size: 14px;
 }
 

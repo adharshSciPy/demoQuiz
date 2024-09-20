@@ -39,7 +39,7 @@ const useAuth = () => {
         }
     }
 
-    return { firstName, role, status, isAdmin, isUser, isLoggedIn, loggedInUserId, logId };
+    return { firstName, role, status, isAdmin, isUser, isLoggedIn, loggedInUserId, logId,token };
 };
 
 export default useAuth;
