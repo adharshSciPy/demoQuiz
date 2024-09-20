@@ -6,6 +6,7 @@ import AdminDashboard from './admin/AdminPage';
 import Report from './admin/Report';
 import StudentPage from './student/StudentPage';
 import Instructions from './student/Instructions';
+import AdminLogin from './admin/AdminLogin'
 import { Provider } from 'react-redux';
 import store from './store/store';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -20,6 +21,7 @@ function App() {
           <Routes>
             <Route path='/' element={<LandingPage />} />
             <Route path='/signup' element={<SignUp />} />
+            <Route path='/adminlogin' element={<AdminLogin />} />
 
             {/* Protecting routes for users */}
             <Route path='/studentdashboard/:loggedInUserId' element={<ProtectedUserRoute element={<StudentPage />} />} />

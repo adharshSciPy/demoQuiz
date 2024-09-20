@@ -30,12 +30,12 @@ function LandingPage() {
   const handleSignin = async (e) => {
     e.preventDefault(); // Prevent the form from submitting the traditional way
     try {
-      const response = await axios.post(`http://localhost:8000/api/v1/user/login`, form);
+      const response = await axios.post(`http://localhost:8000/api/v1/admin/login`, form);
       console.log(response);
 
       // If login is successful, navigate to /studentdashboard
       if (response.status === 200) {
-        navigate('/studentdashboard');
+        navigate('/admindashboard');
       }
 
     } catch (error) {
@@ -99,14 +99,7 @@ function LandingPage() {
               <div className="btn-div">
                 <button type="submit" className="btn-submit">Sign In</button>
               </div>
-              <div className="signup-div">
-                <p className='paragraph'>Create Your Account</p>
-                <Link className='signup-link' to="/signup">Sign Up</Link>
-              </div>
-              <div className="signup-div">
-                <p className='paragraph'>Login as Admin</p>
-                <Link className='signup-link' to="/adminlogin">Admin Login</Link>
-              </div>
+             
             </form>
           </div>
           <div className='head'>
