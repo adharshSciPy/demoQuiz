@@ -346,6 +346,17 @@ const submitQuiz = async (req, res) => {
         return res.status(500).json({ message: `Internal Server Error: ${error.message}` });
     }
 };
+// get all  users
+const getAllUsers=async(request,response)=>{
+  
+    try {
+        const userData=await User.find();
+        response.status(200).json({message:"userdata fetched succesfully",data:userData})
+        
+    } catch (error) {
+        response.status(400).json({message:`internal server error due to ${error}`})
+    }
+}
 
 export {
     registerUser,
@@ -353,6 +364,7 @@ export {
     refreshAccessToken,
     logoutUser,
     getQuestions,
-    submitQuiz
+    submitQuiz,
+    getAllUsers
 };
 
