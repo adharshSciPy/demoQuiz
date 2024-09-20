@@ -29,7 +29,7 @@ function App() {
 
             {/* Protecting routes for admins */}
             <Route path='/admindashboard' element={<ProtectedAdminRoute element={<AdminDashboard />} />} />
-            <Route path='/report' element={<ProtectedAdminRoute element={<Report />} />} />
+            <Route path='/report' element={<ProtectedAdminRoute element={<Report />} />} /> 
           </Routes>
         </BrowserRouter>
       </Provider>
