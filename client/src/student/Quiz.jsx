@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 
 const Quiz = () => {
   const { loggedInUserId } = useParams();
-  
+
   // State for the countdown timer
   const [timer, setTimer] = useState(60);
 
@@ -21,19 +21,34 @@ const Quiz = () => {
   // State for the quiz submission status
   const [quizSubmitted, setQuizSubmitted] = useState(false);
 
-  // Fetch questions from the backend
-  useEffect(() => {
-    const fetchQuestions = async () => {
-      try {
-        const response = await axios.get('http://localhost:8000/api/v1/user/getQuestions');
-        setQuestions(response.data.data.questions);
-        console.log("Fetched questions:", response.data.data.questions);
-      } catch (error) {
-        console.error("Error fetching questions:", error);
-      }
-    };
+  const [currentPage, setCurrentPage] = useState(1); // Start from page 1
 
-    fetchQuestions();
+  // Fetch questions with pagination
+  const fetchQuestions = async (page) => {
+    try {
+      const response = await axios.get('http://localhost:8000/api/v1/user/getQuestions', {
+        params: {
+          page: page,
+          limit: 500, // 10 questions per page
+        },
+      });
+      // Shuffle the questions randomly
+      const shuffledQuestions = response.data.data.questions.sort(() => Math.random() - 0.5);
+      setQuestions(shuffledQuestions);
+    } catch (error) {
+      console.error("Error fetching questions:", error);
+    }
+  };
+
+  // Call this function to go to the next page
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+    fetchQuestions(currentPage + 1);
+  };
+
+  // On component mount, fetch the first page
+  useEffect(() => {
+    fetchQuestions(1); // Fetch page 1 on initial load
   }, []);
 
   // Reset the timer whenever the current question changes
@@ -69,7 +84,7 @@ const Quiz = () => {
   const handleAnswerSelect = (option) => {
     const questionId = questions[currentQuestionIndex]._id; // Assuming each question has a unique _id
     const optionKey = Object.keys(questions[currentQuestionIndex])
-    .find(key => questions[currentQuestionIndex][key] === option);
+      .find(key => questions[currentQuestionIndex][key] === option);
 
     // Store the selected answer for the current question
     const updatedAnswers = [...selectedAnswers];
@@ -118,7 +133,7 @@ const Quiz = () => {
 
                 {/* Options */}
                 <div className="mb-4 d-flex flex-column align-items-start lft">
-                {Object.keys(questions[currentQuestionIndex]).filter(key => key.startsWith('option')).map((optionKey, index) => (
+                  {Object.keys(questions[currentQuestionIndex]).filter(key => key.startsWith('option')).map((optionKey, index) => (
                     <div className="form-check d-flex align-items-center mb-2" key={index}>
                       <input
                         className="form-check-input me-2"
@@ -130,7 +145,7 @@ const Quiz = () => {
                         onChange={() => handleAnswerSelect(questions[currentQuestionIndex][optionKey])}
                       />
                       <label className="form-check-label" htmlFor={`option${index}`}>
-                      {questions[currentQuestionIndex][optionKey]}
+                        {questions[currentQuestionIndex][optionKey]}
                       </label>
                     </div>
                   ))}

@@ -12,6 +12,7 @@ import store from './store/store';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ProtectedAdminRoute from './ProtectedRoutes/ProtectedRouteAdmin';  // Import Admin Protected Route
 import ProtectedUserRoute from './ProtectedRoutes/ProtectedRoute';    // Import User Protected Route
+import AdminTable from './admin/AdminTable';
 
 function App() {
   return (
@@ -29,7 +30,8 @@ function App() {
 
             {/* Protecting routes for admins */}
             <Route path='/admindashboard' element={<ProtectedAdminRoute element={<AdminDashboard />} />} />
-            <Route path='/report' element={<ProtectedAdminRoute element={<Report />} />} /> 
+            <Route path='/report' element={<ProtectedAdminRoute element={<Report />} />} />
+            <Route path='/questions' element={<ProtectedAdminRoute element={<AdminTable />} />} />
           </Routes>
         </BrowserRouter>
       </Provider>

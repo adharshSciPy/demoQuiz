@@ -14,6 +14,25 @@ const questionPost = async (req, res) => {
     }
 }
 
+const questionsGet = async (req, res) => {
+    try {
+        const getQuestions = await Question.find();
+        res.status(200).json({ message: "Questions fetched successfully", data: getQuestions })
+    } catch (error) {
+        res.status(500).json({ message: `Internal server error due to ${error}` })
+    }
+}
+
+const deleteQuestions = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const deletedQuestions = await Question.findByIdAndDelete(id);
+        res.status(200).json({ message: "Questions deleted successfully", data: deletedQuestions })
+    } catch (error) {
+        res.status(400).json({ message: `Internal server error due to ${error}` })
+    }
+}
+
 export {
-    questionPost
+    questionPost, questionsGet, deleteQuestions
 }

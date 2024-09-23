@@ -25,7 +25,7 @@ function ReportTable() {
       <Table striped>
         <thead>
           <tr>
-            <th>#</th>
+            <th>Sl.No</th>
             <th>User Name</th>
             <th>Email</th>
             <th>Mark</th>
