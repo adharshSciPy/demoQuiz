@@ -10,3 +10,18 @@
         margin-left: 0;
     }
 }
+.filter-container{
+    padding: 10px;
+    
+    display: flex;
+    justify-content: flex-end;
+
+}
+.report-dropdown{
+    border-radius: 4px;
+    outline: none;
+    border: none;
+    margin-bottom: 6px;
+
+    
+}

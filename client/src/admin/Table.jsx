@@ -5,12 +5,14 @@ import axios from 'axios';
 
 function ReportTable() {
   const [table, setTable] = useState([]);
+  const [filteredTable, setFilteredTable] = useState([]); // State for filtered data
+  const [selectedRating, setSelectedRating] = useState(''); // State for selected rating
 
   const fetchData = async () => {
     try {
       const response = await axios.get(`http://localhost:8000/api/v1/user/getUsers`);
       setTable(response.data.data);
-      
+      setFilteredTable(response.data.data); // Set filteredTable initially to all data
     } catch (error) {
       console.log(error);
     }
@@ -20,8 +22,30 @@ function ReportTable() {
     fetchData();
   }, []);
 
+  // Function to filter table data based on selected rating
+  const handleRatingChange = (event) => {
+    const rating = event.target.value;
+    setSelectedRating(rating);
+
+    if (rating) {
+      const filteredData = table.filter(item => item.performance === rating);
+      setFilteredTable(filteredData);
+    } else {
+      setFilteredTable(table); // Reset to all data if no rating is selected
+    }
+  };
+
   return (
     <div>
+      <div className="filter-container">
+        <select className="report-dropdown" value={selectedRating} onChange={handleRatingChange}>
+          <option value="">Select Rating</option>
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </select>
+      </div>
+      
       <Table striped>
         <thead>
           <tr>
@@ -33,13 +57,12 @@ function ReportTable() {
             <th>Performance Category</th>
             <th>Batch</th>
             <th>Date</th>
-
           </tr>
         </thead>
         <tbody>
-          {table.length > 0 ? (
-            table.map((item, index) => (
-              <tr key={item.id}> {/* Make sure to use a unique key */}
+          {filteredTable.length > 0 ? (
+            filteredTable.map((item, index) => (
+              <tr key={item.id}>
                 <td>{index + 1}</td>
                 <td>{item.fullName}</td>
                 <td>{item.email}</td>
@@ -52,7 +75,7 @@ function ReportTable() {
             ))
           ) : (
             <tr>
-              <td colSpan="6" className="text-center">No data available</td>
+              <td colSpan="8" className="text-center">No data available</td>
             </tr>
           )}
         </tbody>
