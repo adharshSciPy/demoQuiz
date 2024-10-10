@@ -9,7 +9,7 @@ import { passwordValidator } from "../utils/passwordValidator.js";
 // user/register
 // desc: API for creating new users
 const registerUser = async (req, res) => {
-    const { fullName, email, password,batch,date } = req.body;
+    const { fullName, email, password, batch, date } = req.body;
 
     try {
         // Sanitizing inputs
@@ -44,7 +44,7 @@ const registerUser = async (req, res) => {
 
         // User creation
         const role = process.env.USER_ROLE || 'user'; // Default to 'user' if environment variable is not set
-        const user = await User.create({ fullName, email, password, role ,batch ,date});
+        const user = await User.create({ fullName, email, password, role, batch, date });
         const createdUser = await User.findById(user._id).select("-password");
         if (!createdUser) {
             return res.status(500).json({ message: "User registration failed" });
@@ -247,7 +247,33 @@ const getQuestions = async (req, res) => {
 const submitQuiz = async (req, res) => {
     try {
         const { userId } = req.params;
-        const { answers } = req.body;
+        const { answers, disqualified } = req.body;
+
+        if (disqualified) {
+            // Handle disqualified users
+            const user = await User.findById(userId);
+            if (user) {
+                user.score = 0; // Optionally set score to 0
+                user.performance = 'Disqualified'; // Mark performance as disqualified
+                user.userStrength = null; // Optionally reset user strength
+                await user.save();
+            } else {
+                return res.status(404).json({ message: "User not found" });
+            }
+
+            // Respond with disqualified status
+            return res.status(200).json({
+                message: "Quiz submitted successfully",
+                data: {
+                    score: 0,
+                    percentageScore: 0,
+                    performance: 'Disqualified',
+                    totalQuestions: 0,
+                    evaluation: [],
+                    userStrength: null
+                }
+            });
+        }
 
         console.log("UESRID", userId)
 
@@ -346,14 +372,14 @@ const submitQuiz = async (req, res) => {
     }
 };
 // get all  users
-const getAllUsers=async(request,response)=>{
-  
+const getAllUsers = async (request, response) => {
+
     try {
-        const userData=await User.find();
-        response.status(200).json({message:"userdata fetched succesfully",data:userData})
-        
+        const userData = await User.find();
+        response.status(200).json({ message: "userdata fetched succesfully", data: userData })
+
     } catch (error) {
-        response.status(400).json({message:`internal server error due to ${error}`})
+        response.status(400).json({ message: `internal server error due to ${error}` })
     }
 }
 

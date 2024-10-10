@@ -27,7 +27,6 @@ const Quiz = () => {
 
   const [disqualified, setDisqualified] = useState(false);
 
-
   // Fetch questions with pagination
   const fetchQuestions = async (page) => {
     try {
@@ -74,29 +73,10 @@ const Quiz = () => {
       // Set user as disqualified after a single tab switch
       setDisqualified(true);
       alert('You have been disqualified from this quiz for switching tabs.');
-      storeDisqualification(); // Store disqualification in the backend
+      handleSubmitQuiz(true);
       navigate('/disqualified');
     }
   };
-
-  // Function to store the disqualification in the backend
-  const storeDisqualification = async () => {
-    try {
-      await axios.patch(`http://localhost:8000/api/v1/user/quizSubmit/${loggedInUserId}`, {
-        disqualified: true,
-      });
-      console.log('User disqualified due to tab switch');
-    } catch (error) {
-      console.error('Error storing disqualification:', error);
-    }
-  };
-
-
-
-
-
-
-
 
 
   // Call this function to go to the next page
@@ -152,10 +132,12 @@ const Quiz = () => {
   };
 
   // Function to submit the quiz
-  const handleSubmitQuiz = async () => {
+  const handleSubmitQuiz = async (isDisqualified) => {
+    console.log("disqualified", isDisqualified);
     try {
       const response = await axios.patch(`http://localhost:8000/api/v1/user/quizSubmit/${loggedInUserId}`, {
         answers: selectedAnswers,
+        disqualified: isDisqualified,
       });
       console.log("Quiz submitted successfully:", response.data);
       setQuizSubmitted(true); // Set the quiz submission status to true
