@@ -95,15 +95,19 @@
 /* Adjustments for Form Fields */
 .email,
 .password,
-.name{
-  margin-bottom: 15px;
+.name,
+.batch,
+.date{
+  margin-bottom: 8px;
 }
 
 .label-email,
 .label-password,
-.label-name {
+.label-name,
+.label-batch,
+.label-date {
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 2px;
   display: block;
   color: #333;
 }
@@ -111,7 +115,9 @@
 /* Input Fields */
 .input-email,
 .input-password,
-.input-name {
+.input-name,
+.input-batch,
+.input-date {
   width: 100%;
   padding: 10px;
   font-size: 14px;
@@ -131,6 +137,7 @@
   color: #ffffff;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-top: 2px;
 }
 
 .btn-submit:hover {
@@ -163,6 +170,7 @@
   color: #0056b3;
   text-decoration: underline;
 }
+
 
 /* Footer Styling */
 

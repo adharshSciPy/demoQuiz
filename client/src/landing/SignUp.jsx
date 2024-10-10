@@ -7,7 +7,9 @@ function SignUp() {
   const [form, setForm] = useState({
     fullName: "",
     email: "",
-    password: ""
+    password: "",
+    batch:"",
+    date:""
   });
 
   const navigate = useNavigate(); // Hook for navigation
@@ -40,6 +42,17 @@ function SignUp() {
         <div className='dashboard'>
           <div className='button'>
             <form className="landingForm" onSubmit={handleSignup}>
+            <div className="date">
+                <label htmlFor="date" className="label-date">Date</label>
+                <input
+                  className='input-data'
+                  type="date"
+                  name="date"
+                  value={form.date}
+                  onChange={handleChange}
+                  placeholder='Enter the Date'
+                />
+              </div>
               <div className="name">
                 <label htmlFor="name" className="label-name">Name</label>
                 <input
@@ -73,7 +86,28 @@ function SignUp() {
                   placeholder='Enter your password'
                 />
               </div>
-
+              <div className="batch">
+                <label htmlFor="batch" className="label-batch">Batch</label>
+                <input
+                  className='input-batch'
+                  type="text"
+                  name="batch"
+                  value={form.batch}
+                  onChange={handleChange}
+                  placeholder='Enter your batch'
+                />
+              </div>
+              {/* <div className="date">
+                <label htmlFor="date" className="label-date">Date</label>
+                <input
+                  className='input-data'
+                  type="date"
+                  name="date"
+                  value={form.date}
+                  onChange={handleChange}
+                  placeholder='Enter the Date'
+                />
+              </div> */}
               <div className="btn-div">
                 <button type="submit" className="btn-submit">Sign Up</button>
               </div>

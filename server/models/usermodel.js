@@ -29,6 +29,12 @@ const userSchema = new Schema({
     },
     userStrength: {
         type: String
+    },
+    batch:{
+        type:String
+    },
+    date:{
+        type:String
     }
 
 }, { timestamps: true })

@@ -9,11 +9,11 @@ import { passwordValidator } from "../utils/passwordValidator.js";
 // user/register
 // desc: API for creating new users
 const registerUser = async (req, res) => {
-    const { fullName, email, password } = req.body;
+    const { fullName, email, password,batch,date } = req.body;
 
     try {
         // Sanitizing inputs
-        if (!fullName || !email || !password) {
+        if (!fullName || !email || !password || !batch || !date) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
@@ -44,8 +44,7 @@ const registerUser = async (req, res) => {
 
         // User creation
         const role = process.env.USER_ROLE || 'user'; // Default to 'user' if environment variable is not set
-        const user = await User.create({ fullName, email, password, role });
-
+        const user = await User.create({ fullName, email, password, role ,batch ,date});
         const createdUser = await User.findById(user._id).select("-password");
         if (!createdUser) {
             return res.status(500).json({ message: "User registration failed" });
