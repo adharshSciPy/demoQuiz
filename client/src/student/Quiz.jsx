@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../assets/css/style.css';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const Quiz = () => {
   const { loggedInUserId } = useParams();
+
+  const navigate = useNavigate()
 
   // State for the countdown timer
   const [timer, setTimer] = useState(60);
@@ -23,6 +25,9 @@ const Quiz = () => {
 
   const [currentPage, setCurrentPage] = useState(1); // Start from page 1
 
+  const [disqualified, setDisqualified] = useState(false);
+
+
   // Fetch questions with pagination
   const fetchQuestions = async (page) => {
     try {
@@ -39,6 +44,60 @@ const Quiz = () => {
       console.error("Error fetching questions:", error);
     }
   };
+
+  // On component mount, fetch the first page and set up event listeners
+  useEffect(() => {
+    fetchQuestions(1); // Fetch page 1 on initial load
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        handleMalpractice();
+      }
+    };
+
+    const handleWindowBlur = () => {
+      handleMalpractice();
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('blur', handleWindowBlur);
+
+    // Cleanup event listeners on component unmount
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('blur', handleWindowBlur);
+    };
+  }, []);
+
+  const handleMalpractice = () => {
+    if (!disqualified) {
+      // Set user as disqualified after a single tab switch
+      setDisqualified(true);
+      alert('You have been disqualified from this quiz for switching tabs.');
+      storeDisqualification(); // Store disqualification in the backend
+      navigate('/disqualified');
+    }
+  };
+
+  // Function to store the disqualification in the backend
+  const storeDisqualification = async () => {
+    try {
+      await axios.patch(`http://localhost:8000/api/v1/user/quizSubmit/${loggedInUserId}`, {
+        disqualified: true,
+      });
+      console.log('User disqualified due to tab switch');
+    } catch (error) {
+      console.error('Error storing disqualification:', error);
+    }
+  };
+
+
+
+
+
+
+
+
 
   // Call this function to go to the next page
   const handleNextPage = () => {
