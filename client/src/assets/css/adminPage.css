@@ -17,6 +17,8 @@
   color: white;
   fontsize: 14px;
   width: 100vw;
+  bottom: 0;
+  position: fixed;
 }
 
 /* Navbar Styling */
