@@ -63,7 +63,7 @@
   
     table tbody td {
       display: block;
-      text-align: right;
+      text-align: left;
       padding: 10px;
       position: relative;
       padding-left: 50%;
