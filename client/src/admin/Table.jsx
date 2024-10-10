@@ -31,6 +31,9 @@ function ReportTable() {
             <th>Mark</th>
             <th>Rating</th>
             <th>Performance Category</th>
+            <th>Batch</th>
+            <th>Date</th>
+
           </tr>
         </thead>
         <tbody>
@@ -43,6 +46,8 @@ function ReportTable() {
                 <td>{item.score}</td>
                 <td>{item.performance}</td>
                 <td>{item.userStrength}</td>
+                <td>{item.batch}</td>
+                <td>{item.date}</td>
               </tr>
             ))
           ) : (
