@@ -45,7 +45,21 @@
   table tbody tr:hover {
     background-color: #dee2e6;
   }
-  
+  .download-button {
+    background-color:#6095DE; 
+    border: none; /* No border */
+    cursor: pointer; /* Pointer cursor on hover */
+    margin-left: 10px; /* Space between dropdown and button */
+    font-size:20px; /* Size of the icon */
+    color:#e9ecf1; /* Icon color */
+    transition: color 0.3s; /* Transition for hover effect */
+}
+
+.download-button:hover {
+    background-color: #f8f9fa;
+    color: #6095DE;
+}
+
   /* Responsive adjustments */
   @media (max-width: 768px) {
     .table-container {

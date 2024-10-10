@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import "../assets/css/table.css";
 import axios from 'axios';
+import 'font-awesome/css/font-awesome.min.css';
+
 
 function ReportTable() {
   const [table, setTable] = useState([]);
@@ -35,6 +37,49 @@ function ReportTable() {
     }
   };
 
+  // Function to download the table data as CSV
+  const downloadCSV = () => {
+    const headers = [
+      "Sl.No",
+      "User Name",
+      "Email",
+      "Mark",
+      "Rating",
+      "Performance Category",
+      "Batch",
+      "Date"
+    ];
+
+    const csvRows = [];
+    csvRows.push(headers.join(',')); // Add header row
+
+    filteredTable.forEach((item, index) => {
+      const row = [
+        index + 1,
+        item.fullName,
+        item.email,
+        item.score,
+        item.performance,
+        item.userStrength,
+        item.batch,
+        item.date
+      ];
+      csvRows.push(row.join(',')); // Add each row
+    });
+
+    // Create a Blob from the CSV string
+    const csvString = csvRows.join('\n');
+    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'report.csv';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
   return (
     <div>
       <div className="filter-container">
@@ -44,6 +89,9 @@ function ReportTable() {
           <option value="Medium">Medium</option>
           <option value="Low">Low</option>
         </select>
+        <button className="download-button" onClick={downloadCSV} title="Download">
+          <i className="fa fa-download"></i> 
+        </button>
       </div>
       
       <Table striped>

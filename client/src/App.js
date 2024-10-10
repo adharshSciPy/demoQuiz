@@ -13,6 +13,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import ProtectedAdminRoute from './ProtectedRoutes/ProtectedRouteAdmin';  // Import Admin Protected Route
 import ProtectedUserRoute from './ProtectedRoutes/ProtectedRoute';    // Import User Protected Route
 import AdminTable from './admin/AdminTable';
+import DisQuallified from './student/DisQuallified';
 
 function App() {
   return (
@@ -27,6 +28,9 @@ function App() {
             {/* Protecting routes for users */}
             <Route path='/studentdashboard/:loggedInUserId' element={<ProtectedUserRoute element={<StudentPage />} />} />
             <Route path='/instructions' element={<ProtectedUserRoute element={<Instructions />} />} />
+            <Route path='/disqualified' element={<ProtectedUserRoute element={<DisQuallified />} />} />
+
+           
 
             {/* Protecting routes for admins */}
             <Route path='/admindashboard' element={<ProtectedAdminRoute element={<AdminDashboard />} />} />
