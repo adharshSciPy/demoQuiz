@@ -2,14 +2,38 @@ import React, { useState } from 'react';
 import '../assets/css/landing.css';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import FilledInput from '@mui/material/FilledInput';
+
 
 function SignUp() {
+
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  const handleMouseUpPassword = (event) => {
+    event.preventDefault();
+  };
+
+
+
+
   const [form, setForm] = useState({
     fullName: "",
     email: "",
     password: "",
-    batch:"",
-    date:""
+    batch: "",
+    date: ""
   });
 
   const navigate = useNavigate(); // Hook for navigation
@@ -42,60 +66,79 @@ function SignUp() {
         <div className='dashboard'>
           <div className='button'>
             <form className="landingForm" onSubmit={handleSignup}>
-            <div className="date">
-                <label htmlFor="date" className="label-date">Date</label>
-                <input
-                  className='input-data'
-                  type="date"
-                  name="date"
-                  value={form.date}
-                  onChange={handleChange}
-                  placeholder='Enter the Date'
-                />
+              <div className="date">
+                <FormControl sx={{ m: 1, width: '25ch' }} variant="filled">
+                  <InputLabel htmlFor="filled-adornment-date"></InputLabel>
+                  <FilledInput
+                    id="filled-adornment-date"
+                    type="date"
+                    name="date"
+                    value={form.date}
+                    onChange={handleChange}
+                  />
+                </FormControl>
               </div>
               <div className="name">
-                <label htmlFor="name" className="label-name">Name</label>
-                <input
-                  className='input-name'
-                  type="text"
-                  name="fullName"
-                  value={form.fullName}
-                  onChange={handleChange}
-                  placeholder='Enter your Name'
-                />
+                <FormControl sx={{ m: 1, width: '25ch' }} variant="filled">
+                  <InputLabel htmlFor="filled-adornment-name">Name</InputLabel>
+                  <FilledInput
+                    id="filled-adornment-name"
+                    type="text"
+                    name="fullName"
+                    value={form.fullName}
+                    onChange={handleChange}
+                  />
+                </FormControl>
               </div>
               <div className="email">
-                <label htmlFor="email" className="label-email">Email</label>
-                <input
-                  className='input-email'
-                  type="email"
-                  name="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  placeholder='Enter your Email'
-                />
+                <FormControl sx={{ m: 1, width: '25ch' }} variant="filled">
+                  <InputLabel htmlFor="filled-adornment-email">Email</InputLabel>
+                  <FilledInput
+                    id="filled-adornment-email"
+                    type="email"
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
+                  />
+                </FormControl>
               </div>
               <div className="password">
-                <label htmlFor="password" className="label-password">Password</label>
-                <input
-                  className='input-password'
-                  type="password"
-                  name="password"
-                  value={form.password}
-                  onChange={handleChange}
-                  placeholder='Enter your password'
-                />
+                <FormControl sx={{ m: 1, width: '25ch' }} variant="filled">
+                  <InputLabel htmlFor="filled-adornment-password">Password</InputLabel>
+                  <FilledInput
+                    id="filled-adornment-password"
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    value={form.password}
+                    onChange={handleChange}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          onMouseUp={handleMouseUpPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                </FormControl>
               </div>
+
               <div className="batch">
-                <label htmlFor="batch" className="label-batch">Batch</label>
-                <input
-                  className='input-batch'
-                  type="text"
-                  name="batch"
-                  value={form.batch}
-                  onChange={handleChange}
-                  placeholder='Enter your batch'
-                />
+                <FormControl sx={{ m: 1, width: '25ch' }} variant="filled">
+                  <InputLabel htmlFor="filled-adornment-batch">Batch</InputLabel>
+                  <FilledInput
+                    id="filled-adornment-batch"
+                    type="text"
+                    name="batch"
+                    value={form.batch}
+                    onChange={handleChange}
+                  />
+                </FormControl>
               </div>
               {/* <div className="date">
                 <label htmlFor="date" className="label-date">Date</label>

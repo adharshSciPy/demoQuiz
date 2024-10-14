@@ -8,10 +8,32 @@ import 'react-toastify/dist/ReactToastify.css';
 import useAuth from '../hooks/useAuth';
 import { setLogin } from '../features/slice/authSlice'
 import { useDispatch } from 'react-redux';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import FilledInput from '@mui/material/FilledInput';
+
 
 
 
 function LandingPage() {
+
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  const handleMouseUpPassword = (event) => {
+    event.preventDefault();
+  };
+
+
   const dispatch = useDispatch()
   const { loggedInUserId, isLoggedIn } = useAuth();
   console.log("loginid", loggedInUserId)
@@ -76,26 +98,41 @@ function LandingPage() {
           <div className='button'>
             <form className="landingForm" onSubmit={handleSignin}>
               <div className="email">
-                <label htmlFor="email" className="label-email">Email</label>
-                <input
-                  className='input-email'
-                  type="email"
-                  name="email"
-                  placeholder='Enter your Email'
-                  value={form.email}
-                  onChange={handleChange}
-                />
+                <FormControl sx={{ m: 1, width: '25ch' }} variant="filled">
+                  <InputLabel htmlFor="filled-adornment-email">Email</InputLabel>
+                  <FilledInput
+                    id="filled-adornment-email"
+                    type="email"
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
+                  />
+                </FormControl>
               </div>
               <div className="password">
-                <label htmlFor="password" className="label-password">Password</label>
-                <input
-                  className='input-password'
-                  type="password"
-                  name="password"
-                  placeholder='Enter your password'
-                  value={form.password}
-                  onChange={handleChange}
-                />
+                <FormControl sx={{ m: 1, width: '25ch' }} variant="filled">
+                  <InputLabel htmlFor="filled-adornment-password">Password</InputLabel>
+                  <FilledInput
+                    id="filled-adornment-password"
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    value={form.password}
+                    onChange={handleChange}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          onMouseUp={handleMouseUpPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                </FormControl>
               </div>
 
 
