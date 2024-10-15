@@ -51,27 +51,30 @@ const Quiz = () => {
   useEffect(() => {
     fetchQuestions(1); // Fetch page 1 on initial load
 
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden') {
+    // Only add event listeners if the quiz hasn't been submitted yet
+    if (!quizSubmitted) {
+      const handleVisibilityChange = () => {
+        if (document.visibilityState === 'hidden') {
+          handleMalpractice();
+        }
+      };
+
+      const handleWindowBlur = () => {
         handleMalpractice();
-      }
-    };
+      };
 
-    const handleWindowBlur = () => {
-      handleMalpractice();
-    };
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+      window.addEventListener('blur', handleWindowBlur);
 
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('blur', handleWindowBlur);
-
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('blur', handleWindowBlur);
-    };
-  }, []);
+      return () => {
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+        window.removeEventListener('blur', handleWindowBlur);
+      };
+    }
+  }, [quizSubmitted, disqualified]);
 
   const handleMalpractice = () => {
-    if (!disqualified) {
+    if (!disqualified && !quizSubmitted) {
       setDisqualified(true);
       alert('You have been disqualified from this quiz for switching tabs.');
       handleSubmitQuiz(true);
