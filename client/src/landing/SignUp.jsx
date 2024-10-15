@@ -67,7 +67,7 @@ function SignUp() {
           <div className='button'>
             <form className="landingForm" onSubmit={handleSignup}>
               <div className="date">
-                <FormControl sx={{ m: 1, width: '25ch' }} variant="filled">
+                <FormControl sx={{ m: 1, width: '30ch' }} variant="filled">
                   <InputLabel htmlFor="filled-adornment-date"></InputLabel>
                   <FilledInput
                     id="filled-adornment-date"
@@ -79,7 +79,7 @@ function SignUp() {
                 </FormControl>
               </div>
               <div className="name">
-                <FormControl sx={{ m: 1, width: '25ch' }} variant="filled">
+                <FormControl sx={{ m: 1, width: '30ch' }} variant="filled">
                   <InputLabel htmlFor="filled-adornment-name">Name</InputLabel>
                   <FilledInput
                     id="filled-adornment-name"
@@ -91,7 +91,7 @@ function SignUp() {
                 </FormControl>
               </div>
               <div className="email">
-                <FormControl sx={{ m: 1, width: '25ch' }} variant="filled">
+                <FormControl sx={{ m: 1, width: '30ch' }} variant="filled">
                   <InputLabel htmlFor="filled-adornment-email">Email</InputLabel>
                   <FilledInput
                     id="filled-adornment-email"
@@ -103,7 +103,7 @@ function SignUp() {
                 </FormControl>
               </div>
               <div className="password">
-                <FormControl sx={{ m: 1, width: '25ch' }} variant="filled">
+                <FormControl sx={{ m: 1, width: '30ch' }} variant="filled">
                   <InputLabel htmlFor="filled-adornment-password">Password</InputLabel>
                   <FilledInput
                     id="filled-adornment-password"
@@ -129,7 +129,7 @@ function SignUp() {
               </div>
 
               <div className="batch">
-                <FormControl sx={{ m: 1, width: '25ch' }} variant="filled">
+                <FormControl sx={{ m: 1, width: '30ch' }} variant="filled">
                   <InputLabel htmlFor="filled-adornment-batch">Batch</InputLabel>
                   <FilledInput
                     id="filled-adornment-batch"
@@ -140,17 +140,6 @@ function SignUp() {
                   />
                 </FormControl>
               </div>
-              {/* <div className="date">
-                <label htmlFor="date" className="label-date">Date</label>
-                <input
-                  className='input-data'
-                  type="date"
-                  name="date"
-                  value={form.date}
-                  onChange={handleChange}
-                  placeholder='Enter the Date'
-                />
-              </div> */}
               <div className="btn-div">
                 <button type="submit" className="btn-submit">Sign Up</button>
               </div>
