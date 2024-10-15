@@ -244,6 +244,9 @@ const getQuestions = async (req, res) => {
 // @POST
 // user/submit-quiz
 // desc: Submit quiz answers and calculate score
+// @POST
+// user/submit-quiz
+// desc: Submit quiz answers and calculate score
 const submitQuiz = async (req, res) => {
     try {
         const { userId } = req.params;
@@ -275,17 +278,13 @@ const submitQuiz = async (req, res) => {
             });
         }
 
-        console.log("UESRID", userId)
-
         if (!answers || answers.length === 0) {
             return res.status(400).json({ message: "No answers submitted" });
         }
 
         // Find all questions
         const questionIds = answers.map(answer => answer.questionId);
-        console.log("questionsId", questionIds)
         const questions = await Question.find({ _id: { $in: questionIds } });
-        console.log("question each", questions)
 
         if (questions.length === 0) {
             return res.status(404).json({ message: "Questions not found" });
@@ -296,25 +295,36 @@ const submitQuiz = async (req, res) => {
         let technicalCorrect = 0;
         let nonTechnicalCorrect = 0;
         const totalQuestions = questions.length;
-        const evaluation = answers.map(answer => {
-            const question = questions.find(q => q._id.toString() === answer.questionId);
-            const isCorrect = question.correctAns === answer.selectedOption;
-            if (isCorrect) {
-                score += 1;
-                // Track correct answers by category
-                if (question.category === "Technical") {
-                    technicalCorrect += 1;
-                } else if (question.category === "NonTechnical") {
-                    nonTechnicalCorrect += 1;
+
+        const evaluation = questions.map(question => {
+            const submittedAnswer = answers.find(answer => answer.questionId === question._id.toString());
+            let isCorrect = false;
+            let selectedOption = null;
+
+            // Check if question was skipped
+            if (!submittedAnswer || !submittedAnswer.selectedOption) {
+                isCorrect = false;
+            } else {
+                selectedOption = submittedAnswer.selectedOption;
+                isCorrect = question.correctAns === selectedOption;
+                if (isCorrect) {
+                    score += 1;
+                    if (question.category === "Technical") {
+                        technicalCorrect += 1;
+                    } else if (question.category === "NonTechnical") {
+                        nonTechnicalCorrect += 1;
+                    }
                 }
             }
+
             return {
                 category: question.category,
-                questionId: answer.questionId,
+                questionId: question._id.toString(),
                 question: question.question,
-                selectedOption: answer.selectedOption,
+                selectedOption: selectedOption, // Null for skipped questions
                 correctAnswer: question.correctAns,
-                isCorrect
+                isCorrect: isCorrect,
+                isSkipped: !submittedAnswer || !submittedAnswer.selectedOption // Mark as skipped if no answer
             };
         });
 
@@ -325,7 +335,6 @@ const submitQuiz = async (req, res) => {
         } else if (nonTechnicalCorrect > technicalCorrect) {
             strength = "NonTechnical";
         }
-
 
         // Convert the score to a percentage
         const percentageScore = (score / totalQuestions) * 100;
@@ -344,7 +353,6 @@ const submitQuiz = async (req, res) => {
 
         // Save score, performance, and strength in the user's record
         const user = await User.findById(userId);
-        console.log("quizsubmit", user)
         if (user) {
             user.score = score;
             user.performance = performance;
@@ -371,6 +379,7 @@ const submitQuiz = async (req, res) => {
         return res.status(500).json({ message: `Internal Server Error: ${error.message}` });
     }
 };
+
 // get all  users
 const getAllUsers = async (request, response) => {
 

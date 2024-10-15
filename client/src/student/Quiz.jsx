@@ -5,8 +5,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 const Quiz = () => {
   const { loggedInUserId } = useParams();
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   // State for the countdown timer
   const [timer, setTimer] = useState(60);
@@ -17,13 +16,11 @@ const Quiz = () => {
   // State to store questions fetched from the backend
   const [questions, setQuestions] = useState([]);
 
-  // State to track the selected answers
+  // State to track the selected answers (initialized with null for skipped questions)
   const [selectedAnswers, setSelectedAnswers] = useState([]);
 
   // State for the quiz submission status
   const [quizSubmitted, setQuizSubmitted] = useState(false);
-
-  const [currentPage, setCurrentPage] = useState(1); // Start from page 1
 
   const [disqualified, setDisqualified] = useState(false);
 
@@ -33,18 +30,24 @@ const Quiz = () => {
       const response = await axios.get('http://localhost:8000/api/v1/user/getQuestions', {
         params: {
           page: page,
-          limit: 500, // 10 questions per page
+          limit: 500, // Fetch all questions (or adjust limit if needed)
         },
       });
       // Shuffle the questions randomly
       const shuffledQuestions = response.data.data.questions.sort(() => Math.random() - 0.5);
       setQuestions(shuffledQuestions);
+
+      // Initialize the selectedAnswers with null values for each question
+      const initialAnswers = shuffledQuestions.map((q) => ({
+        questionId: q._id,
+        selectedOption: null, // Start as null, meaning unanswered/skipped
+      }));
+      setSelectedAnswers(initialAnswers);
     } catch (error) {
-      console.error("Error fetching questions:", error);
+      console.error('Error fetching questions:', error);
     }
   };
 
-  // On component mount, fetch the first page and set up event listeners
   useEffect(() => {
     fetchQuestions(1); // Fetch page 1 on initial load
 
@@ -61,7 +64,6 @@ const Quiz = () => {
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('blur', handleWindowBlur);
 
-    // Cleanup event listeners on component unmount
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('blur', handleWindowBlur);
@@ -70,7 +72,6 @@ const Quiz = () => {
 
   const handleMalpractice = () => {
     if (!disqualified) {
-      // Set user as disqualified after a single tab switch
       setDisqualified(true);
       alert('You have been disqualified from this quiz for switching tabs.');
       handleSubmitQuiz(true);
@@ -78,39 +79,35 @@ const Quiz = () => {
     }
   };
 
-
-  // Call this function to go to the next page
-  const handleNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
-    fetchQuestions(currentPage + 1);
-  };
-
-  // On component mount, fetch the first page
-  useEffect(() => {
-    fetchQuestions(1); // Fetch page 1 on initial load
-  }, []);
-
   // Reset the timer whenever the current question changes
   useEffect(() => {
-    // Reset the timer to 60 seconds when a new question loads
     setTimer(60);
-
-    // Set up a countdown timer
     const countdown = setInterval(() => {
       setTimer((prevTimer) => {
         if (prevTimer === 1) {
-          clearInterval(countdown); // Clear the timer when it reaches 0
-          handleNext(); // Automatically go to the next question
+          clearInterval(countdown);
+          handleNext();
         }
         return prevTimer - 1;
       });
-    }, 1000); // Update every second
+    }, 1000);
 
-    // Cleanup the interval when the component unmounts or currentQuestionIndex changes
     return () => clearInterval(countdown);
   }, [currentQuestionIndex]);
 
-  // Function to handle going to the next question
+  // Handle answer selection
+  const handleAnswerSelect = (option) => {
+    const questionId = questions[currentQuestionIndex]._id;
+    const optionKey = Object.keys(questions[currentQuestionIndex])
+      .find(key => questions[currentQuestionIndex][key] === option);
+
+    // Update the selected answer for the current question
+    const updatedAnswers = [...selectedAnswers];
+    updatedAnswers[currentQuestionIndex] = { questionId, selectedOption: optionKey || null };
+    setSelectedAnswers(updatedAnswers);
+  };
+
+  // Move to the next question or submit quiz
   const handleNext = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -119,36 +116,26 @@ const Quiz = () => {
     }
   };
 
-  // Function to handle answer selection
-  const handleAnswerSelect = (option) => {
-    const questionId = questions[currentQuestionIndex]._id; // Assuming each question has a unique _id
-    const optionKey = Object.keys(questions[currentQuestionIndex])
-      .find(key => questions[currentQuestionIndex][key] === option);
-
-    // Store the selected answer for the current question
-    const updatedAnswers = [...selectedAnswers];
-    updatedAnswers[currentQuestionIndex] = { questionId, selectedOption: optionKey };
-    setSelectedAnswers(updatedAnswers);
-  };
-
-  // Function to submit the quiz
+  // Submit the quiz and send skipped questions as well
   const handleSubmitQuiz = async (isDisqualified) => {
-    console.log("disqualified", isDisqualified);
     try {
+      // Ensure that skipped questions (null values) are marked as "skipped"
+      const processedAnswers = selectedAnswers.map(answer => ({
+        questionId: answer.questionId,
+        selectedOption: answer.selectedOption || 'skipped',
+      }));
+
       const response = await axios.patch(`http://localhost:8000/api/v1/user/quizSubmit/${loggedInUserId}`, {
-        answers: selectedAnswers,
+        answers: processedAnswers,
         disqualified: isDisqualified,
       });
-      console.log("Quiz submitted successfully:", response.data);
-      setQuizSubmitted(true); // Set the quiz submission status to true
+
+      console.log('Quiz submitted successfully:', response.data);
+      setQuizSubmitted(true);
     } catch (error) {
-      console.error("Error submitting quiz:", error);
+      console.error('Error submitting quiz:', error);
     }
   };
-
-  // const getOptionsArray = (question) => {
-  //   return Object.values(question).filter((value, index) => index >= 1 && value !== question.question);
-  // };
 
   return (
     <div className="mt-5 d-flex align-items-center justify-content-center">
@@ -164,7 +151,7 @@ const Quiz = () => {
 
         <main>
           <form>
-            {/* Conditional rendering to prevent accessing undefined question */}
+            {/* Prevent accessing undefined question */}
             {questions[currentQuestionIndex] && !quizSubmitted ? (
               <>
                 {/* Question */}
@@ -205,7 +192,7 @@ const Quiz = () => {
                   type="button"
                   className="btn btn-secondary"
                   onClick={() => setCurrentQuestionIndex(currentQuestionIndex - 1)}
-                  disabled
+                  disabled={currentQuestionIndex === 0}
                 >
                   Previous
                 </button>
@@ -214,7 +201,7 @@ const Quiz = () => {
                   className="btn btn-primary"
                   onClick={handleNext}
                 >
-                  {currentQuestionIndex === questions.length - 1 ? "Submit" : "Next"}
+                  {currentQuestionIndex === questions.length - 1 ? 'Submit' : 'Next'}
                 </button>
               </div>
             )}
