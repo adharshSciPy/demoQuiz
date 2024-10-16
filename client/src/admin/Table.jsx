@@ -88,6 +88,7 @@ function ReportTable() {
           <option value="High">High</option>
           <option value="Medium">Medium</option>
           <option value="Low">Low</option>
+          <option value="Very Low">Very Low</option>
           <option value="Disqualified">Disqualified</option>
         </select>
         <button className="download-button" onClick={downloadCSV} title="Download">

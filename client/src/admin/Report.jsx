@@ -13,7 +13,7 @@ function Report() {
         <Navbar/>
        <h3 className='text-white'>Student Report</h3>
         <ReportTable/>
-       <Footer/>
+       {/* <Footer/> */}
       
     </div>
   )
