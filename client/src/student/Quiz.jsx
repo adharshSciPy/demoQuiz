@@ -84,18 +84,19 @@ const Quiz = () => {
 
   // Reset the timer whenever the current question changes
   useEffect(() => {
-    setTimer(60);
+    setTimer(60); // Reset timer to 60 seconds
+
     const countdown = setInterval(() => {
       setTimer((prevTimer) => {
         if (prevTimer === 1) {
           clearInterval(countdown);
-          handleNext();
+          handleNext(); // Automatically move to the next question when timer reaches 0
         }
         return prevTimer - 1;
       });
     }, 1000);
 
-    return () => clearInterval(countdown);
+    return () => clearInterval(countdown); // Clear the interval when component unmounts or question changes
   }, [currentQuestionIndex]);
 
   // Handle answer selection
@@ -120,7 +121,7 @@ const Quiz = () => {
   };
 
   // Submit the quiz and send skipped questions as well
-  const handleSubmitQuiz = async (isDisqualified) => {
+  const handleSubmitQuiz = async (isDisqualified = false) => {
     try {
       // Ensure that skipped questions (null values) are marked as "skipped"
       const processedAnswers = selectedAnswers.map(answer => ({
