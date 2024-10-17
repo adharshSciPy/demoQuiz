@@ -76,7 +76,7 @@ const Quiz = () => {
   const handleMalpractice = () => {
     if (!disqualified && !quizSubmitted) {
       setDisqualified(true);
-      alert('You have been disqualified from this quiz for switching tabs.');
+      // alert('You have been disqualified from this quiz for switching tabs.');
       handleSubmitQuiz(true);
       navigate('/disqualified');
     }
@@ -90,14 +90,18 @@ const Quiz = () => {
       setTimer((prevTimer) => {
         if (prevTimer === 1) {
           clearInterval(countdown);
-          handleNext(); // Automatically move to the next question when timer reaches 0
+          if (currentQuestionIndex < questions.length - 1) {
+            handleNext(); // Automatically move to the next question when timer reaches 0
+          } else {
+            handleSubmitQuiz(); // Automatically submit the quiz if it's the last question
+          }
         }
         return prevTimer - 1;
       });
     }, 1000);
 
     return () => clearInterval(countdown); // Clear the interval when component unmounts or question changes
-  }, [currentQuestionIndex]);
+  }, [currentQuestionIndex, questions.length]);
 
   // Handle answer selection
   const handleAnswerSelect = (option) => {
