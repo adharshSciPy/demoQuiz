@@ -98,7 +98,10 @@ function LandingPage() {
           <div className='button'>
             <form className="landingForm" onSubmit={handleSignin}>
               <div className="email">
-                <FormControl sx={{ m: 1, width: '30ch' }} variant="filled">
+                <FormControl sx={{
+                  m: 1,
+                  width: { xs: '100%' }
+                }} variant="filled">
                   <InputLabel htmlFor="filled-adornment-email">Email</InputLabel>
                   <FilledInput
                     id="filled-adornment-email"
@@ -110,7 +113,10 @@ function LandingPage() {
                 </FormControl>
               </div>
               <div className="password">
-                <FormControl sx={{ m: 1, width: '30ch' }} variant="filled">
+                <FormControl sx={{
+                  m: 1,
+                  width: { xs: '100%' }
+                }} variant="filled">
                   <InputLabel htmlFor="filled-adornment-password">Password</InputLabel>
                   <FilledInput
                     id="filled-adornment-password"
