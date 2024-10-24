@@ -2,10 +2,19 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../assets/css/style.css';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setLogout } from '../features/slice/authSlice';
 
 const Quiz = () => {
   const { loggedInUserId } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(setLogout()); // Dispatch the logout action
+    localStorage.removeItem('token'); // Remove the token from local storage
+    navigate('/'); // Redirect to the admin login page
+  };
 
   // State for the countdown timer
   const [timer, setTimer] = useState(60);
@@ -78,7 +87,7 @@ const Quiz = () => {
       setDisqualified(true);
       // alert('You have been disqualified from this quiz for switching tabs.');
       handleSubmitQuiz(true);
-      navigate('/disqualified');
+      handleLogout()
     }
   };
 
