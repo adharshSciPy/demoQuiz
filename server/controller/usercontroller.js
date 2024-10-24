@@ -87,7 +87,7 @@ const loginUser = async (req, res) => {
 
         // Check if the user has already logged in
         if (user.hasLoggedIn) {
-            return res.status(403).json({ message: "You have already logged in once. Further logins are restricted." });
+            return res.status(403).json({ message: "You have already submitted." });
         }
 
         // Verify password
@@ -96,9 +96,9 @@ const loginUser = async (req, res) => {
             return res.status(401).json({ message: "Incorrect password" });
         }
 
-        // Mark user as logged in
-        user.hasLoggedIn = true;
-        await user.save();
+        // // Mark user as logged in
+        // user.hasLoggedIn = true;
+        // await user.save();
 
         // Generate tokens
         const accessToken = await user.generateAccessToken();
@@ -259,6 +259,7 @@ const submitQuiz = async (req, res) => {
                 user.score = 0; // Optionally set score to 0
                 user.performance = 'Disqualified'; // Mark performance as disqualified
                 user.userStrength = null; // Optionally reset user strength
+                user.hasLoggedIn = true;
                 await user.save();
             } else {
                 return res.status(404).json({ message: "User not found" });
@@ -357,6 +358,7 @@ const submitQuiz = async (req, res) => {
             user.score = score;
             user.performance = performance;
             user.userStrength = strength;
+            user.hasLoggedIn = true;
             await user.save();
         } else {
             return res.status(404).json({ message: "User not found" });
