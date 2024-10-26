@@ -85,7 +85,7 @@ const Quiz = () => {
   const handleMalpractice = () => {
     if (!disqualified && !quizSubmitted) {
       setDisqualified(true);
-      // alert('You have been disqualified from this quiz for switching tabs.');
+      alert('You have been disqualified from this quiz for Malpractice.');
       handleSubmitQuiz(true);
       handleLogout()
     }
