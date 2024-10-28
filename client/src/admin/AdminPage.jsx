@@ -5,7 +5,7 @@ import React from 'react';
 // import * as FaIcons from "react-icons/fa";
 // import * as AiIcons from "react-icons/ai";
 import '../assets/css/adminPage.css';
-import Question from './Question';
+// import Question from './Question';
 import Navbar from '../navbar/Navbar';
 import Footer from '../footer/Footer';
 
@@ -16,7 +16,7 @@ function AdminPage() {
   return (
     <div className='main'>
       <Navbar/>
-      <Question/>
+      {/* <Question/> */}
       <Footer/>
     </div>
     

@@ -26,6 +26,8 @@ function Navbar() {
         <ul className={menuOpen ? "open" : " "}>
           <li><NavLink to='/admindashboard'>Home</NavLink></li>
           <li><NavLink to='/questions'>Questions</NavLink></li>
+          <li><NavLink to='/session'>Session</NavLink></li>
+
           <li><NavLink to='/report'>Report</NavLink></li>
           <li><NavLink onClick={handleLogout}>Logout</NavLink></li>
         </ul>

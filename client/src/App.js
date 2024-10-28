@@ -14,6 +14,7 @@ import ProtectedAdminRoute from './ProtectedRoutes/ProtectedRouteAdmin';  // Imp
 import ProtectedUserRoute from './ProtectedRoutes/ProtectedRoute';    // Import User Protected Route
 import AdminTable from './admin/AdminTable';
 import DisQuallified from './student/DisQuallified';
+import Session from './admin/Session';
 
 function App() {
   return (
@@ -36,6 +37,8 @@ function App() {
             <Route path='/admindashboard' element={<ProtectedAdminRoute element={<AdminDashboard />} />} />
             <Route path='/report' element={<ProtectedAdminRoute element={<Report />} />} />
             <Route path='/questions' element={<ProtectedAdminRoute element={<AdminTable />} />} />
+            <Route path='/session' element={<ProtectedAdminRoute element={<Session />} />} />
+
           </Routes>
         </BrowserRouter>
       </Provider>
