@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../assets/css/landing.css';
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import {  useNavigate } from 'react-router-dom'; // Import useNavigate
 import Footer from '../footer/Footer';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
