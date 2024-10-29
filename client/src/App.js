@@ -17,7 +17,6 @@ import DisQuallified from './student/DisQuallified';
 import Session from './admin/Session';
 import Question from './admin/Question';
 import ShortAnswerQuestion from './admin/ShortAnswerQuestions';
-import Timer from './student/Timer';
 
 function App() {
   return (
