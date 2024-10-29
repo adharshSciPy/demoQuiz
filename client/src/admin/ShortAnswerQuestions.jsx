@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Navbar from '../navbar/Navbar';
 import Footer from '../footer/Footer';
+import styles from './../assets/css/ShortAnswerQuestion.module.css'
 
 
 const ShortAnswerQuestion = () => {
@@ -14,6 +15,7 @@ const ShortAnswerQuestion = () => {
     category: '',
     question: '',
     answer: '',
+    mark:''
   };
 
   const [form, setForm] = useState(fields);
@@ -26,14 +28,14 @@ const ShortAnswerQuestion = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    const { category, question, answer } = form;
-    if (!category || !question || !answer) {
+    const { category, question, answer,mark } = form;
+    if (!category || !question || !answer||!mark) {
       notifyError("Please fill required fields");
       return;
     }
 
     try {
-      const payload = { category, question, answer };
+      const payload = { category, question, answer,mark };
       const response = await axios.post('http://localhost:8000', payload);
       
       if (response) {
@@ -50,15 +52,15 @@ const ShortAnswerQuestion = () => {
   };
 
   return (
-    <div style={{ backgroundColor: "#6095de" }}>
+    <div className={styles.main}>
       <Navbar />
-      <div className="container mt-5 pb-5">
+      <div className={styles.conatiner}>
         <ToastContainer position="bottom-right" autoClose={2000} hideProgressBar={false} />
 
         <form onSubmit={submitHandler}>
           {/* Question Type */}
-          <div className="mb-4">
-            <label htmlFor="type" className="form-label">Type</label>
+          <div className={styles.inputDiv}>
+            <label htmlFor="type" className={styles.formLabel}>Type</label>
             <select
               name="category"
               id="type"
@@ -73,8 +75,8 @@ const ShortAnswerQuestion = () => {
           </div>
 
           {/* Question Text */}
-          <div className="mb-4 w-100">
-            <label htmlFor="question" className="form-label">Question</label>
+          <div className={styles.inputDiv}>
+            <label htmlFor="question" className={styles.formLabel}>Question</label>
             <textarea
               name="question"
               id="question"
@@ -87,8 +89,8 @@ const ShortAnswerQuestion = () => {
           </div>
 
           {/* Answer Text */}
-          <div className="mb-4 w-100">
-            <label htmlFor="answer" className="form-label">Answer</label>
+          <div className={styles.inputDiv}>
+            <label htmlFor="answer" className={styles.formLabel}>Answer</label>
             <textarea
               name="answer"
               id="answer"
@@ -98,6 +100,20 @@ const ShortAnswerQuestion = () => {
               value={form.answer}
               onChange={handleInputChange}
             ></textarea>
+          </div>
+          {/* INput Mark */}
+          <div className={styles.inputDiv}>
+            <label htmlFor="mark" className={styles.formLabel}>Mark</label>
+            <input
+            type='number'
+              name="mark"
+              id="mark"
+              className={styles.markInput}
+              
+              placeholder="Enter the mark here"
+              value={form.mark}
+              onChange={handleInputChange}
+            ></input>
           </div>
 
           {/* Submit Button */}

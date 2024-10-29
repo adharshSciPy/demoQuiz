@@ -16,9 +16,6 @@ const Quiz = () => {
     navigate('/'); // Redirect to the admin login page
   };
 
-  // State for the countdown timer
-  const [timer, setTimer] = useState(60);
-
   // State for the current question index
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
@@ -87,30 +84,9 @@ const Quiz = () => {
       setDisqualified(true);
       alert('You have been disqualified from this quiz for Malpractice.');
       handleSubmitQuiz(true);
-      handleLogout()
+      handleLogout();
     }
   };
-
-  // Reset the timer whenever the current question changes
-  useEffect(() => {
-    setTimer(60); // Reset timer to 60 seconds
-
-    const countdown = setInterval(() => {
-      setTimer((prevTimer) => {
-        if (prevTimer === 1) {
-          clearInterval(countdown);
-          if (currentQuestionIndex < questions.length - 1) {
-            handleNext(); // Automatically move to the next question when timer reaches 0
-          } else {
-            handleSubmitQuiz(); // Automatically submit the quiz if it's the last question
-          }
-        }
-        return prevTimer - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(countdown); // Clear the interval when component unmounts or question changes
-  }, [currentQuestionIndex, questions.length]);
 
   // Handle answer selection
   const handleAnswerSelect = (option) => {
@@ -153,6 +129,37 @@ const Quiz = () => {
       console.error('Error submitting quiz:', error);
     }
   };
+  // timer functionality
+  const [hours, setHours] = useState(0); // Start with 0 hours
+    const [minutes, setMinutes] = useState(1); // Start with 1 minute
+    const [seconds, setSeconds] = useState(0); // Start with 0 seconds
+
+    useEffect(() => {
+      // If the timer has reached zero, auto-submit the quiz
+      if (hours === 0 && minutes === 0 && seconds === 0 && !quizSubmitted) {
+        handleSubmitQuiz();
+        return; // Exit early to prevent further countdown
+      }
+    
+      const intervalId = setInterval(() => {
+        if (seconds > 0) {
+          setSeconds(prevSeconds => prevSeconds - 1);
+        } else if (minutes > 0) {
+          setMinutes(prevMinutes => prevMinutes - 1);
+          setSeconds(59);
+        } else if (hours > 0) {
+          setHours(prevHours => prevHours - 1);
+          setMinutes(59);
+          setSeconds(59);
+        }
+      }, 1000);
+    
+      return () => clearInterval(intervalId); // Cleanup interval on component unmount
+    }, [hours, minutes, seconds, quizSubmitted]); // Add quizSubmitted to dependency array
+     // Dependency array includes hours, minutes, and seconds
+
+    // Determine if the timer is in the last minute
+    const isLastMinute = hours === 0 && minutes === 0 && seconds <= 60;
 
   return (
     <div className="mt-5 d-flex align-items-center justify-content-center">
@@ -161,17 +168,26 @@ const Quiz = () => {
           <h1 className="display-4">Quiz</h1>
           {quizSubmitted ? (
             <p className="text-success">Quiz submitted successfully!</p>
-          ) : (
-            <p>Time remaining: {timer} seconds</p>
-          )}
+          ) : 
+          (
+            <p></p>
+          )
+          }
         </header>
 
         <main>
           <form>
+         
             {/* Prevent accessing undefined question */}
             {questions[currentQuestionIndex] && !quizSubmitted ? (
               <>
                 {/* Question */}
+                <div className='timerMain'>
+                  
+            <h6 className={`${'timerHead'} ${isLastMinute ? 'timerRed' : ''}`}>
+                {hours}:{minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+            </h6>
+        </div>
                 <div className="mb-4 text-center">
                   <h4>Question {currentQuestionIndex + 1}: {questions[currentQuestionIndex]?.question}</h4>
                 </div>
@@ -193,14 +209,16 @@ const Quiz = () => {
                         {questions[currentQuestionIndex][optionKey]}
                       </label>
                     </div>
-                  ))}
+                  ))} 
                 </div>
               </>
             ) : quizSubmitted ? (
               <div className="text-center">Thank you for completing the quiz!</div>
-            ) : (
+            ) : 
+            (
               <div className="text-center">No more questions available.</div>
-            )}
+            )
+            }
 
             {/* Navigation Buttons */}
             {!quizSubmitted && (
