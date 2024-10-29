@@ -1,7 +1,9 @@
-import { React, useState, useEffect } from 'react';
+import { React, useState,  } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Navbar from '../navbar/Navbar';
+import Footer from '../footer/Footer';
 
 
 const Question = () => {
@@ -63,7 +65,10 @@ const Question = () => {
 
 
   return (
+  
+<div style={{ backgroundColor: "#6095de" }}>
 
+  <Navbar/>
     <div className="container mt-5 pb-5 " >
       <ToastContainer position="bottom-right"
         autoClose={2000}
@@ -164,6 +169,8 @@ const Question = () => {
           Submit
         </button>
       </form>
+    </div>
+    <Footer/>
     </div>
 
   );

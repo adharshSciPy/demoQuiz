@@ -56,14 +56,14 @@
   color: #333;
 }
 
-.TrashIcon {
+.trashIcon {
   font-size: 1.2rem;
   color: #82a9e5;
   cursor: pointer;
   margin-top: 10px;
 }
 
-.TrashIcon:hover {
+.trashIcon:hover {
   color: red;
 }
 

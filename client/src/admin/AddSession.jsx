@@ -1,17 +1,25 @@
 import React, { useState } from 'react';
 import styles from './../assets/css/addSession.module.css';
+import { useNavigate } from 'react-router-dom';
+import { Button, Flex } from 'antd';
 
-function AddSession({ onClose }) { // Accept onClose prop
+function AddSession({ onClose }) {
   const [sessionName, setSessionName] = useState('');
   const [sessionDate, setSessionDate] = useState('');
   const [questionType, setQuestionType] = useState('');
+  const navigate = useNavigate();
 
   const handleConfirm = () => {
-    // Handle the confirmation logic here
+    if (questionType === "mcq") {
+      navigate("/mcquestions");
+    } else if (questionType === "shortAnswer") {
+      navigate("/shortanswerquestions");
+    }
+
     console.log('Session Name:', sessionName);
     console.log('Session Date:', sessionDate);
     console.log('Question Type:', questionType);
-    
+
     // Reset the input fields
     setSessionName('');
     setSessionDate('');
@@ -21,6 +29,9 @@ function AddSession({ onClose }) { // Accept onClose prop
     onClose();
   };
 
+  // Check if all fields are filled
+  const isFormComplete = sessionName && sessionDate && questionType;
+
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
@@ -28,6 +39,7 @@ function AddSession({ onClose }) { // Accept onClose prop
         <div className={styles.modalBody}>
           <input
             type="text"
+            required
             placeholder="Session Name"
             className={styles.inputField}
             value={sessionName}
@@ -35,6 +47,7 @@ function AddSession({ onClose }) { // Accept onClose prop
           />
           <input
             type="date"
+            required
             className={styles.inputField}
             value={sessionDate}
             onChange={(e) => setSessionDate(e.target.value)}
@@ -46,15 +59,16 @@ function AddSession({ onClose }) { // Accept onClose prop
           >
             <option value="">Select Question Type</option>
             <option value="mcq">Multiple Choice Questions</option>
-            
             <option value="shortAnswer">Short Answer Questions</option>
           </select>
         </div>
         <div className={styles.modalFooter}>
-          <button className={styles.closeButton} onClick={onClose}>Cancel</button>
-          <button className={styles.confirmButton} onClick={handleConfirm}>
-            Confirm
-          </button>
+          <Flex gap="small" wrap>
+            <Button onClick={onClose}>Cancel</Button>
+            <Button type="primary" onClick={handleConfirm} disabled={!isFormComplete}>
+              Confirm
+            </Button>
+          </Flex>
         </div>
       </div>
     </div>

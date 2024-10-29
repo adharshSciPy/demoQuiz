@@ -15,6 +15,8 @@ import ProtectedUserRoute from './ProtectedRoutes/ProtectedRoute';    // Import 
 import AdminTable from './admin/AdminTable';
 import DisQuallified from './student/DisQuallified';
 import Session from './admin/Session';
+import Question from './admin/Question';
+import ShortAnswerQuestion from './admin/ShortAnswerQuestions';
 
 function App() {
   return (
@@ -36,6 +38,10 @@ function App() {
             {/* Protecting routes for admins */}
             <Route path='/admindashboard' element={<ProtectedAdminRoute element={<AdminDashboard />} />} />
             <Route path='/report' element={<ProtectedAdminRoute element={<Report />} />} />
+            <Route path='/mcquestions' element={<ProtectedAdminRoute element={<Question />} />} />
+            <Route path='/shortanswerquestions' element={<ProtectedAdminRoute element={<ShortAnswerQuestion />} />} />
+
+
             <Route path='/questions' element={<ProtectedAdminRoute element={<AdminTable />} />} />
             <Route path='/session' element={<ProtectedAdminRoute element={<Session />} />} />
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Modal } from 'antd';
-import styles from './../assets/css/sSessionModal.module.css'
+import styles from './../assets/css/sSessionModal.module.css';
 
 const SessionModal = ({ isOpen, onOk, onCancel }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -9,7 +9,7 @@ const SessionModal = ({ isOpen, onOk, onCancel }) => {
     setConfirmLoading(true);
     setTimeout(() => {
       setConfirmLoading(false);
-      onOk();
+      onOk(); // Call the onOk function passed as prop
     }, 1000);
   };
 
@@ -19,7 +19,6 @@ const SessionModal = ({ isOpen, onOk, onCancel }) => {
       open={isOpen}
       onCancel={onCancel}
       footer={[
-       
         <Button
           key="ok"
           className={styles.okButton}
@@ -29,9 +28,9 @@ const SessionModal = ({ isOpen, onOk, onCancel }) => {
         >
           OK
         </Button>,
-         <Button key="cancel" className={styles.cancelButton} onClick={onCancel}>
-         Cancel
-       </Button>,
+        <Button key="cancel" className={styles.cancelButton} onClick={onCancel}>
+          Cancel
+        </Button>,
       ]}
     >
       <p>Are you sure you want to delete this session?</p>

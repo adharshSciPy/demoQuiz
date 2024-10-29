@@ -4,13 +4,32 @@ import Navbar from '../navbar/Navbar';
 import Footer from '../footer/Footer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
-import AddSession from './AddSession'; // Import AddSession
+import AddSession from './AddSession';
+import SessionModal from './SessionModal'; // Import SessionModal
 
 function Session() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [sessionToDelete, setSessionToDelete] = useState(null);
 
   const openAddModal = () => setIsAddModalOpen(true);
   const closeAddModal = () => setIsAddModalOpen(false);
+
+  const openDeleteModal = (sessionId) => {
+    setSessionToDelete(sessionId);
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setSessionToDelete(null);
+  };
+
+  const handleDelete = () => {
+    console.log(`Deleting session with ID: ${sessionToDelete}`);
+    // Implement your delete functionality here
+    closeDeleteModal();
+  };
 
   return (
     <div>
@@ -24,6 +43,7 @@ function Session() {
             </div>
           </div>
 
+          {/* List of Sessions */}
           {[1, 2, 3, 4].map((session, index) => (
             <div className={styles.sessionsListCard} key={index}>
               <div className={styles.fontHead}>
@@ -32,20 +52,26 @@ function Session() {
                 <h6>MCQ Questions</h6>
               </div>
               <FontAwesomeIcon
-                className={styles.TrashIcon}
+                className={styles.trashIcon}
                 icon={faTrash}
-                // Handle delete session logic
+                onClick={() => openDeleteModal(session)} // Open delete modal on click
               />
             </div>
           ))}
         </div>
       </div>
 
+      {/* Add Session Modal */}
       {isAddModalOpen && (
-        <AddSession
-          onClose={closeAddModal} // Function to close the modal
-        />
+        <AddSession onClose={closeAddModal} />
       )}
+
+      {/* Delete Confirmation Modal */}
+      <SessionModal
+        isOpen={isDeleteModalOpen}
+        onOk={handleDelete} // Pass the delete handler
+        onCancel={closeDeleteModal} // Close modal on cancel
+      />
 
       <Footer />
     </div>
