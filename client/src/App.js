@@ -46,8 +46,7 @@ function App() {
 
             <Route path='/questions' element={<ProtectedAdminRoute element={<AdminTable />} />} />
             <Route path='/session' element={<ProtectedAdminRoute element={<Session />} />} />
-            {/* unprotected route */}
-            <Route path='/timerdemo' element={<Timer/>}/>
+
           </Routes>
         </BrowserRouter>
       </Provider>
