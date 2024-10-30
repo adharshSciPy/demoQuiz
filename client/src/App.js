@@ -17,7 +17,6 @@ import DisQuallified from './student/DisQuallified';
 import Session from './admin/Session';
 import Question from './admin/Question';
 import ShortAnswerQuestion from './admin/ShortAnswerQuestions';
-import Timer from './student/Timer';
 
 function App() {
   return (
@@ -46,8 +45,7 @@ function App() {
 
             <Route path='/questions' element={<ProtectedAdminRoute element={<AdminTable />} />} />
             <Route path='/session' element={<ProtectedAdminRoute element={<Session />} />} />
-            {/* unprotected route */}
-            <Route path='/timerdemo' element={<Timer/>}/>
+
           </Routes>
         </BrowserRouter>
       </Provider>
