@@ -22,26 +22,27 @@
 .addSectionCard, .sessionsListCard {
   width: 250px;
   height: 200px;
-  background-color: aliceblue;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  /* background-color: aliceblue; */
+  background: linear-gradient(to right, #9ebdec, #6095de);
+  box-shadow: 0 20px 20px rgba(5, 5, 5, 0.1);
   border-radius: 10px;
   padding: 8px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* align-items: center; */
   justify-content: center;
   margin: 0 auto;
 }
 
 .plusIcon {
   font-size: 2rem;
-  color: #82a9e5;
+  color: #bec7d4;
   cursor: pointer;
   margin-bottom: 8px;
 }
 
 .plusIcon:hover {
-  color: #6095de;
+  color: #434344;
 }
 
 .fontHead h5 {
@@ -55,10 +56,16 @@
   font-size: 1rem;
   color: #333;
 }
+.icons{
+  display: flex;
+  padding-left: 2rem;
+  padding-right: 2rem;
 
+  justify-content: space-around;
+}
 .trashIcon {
   font-size: 1.2rem;
-  color: #82a9e5;
+  color:  #bec7d4;
   cursor: pointer;
   margin-top: 10px;
 }
@@ -66,7 +73,24 @@
 .trashIcon:hover {
   color: red;
 }
-
+.editIcon{
+  font-size: 1.2rem;
+  color:  #bec7d4;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.viewIcon{
+  font-size: 1.2rem;
+  color:  #bec7d4;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.editIcon:hover {
+  color: #434344;
+}
+.viewIcon:hover {
+  color: #434344;
+}
 /* Responsive Adjustments */
 
 /* Small screens (mobile devices) */

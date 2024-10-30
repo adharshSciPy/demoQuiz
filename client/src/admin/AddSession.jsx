@@ -1,24 +1,27 @@
 import React, { useState } from 'react';
 import styles from './../assets/css/addSession.module.css';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { Button, Flex } from 'antd';
+import axios from 'axios'
 
-function AddSession({ onClose }) {
+function AddSession({ onClose, refreshSessions }) {
   const [sessionName, setSessionName] = useState('');
   const [sessionDate, setSessionDate] = useState('');
   const [questionType, setQuestionType] = useState('');
-  const navigate = useNavigate();
 
-  const handleConfirm = () => {
-    if (questionType === "mcq") {
-      navigate("/mcquestions");
-    } else if (questionType === "shortAnswer") {
-      navigate("/shortanswerquestions");
+  const handleConfirm = async () => {
+    try {
+      await axios.post("http://localhost:8000/api/v1/section/createsection", {
+        sectionName: sessionName,
+        date: sessionDate,
+        questionType: questionType
+      });
+      
+      // Refresh sessions to reflect the new data
+      refreshSessions();
+    } catch (error) {
+      console.log(error);
     }
-
-    console.log('Session Name:', sessionName);
-    console.log('Session Date:', sessionDate);
-    console.log('Question Type:', questionType);
 
     // Reset the input fields
     setSessionName('');
@@ -59,15 +62,15 @@ function AddSession({ onClose }) {
           >
             <option value="">Select Question Type</option>
             <option value="mcq">Multiple Choice Questions</option>
-            <option value="shortAnswer">Short Answer Questions</option>
+            <option value="Descriptive">Short Answer Questions</option>
           </select>
         </div>
         <div className={styles.modalFooter}>
-          <Flex gap="small" wrap>
-            <Button onClick={onClose}>Cancel</Button>
-            <Button type="primary" onClick={handleConfirm} disabled={!isFormComplete}>
-              Confirm
-            </Button>
+        <Flex gap="small" wrap>
+          <Button onClick={onClose}>Cancel</Button>
+          <Button type="primary" onClick={handleConfirm} disabled={!isFormComplete}>
+            Confirm
+          </Button>
           </Flex>
         </div>
       </div>
@@ -76,3 +79,5 @@ function AddSession({ onClose }) {
 }
 
 export default AddSession;
+
+

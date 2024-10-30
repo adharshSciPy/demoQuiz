@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useParams } from "react-router-dom";
 import Navbar from '../navbar/Navbar';
 import Footer from '../footer/Footer';
 import styles from './../assets/css/ShortAnswerQuestion.module.css'
@@ -10,6 +11,9 @@ import styles from './../assets/css/ShortAnswerQuestion.module.css'
 const ShortAnswerQuestion = () => {
   const notifySuccess = () => toast.success("Submitted Successfully!");
   const notifyError = () => toast.error("Something Went Wrong!");
+  const {id}=useParams();
+  // console.log(id);
+  
 
   const fields = {
     category: '',
@@ -35,8 +39,8 @@ const ShortAnswerQuestion = () => {
     }
 
     try {
-      const payload = { category, question, answer,mark };
-      const response = await axios.post('http://localhost:8000', payload);
+      const payload = { category, question, answer,mark,sectionId:id };
+      const response = await axios.put(`http://localhost:8000/api/v1/section/createquestions/${id}`, payload);
       
       if (response) {
         console.log("payload", payload);

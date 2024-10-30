@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './../assets/css/session.module.css';
 import Navbar from '../navbar/Navbar';
 import Footer from '../footer/Footer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTrash, faPen, faEye } from '@fortawesome/free-solid-svg-icons';
 import AddSession from './AddSession';
-import SessionModal from './SessionModal'; // Import SessionModal
+import SessionModal from './SessionModal';
+import axios from 'axios';
 
 function Session() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [sessionToDelete, setSessionToDelete] = useState(null);
+  const [sessions, setSessions] = useState([]);
 
   const openAddModal = () => setIsAddModalOpen(true);
   const closeAddModal = () => setIsAddModalOpen(false);
@@ -27,9 +29,21 @@ function Session() {
 
   const handleDelete = () => {
     console.log(`Deleting session with ID: ${sessionToDelete}`);
-    // Implement your delete functionality here
     closeDeleteModal();
   };
+
+  const getSessions = async () => {
+    try {
+      const res = await axios.get("http://localhost:8000/api/v1/section/getsections");
+      setSessions(Array.isArray(res.data.data) ? res.data.data : []);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getSessions();
+  }, []);
 
   return (
     <div>
@@ -44,33 +58,35 @@ function Session() {
           </div>
 
           {/* List of Sessions */}
-          {[1, 2, 3, 4].map((session, index) => (
-            <div className={styles.sessionsListCard} key={index}>
+          {sessions.map((item) => (
+            <div className={styles.sessionsListCard} key={item.id}>
               <div className={styles.fontHead}>
-                <h5>Session {session}</h5>
-                <p>16/2/2024</p>
-                <h6>MCQ Questions</h6>
+                <h5>{item.sectionName}</h5>
+                <p>{item.date}</p>
+                <h6>{item.questionType}</h6>
               </div>
-              <FontAwesomeIcon
-                className={styles.trashIcon}
-                icon={faTrash}
-                onClick={() => openDeleteModal(session)} // Open delete modal on click
-              />
+              <div className={styles.icons}>
+                <FontAwesomeIcon className={styles.editIcon} icon={faPen} />
+                <FontAwesomeIcon className={styles.viewIcon} icon={faEye} />
+                <FontAwesomeIcon
+                  className={styles.trashIcon}
+                  icon={faTrash}
+                  onClick={() => openDeleteModal(item.id)}
+                />
+              </div>
             </div>
           ))}
         </div>
       </div>
 
       {/* Add Session Modal */}
-      {isAddModalOpen && (
-        <AddSession onClose={closeAddModal} />
-      )}
+      {isAddModalOpen && <AddSession onClose={closeAddModal} refreshSessions={getSessions} />}
 
       {/* Delete Confirmation Modal */}
       <SessionModal
         isOpen={isDeleteModalOpen}
-        onOk={handleDelete} // Pass the delete handler
-        onCancel={closeDeleteModal} // Close modal on cancel
+        onOk={handleDelete}
+        onCancel={closeDeleteModal}
       />
 
       <Footer />
