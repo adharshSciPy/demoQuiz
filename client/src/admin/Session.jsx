@@ -7,12 +7,15 @@ import { faPlus, faTrash, faPen, faEye } from '@fortawesome/free-solid-svg-icons
 import AddSession from './AddSession';
 import SessionModal from './SessionModal';
 import axios from 'axios';
+import {useNavigate} from "react-router-dom"
 
 function Session() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [sessionToDelete, setSessionToDelete] = useState(null);
   const [sessions, setSessions] = useState([]);
+  const navigate=useNavigate();
+  
 
   const openAddModal = () => setIsAddModalOpen(true);
   const closeAddModal = () => setIsAddModalOpen(false);
@@ -44,6 +47,18 @@ function Session() {
   useEffect(() => {
     getSessions();
   }, []);
+  // To add questions into the section;
+  const addQuestions=async(id,questionType)=>{
+    
+    
+    if(questionType==="MCQ"){
+      navigate(`/mcquestions/${id}`)
+    }else if(questionType==="Descriptive"){
+      navigate(`/shortanswerquestions/${id}`)
+    }
+
+  }
+
 
   return (
     <div>
@@ -63,10 +78,10 @@ function Session() {
               <div className={styles.fontHead}>
                 <h5>{item.sectionName}</h5>
                 <p>{item.date}</p>
-                <h6>{item.questionType}</h6>
+                <h6>{`${item.questionType} Question`}</h6>
               </div>
               <div className={styles.icons}>
-                <FontAwesomeIcon className={styles.editIcon} icon={faPen} />
+                <FontAwesomeIcon className={styles.editIcon} icon={faPen} onClick={()=>addQuestions(item._id,item.questionType)} />
                 <FontAwesomeIcon className={styles.viewIcon} icon={faEye} />
                 <FontAwesomeIcon
                   className={styles.trashIcon}

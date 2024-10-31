@@ -61,7 +61,7 @@ function AddSession({ onClose, refreshSessions }) {
             onChange={(e) => setQuestionType(e.target.value)}
           >
             <option value="">Select Question Type</option>
-            <option value="mcq">Multiple Choice Questions</option>
+            <option value="MCQ">Multiple Choice Questions</option>
             <option value="Descriptive">Short Answer Questions</option>
           </select>
         </div>

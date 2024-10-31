@@ -32,7 +32,8 @@ const questionsSection = async (req, res) => {
         res.status(200).json({ message: "Question added successfully", data: result })
     }
     catch (error) {
-        res.status(500).json({ message: "Internal Server Error", err: error.message })
+        res.status(500).json({ message: "Internal Server Error ", err: error.message })
+        
     }
 }
 

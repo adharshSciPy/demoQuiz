@@ -7,22 +7,20 @@ import Navbar from '../navbar/Navbar';
 import Footer from '../footer/Footer';
 import styles from './../assets/css/ShortAnswerQuestion.module.css'
 
-
 const ShortAnswerQuestion = () => {
   const notifySuccess = () => toast.success("Submitted Successfully!");
-  const notifyError = () => toast.error("Something Went Wrong!");
-  const {id}=useParams();
-  // console.log(id);
+  const notifyError = (message) => toast.error(message || "Something Went Wrong!");
+  const { sectionId } = useParams();
   
 
-  const fields = {
-    category: '',
+  const initialFields = {
+    questionCategory: '',
     question: '',
     answer: '',
-    mark:''
+    mark: ''
   };
 
-  const [form, setForm] = useState(fields);
+  const [form, setForm] = useState(initialFields);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -32,41 +30,41 @@ const ShortAnswerQuestion = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    const { category, question, answer,mark } = form;
-    if (!category || !question || !answer||!mark) {
+    const { questionCategory, question, answer, mark } = form;
+    if (!questionCategory || !question || !answer || !mark) {
       notifyError("Please fill required fields");
       return;
     }
 
     try {
-      const payload = { category, question, answer,mark,sectionId:id };
-      const response = await axios.put(`http://localhost:8000/api/v1/section/createquestions/${id}`, payload);
+      const payload = { questionCategory, question, answer, mark, sectionId };
       
-      if (response) {
-        console.log("payload", payload);
+      const response = await axios.put(`http://localhost:8000/api/v1/section/createquestions/${sectionId}`, payload);
+
+      if (response.status === 200) {
         notifySuccess();
-        setForm(fields); // Reset form after success
+        setForm(initialFields); // Reset form after success
       } else {
         notifyError();
       }
     } catch (error) {
-      console.log(error);
-      notifyError(error.message);
+      console.error("Error submitting form:", error.response || error);
+      notifyError(error.response?.data?.message || error.message);
     }
   };
 
   return (
     <div className={styles.main}>
       <Navbar />
-      <div className={styles.conatiner}>
+      <div className={styles.container}>
         <ToastContainer position="bottom-right" autoClose={2000} hideProgressBar={false} />
 
         <form onSubmit={submitHandler}>
-          {/* Question Type */}
+          {/* Category Selection */}
           <div className={styles.inputDiv}>
             <label htmlFor="type" className={styles.formLabel}>Type</label>
             <select
-              name="category"
+              name="questionCategory"
               id="type"
               className="form-select"
               value={form.category}
@@ -84,7 +82,7 @@ const ShortAnswerQuestion = () => {
             <textarea
               name="question"
               id="question"
-              className="form-control w-100  "
+              className="form-control w-100"
               rows="2"
               placeholder="Enter the question here"
               value={form.question}
@@ -105,19 +103,19 @@ const ShortAnswerQuestion = () => {
               onChange={handleInputChange}
             ></textarea>
           </div>
-          {/* INput Mark */}
+
+          {/* Mark Input */}
           <div className={styles.inputDiv}>
             <label htmlFor="mark" className={styles.formLabel}>Mark</label>
             <input
-            type='number'
+              type='number'
               name="mark"
               id="mark"
               className={styles.markInput}
-              
               placeholder="Enter the mark here"
               value={form.mark}
               onChange={handleInputChange}
-            ></input>
+            />
           </div>
 
           {/* Submit Button */}
