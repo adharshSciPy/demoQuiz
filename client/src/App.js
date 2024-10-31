@@ -39,8 +39,8 @@ function App() {
             {/* Protecting routes for admins */}
             <Route path='/admindashboard' element={<ProtectedAdminRoute element={<AdminDashboard />} />} />
             <Route path='/report' element={<ProtectedAdminRoute element={<Report />} />} />
-            <Route path='/mcquestions' element={<ProtectedAdminRoute element={<Question />} />} />
-            <Route path='/shortanswerquestions' element={<ProtectedAdminRoute element={<ShortAnswerQuestion />} />} />
+            <Route path='/mcquestions/:sectionId' element={<ProtectedAdminRoute element={<Question />} />} />
+            <Route path='/shortanswerquestions/:sectionId' element={<ProtectedAdminRoute element={<ShortAnswerQuestion />} />} />
 
 
             <Route path='/questions' element={<ProtectedAdminRoute element={<AdminTable />} />} />
