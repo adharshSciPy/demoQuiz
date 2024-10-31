@@ -21,6 +21,7 @@ function Session() {
   const closeAddModal = () => setIsAddModalOpen(false);
 
   const openDeleteModal = (sessionId) => {
+    console.log(sessionId)
     setSessionToDelete(sessionId);
     setIsDeleteModalOpen(true);
   };
@@ -30,10 +31,17 @@ function Session() {
     setSessionToDelete(null);
   };
 
-  const handleDelete = () => {
-    console.log(`Deleting session with ID: ${sessionToDelete}`);
-    closeDeleteModal();
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`http://localhost:8000/api/v1/section/deletesection/${sessionToDelete}`);
+      console.log(`Deleted session with ID: ${sessionToDelete}`);
+      closeDeleteModal();
+      setSessions(sessions.filter(session => session._id !== sessionToDelete)); // Update the session list locally
+    } catch (error) {
+      console.log('Error deleting session:', error);
+    }
   };
+  
 
   const getSessions = async () => {
     try {
@@ -94,7 +102,7 @@ function Session() {
                 <FontAwesomeIcon
                   className={styles.trashIcon}
                   icon={faTrash}
-                  onClick={() => openDeleteModal(item.id)}
+                  onClick={() => openDeleteModal(item._id)}
                 />
               </div>
             </div>
@@ -107,10 +115,11 @@ function Session() {
 
       {/* Delete Confirmation Modal */}
       <SessionModal
-        isOpen={isDeleteModalOpen}
-        onOk={handleDelete}
-        onCancel={closeDeleteModal}
-      />
+  isOpen={isDeleteModalOpen}
+  onOk={handleDelete} // Directly call handleDelete here
+  onCancel={closeDeleteModal}
+/>
+
 
       <Footer />
     </div>
