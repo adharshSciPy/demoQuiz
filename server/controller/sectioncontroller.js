@@ -73,6 +73,15 @@ const getSections = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error", err: error.message })
     }
 }
+const getSectionsById = async (req, res) => {
+    const{sectionId}=req.params
+    try {
+        const sections = await Section.findById(sectionId);
+        res.status(200).json({ message: "Section retrieved successfully", data: sections })
+    } catch (error) {
+        res.status(500).json({ message: "Internal Server Error", err: error.message })
+    }
+}
 
 const deleteSections = async (req, res) => {
     const { sectionId } = req.params;
@@ -84,4 +93,4 @@ const deleteSections = async (req, res) => {
     }
 }
 
-export { sectionPost, questionsSection, getSections, McqSection, deleteSections }
+export { sectionPost, questionsSection, getSections, McqSection, deleteSections,getSectionsById }

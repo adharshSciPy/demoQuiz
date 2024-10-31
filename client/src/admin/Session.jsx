@@ -58,6 +58,14 @@ function Session() {
     }
 
   }
+  const viewQuestions=async(id,questionType)=>{
+    if(questionType==="MCQ"){
+      navigate(`/questions/${id}`)
+    }else if(questionType==="Descriptive"){
+      navigate(`/descriptivequestions/${id}`)
+    }
+    
+  }
 
 
   return (
@@ -82,7 +90,7 @@ function Session() {
               </div>
               <div className={styles.icons}>
                 <FontAwesomeIcon className={styles.editIcon} icon={faPen} onClick={()=>addQuestions(item._id,item.questionType)} />
-                <FontAwesomeIcon className={styles.viewIcon} icon={faEye} />
+                <FontAwesomeIcon className={styles.viewIcon} icon={faEye} onClick={()=>viewQuestions(item._id,item.questionType)} />
                 <FontAwesomeIcon
                   className={styles.trashIcon}
                   icon={faTrash}

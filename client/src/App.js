@@ -17,6 +17,7 @@ import DisQuallified from './student/DisQuallified';
 import Session from './admin/Session';
 import Question from './admin/Question';
 import ShortAnswerQuestion from './admin/ShortAnswerQuestions';
+import DescriptiveQuestions from './admin/DescriptiveQuestions';
 
 function App() {
   return (
@@ -43,7 +44,9 @@ function App() {
             <Route path='/shortanswerquestions/:sectionId' element={<ProtectedAdminRoute element={<ShortAnswerQuestion />} />} />
 
 
-            <Route path='/questions' element={<ProtectedAdminRoute element={<AdminTable />} />} />
+            <Route path='/questions/:sectionId' element={<ProtectedAdminRoute element={<AdminTable />} />} />
+            <Route path='/descriptivequestions/:sectionId' element={<ProtectedAdminRoute element={<DescriptiveQuestions />} />} />
+
             <Route path='/session' element={<ProtectedAdminRoute element={<Session />} />} />
 
           </Routes>
