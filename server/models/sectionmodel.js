@@ -1,6 +1,35 @@
 import { mongoose, Schema } from "mongoose";
 
-const questionSchema = new Schema({
+const McqSchema = new Schema({
+    category: {
+        type: String
+    },
+    question: {
+        type: String
+    },
+    option1: {
+        type: String
+    },
+    option2: {
+        type: String
+    },
+    option3: {
+        type: String
+    },
+    option4: {
+        type: String
+    },
+    score: {
+        type: Number,
+        default: 1
+    },
+    correctAns: {
+        type: String
+    }
+
+})
+
+const ShortSchema = new Schema({
     question: {
         type: String
     },
@@ -25,7 +54,8 @@ const SectionSchema = new Schema({
     questionType: {
         type: String
     },
-    Questions: [questionSchema]
+    Questions: [ShortSchema],
+    MCQ: [McqSchema]
 
 })
 
