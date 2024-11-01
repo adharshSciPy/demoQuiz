@@ -40,7 +40,7 @@ const questionsSection = async (req, res) => {
 const McqSection = async (req, res) => {
     const { sectionId } = req.params;
     const { category, question, option1, option2, option3, option4, score, correctAns, questionCategory } = req.body
-    console.log(sectionId)
+
     try {
         const result = await Section.findByIdAndUpdate(sectionId, {
             $push: {
