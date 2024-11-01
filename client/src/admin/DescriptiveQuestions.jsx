@@ -27,15 +27,19 @@ function DescriptiveQuestions () {
     }, [])
 
     const deleteQuestions = async (id) => {
+        console.log(id);
+        console.log("sectionId:",sectionId);
+      
         try {
-            const response = await axios.delete(`http://localhost:8000/api/v1/question/deletequestions/${id}`);
-            console.log("deleted", response)
-            getQuestions();
+          const response=await axios.put(`http://localhost:8000/api/v1/section/deletesectiondescriptive/${sectionId}`,{id:id});
+          console.log(response);
+          getQuestions();
+          
+        } catch (error) {
+          console.log(error);
+          
         }
-        catch (error) {
-            console.log(error);
-        }
-    }
+      };
 
     return (
         <div>

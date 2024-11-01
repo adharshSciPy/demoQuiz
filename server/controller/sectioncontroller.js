@@ -92,5 +92,49 @@ const deleteSections = async (req, res) => {
         res.status(500).json({ message: "Internal server error due to", err: error.message })
     }
 }
+const deleteSectionMcq=async(req,res)=>{
+    const{sectionId}=req.params;
+    // console.log("section id:",sectionId)
+    const {id}=req.body;
+    // console.log("question id:",id)
+ 
+    try {
+        const deletedQuestion=await Section.findByIdAndUpdate(sectionId,{
+            $pull:{MCQ:{_id:id}}
+        },{new:true})
+        if(!deletedQuestion){
+            return res.status(400).json({message:"Question didn't found"})
+        }
+        res.status(200).json({message:"Question deleted succesfully",data:deletedQuestion})
+        
+    } catch (error) {
+        console.log(error);
+        
+    }
 
-export { sectionPost, questionsSection, getSections, McqSection, deleteSections,getSectionsById }
+
+}
+const deleteSectionDescripive=async(req,res)=>{
+    const{sectionId}=req.params;
+    // console.log("section id:",sectionId)
+    const {id}=req.body;
+    // console.log("question id:",id)
+ 
+    try {
+        const deletedQuestion=await Section.findByIdAndUpdate(sectionId,{
+            $pull:{Questions:{_id:id}}
+        },{new:true})
+        if(!deletedQuestion){
+            return res.status(400).json({message:"Question didn't found"})
+        }
+        res.status(200).json({message:"Question deleted succesfully",data:deletedQuestion})
+        
+    } catch (error) {
+        console.log(error);
+        
+    }
+
+
+}
+
+export { sectionPost, questionsSection, getSections, McqSection, deleteSections,getSectionsById ,deleteSectionMcq,deleteSectionDescripive}

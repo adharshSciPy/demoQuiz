@@ -28,14 +28,17 @@ function AdminTable() {
   }, []);
 
   const deleteQuestions = async (id) => {
+    console.log(id);
+    console.log("sectionId:",sectionId);
+  
     try {
-      const response = await axios.delete(
-        `http://localhost:8000/api/v1/question/deletequestions/${id}`
-      );
-      console.log("deleted", response);
+      const response=await axios.put(`http://localhost:8000/api/v1/section/deletesectionmcq/${sectionId}`,{id:id});
+      console.log(response);
       getQuestions();
+      
     } catch (error) {
       console.log(error);
+      
     }
   };
 
@@ -79,7 +82,7 @@ function AdminTable() {
             ))
           ) : (
             <tr>
-              <td colSpan="6" className="text-center">
+              <td colSpan="8" className="text-center">
                 No data available
               </td>
             </tr>
