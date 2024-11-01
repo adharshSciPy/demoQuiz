@@ -44,7 +44,7 @@ const Question = () => {
       option3,
       option4,
       correctAns,
-      
+
     };
 
     try {
@@ -71,7 +71,7 @@ const Question = () => {
   };
 
   return (
-    <div style={{ backgroundColor: "#6095de" }}>
+    <div style={{ backgroundColor: "#6095de", minHeight: "100vh" }}>
       <Navbar />
       <div className="container mt-5 pb-5">
         <ToastContainer

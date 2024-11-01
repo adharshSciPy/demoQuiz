@@ -67,7 +67,7 @@ const ShortAnswerQuestion = () => {
               name="questionCategory"
               id="type"
               className="form-select"
-              value={form.category}
+              value={form.questionCategory}
               onChange={handleInputChange}
             >
               <option value="">Select Type</option>
