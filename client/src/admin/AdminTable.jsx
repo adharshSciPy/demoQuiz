@@ -9,7 +9,6 @@ import { useParams } from "react-router-dom";
 function AdminTable() {
   const [questions, setQuestions] = useState([]);
   const { sectionId } = useParams();
-  
 
   const getQuestions = async () => {
     try {
@@ -29,16 +28,17 @@ function AdminTable() {
 
   const deleteQuestions = async (id) => {
     console.log(id);
-    console.log("sectionId:",sectionId);
-  
+    console.log("sectionId:", sectionId);
+
     try {
-      const response=await axios.put(`http://localhost:8000/api/v1/section/deletesectionmcq/${sectionId}`,{id:id});
+      const response = await axios.put(
+        `http://localhost:8000/api/v1/section/deletesectionmcq/${sectionId}`,
+        { id: id }
+      );
       console.log(response);
       getQuestions();
-      
     } catch (error) {
       console.log(error);
-      
     }
   };
 

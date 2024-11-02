@@ -18,6 +18,7 @@ import Session from './admin/Session';
 import Question from './admin/Question';
 import ShortAnswerQuestion from './admin/ShortAnswerQuestions';
 import DescriptiveQuestions from './admin/DescriptiveQuestions';
+import DescriptiveQuiz from './student/DescriptiveQuiz';
 
 function App() {
   return (
@@ -29,6 +30,8 @@ function App() {
             <Route path='/' element={<LandingPage />} />
             <Route path='/signup' element={<SignUp />} />
             <Route path='/adminlogin' element={<AdminLogin />} />
+            {/* unprotected route */}
+            <Route path='/descriptivequiz' element={<DescriptiveQuiz/>}/>
 
             {/* Protecting routes for users */}
             <Route path='/studentdashboard/:loggedInUserId' element={<ProtectedUserRoute element={<StudentPage />} />} />

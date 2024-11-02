@@ -2,6 +2,7 @@
 import { User } from "../models/usermodel.js";
 import { Admin } from "../models/adminmodel.js";
 import { Question } from "../models/questionsmodel.js";
+import {Section} from '../models/sectionmodel.js'
 import jwt from "jsonwebtoken";
 import { passwordValidator } from "../utils/passwordValidator.js";
 
@@ -202,34 +203,29 @@ const logoutUser = async (req, res) => {
 };
 
 // @GET
-// get the questions from admin
-const getQuestions = async (req, res) => {
+// get the mcq questions from admin
+const getMcquestions = async (req, res) => {
+    const{sectionId}=req.params;
+    // console.log(sectionId)
     const { page = 1, limit = 10 } = req.query;
     const pageNumber = parseInt(page, 10);
     const limitNumber = parseInt(limit, 10);
     const skip = (pageNumber - 1) * limitNumber;
-
     try {
-        // Pagination logic for quiz questions
-        const totalQuestions = await Question.countDocuments({});
+        if(!sectionId){
+            return res.status(400).json({message:"Section Id is required"})
+        }
+        const section=await Section.findById(sectionId).select("MCQ").slice("MCQ",[skip,limitNumber])//pagination over the mcq
+        if(!section||section.MCQ.length===0){
+            return res.status(400).json({message:"No Questions available in the section"})
+        }
+        const totalQuestions=section.MCQ.length;
         const totalPages = Math.ceil(totalQuestions / limitNumber);
         const hasNextPage = pageNumber < totalPages;
-
-        // Find questions with pagination
-        const questions = await Question.find({})
-            .select("question option1 option2 option3 option4")
-            .skip(skip)
-            .limit(limitNumber);
-
-        if (questions.length === 0) {
-            return res.status(404).json({ message: "No questions available" });
-        }
-
-        // Respond with question data and pagination info
         return res.status(200).json({
             message: "Questions fetched successfully",
             data: {
-                questions,
+                questions: section.MCQ,
                 hasNextPage,
                 total: totalQuestions,
                 currentPage: pageNumber,
@@ -239,7 +235,71 @@ const getQuestions = async (req, res) => {
         console.error("Error fetching questions:", error);
         return res.status(500).json({ message: `Internal Server Error: ${error.message}` });
     }
+
+    // try {
+
+    //     // Pagination logic for quiz questions
+    //     const totalQuestions = await Section.countDocuments({});
+    //     const totalPages = Math.ceil(totalQuestions / limitNumber);
+    //     const hasNextPage = pageNumber < totalPages;
+
+    //     // Find questions with pagination
+    //     const questions = await Question.find({})
+    //         .select("question option1 option2 option3 option4")
+    //         .skip(skip)
+    //         .limit(limitNumber);
+
+    //     if (questions.length === 0) {
+    //         return res.status(404).json({ message: "No questions available" });
+    //     }
+
+    //     // Respond with question data and pagination info
+    //     return res.status(200).json({
+    //         message: "Questions fetched successfully",
+    //         data: {
+    //             questions,
+    //             hasNextPage,
+    //             total: totalQuestions,
+    //             currentPage: pageNumber,
+    //         },
+    //     });
+    // } catch (error) {
+    //     console.error("Error fetching questions:", error);
+    //     return res.status(500).json({ message: `Internal Server Error: ${error.message}` });
+    // }
 };
+const getDescriptiveQuestions=async(req,res)=>{
+    const {sectionId}=req.params;
+    const{page=1,limit=10}=req.query;
+    const pageNumber = parseInt(page, 10);
+    const limitNumber = parseInt(limit, 10);
+    const skip = (pageNumber - 1) * limitNumber;
+    try {
+        if(!sectionId){
+            return res.status(400).json({message:"Section Id is required"})
+        }
+        const section=await Section.findById(sectionId).select("Questions").slice("Questions",[skip,limitNumber])//pagination over the shortAnswer
+        if(!section||section.Questions.length===0){
+            return res.status(400).json({message:"No Questions available in the section"})
+        }
+        const totalQuestions=section.Questions.length;
+        const totalPages = Math.ceil(totalQuestions / limitNumber);
+        const hasNextPage = pageNumber < totalPages;
+        return res.status(200).json({
+            message: "Questions fetched successfully",
+            data: {
+                questions: section.Questions,
+                hasNextPage,
+                total: totalQuestions,
+                currentPage: pageNumber,
+            },
+        });
+    } catch (error) {
+        console.error("Error fetching questions:", error);
+        return res.status(500).json({ message: `Internal Server Error: ${error.message}` });
+    }
+
+}
 
 // @POST
 // user/submit-quiz
@@ -399,7 +459,8 @@ export {
     loginUser,
     refreshAccessToken,
     logoutUser,
-    getQuestions,
+    getMcquestions,
+    getDescriptiveQuestions,
     submitQuiz,
     getAllUsers
 };
