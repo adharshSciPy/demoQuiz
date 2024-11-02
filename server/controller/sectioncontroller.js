@@ -16,7 +16,7 @@ const sectionPost = async (req, res) => {
 const questionsSection = async (req, res) => {
     const { sectionId } = req.params;
     const { question, answer, mark, questionCategory } = req.body;
-    console.log(sectionId)
+
     try {
         const result = await Section.findByIdAndUpdate(sectionId, {
             $push: {
@@ -33,14 +33,14 @@ const questionsSection = async (req, res) => {
     }
     catch (error) {
         res.status(500).json({ message: "Internal Server Error ", err: error.message })
-        
+
     }
 }
 
 const McqSection = async (req, res) => {
     const { sectionId } = req.params;
     const { category, question, option1, option2, option3, option4, score, correctAns, questionCategory } = req.body
-    console.log(sectionId)
+
     try {
         const result = await Section.findByIdAndUpdate(sectionId, {
             $push: {
@@ -74,7 +74,7 @@ const getSections = async (req, res) => {
     }
 }
 const getSectionsById = async (req, res) => {
-    const{sectionId}=req.params
+    const { sectionId } = req.params
     try {
         const sections = await Section.findById(sectionId);
         res.status(200).json({ message: "Section retrieved successfully", data: sections })
@@ -92,49 +92,45 @@ const deleteSections = async (req, res) => {
         res.status(500).json({ message: "Internal server error due to", err: error.message })
     }
 }
-const deleteSectionMcq=async(req,res)=>{
-    const{sectionId}=req.params;
-    // console.log("section id:",sectionId)
-    const {id}=req.body;
-    // console.log("question id:",id)
- 
+const deleteSectionMcq = async (req, res) => {
+    const { sectionId } = req.params;
+    const { id } = req.body;
+
     try {
-        const deletedQuestion=await Section.findByIdAndUpdate(sectionId,{
-            $pull:{MCQ:{_id:id}}
-        },{new:true})
-        if(!deletedQuestion){
-            return res.status(400).json({message:"Question didn't found"})
+        const deletedQuestion = await Section.findByIdAndUpdate(sectionId, {
+            $pull: { MCQ: { _id: id } }
+        }, { new: true })
+        if (!deletedQuestion) {
+            return res.status(400).json({ message: "Question didn't found" })
         }
-        res.status(200).json({message:"Question deleted succesfully",data:deletedQuestion})
-        
+        res.status(200).json({ message: "Question deleted succesfully", data: deletedQuestion })
+
     } catch (error) {
         console.log(error);
-        
+
     }
 
 
 }
-const deleteSectionDescripive=async(req,res)=>{
-    const{sectionId}=req.params;
-    // console.log("section id:",sectionId)
-    const {id}=req.body;
-    // console.log("question id:",id)
- 
+const deleteSectionDescripive = async (req, res) => {
+    const { sectionId } = req.params;
+    const { id } = req.body;
+
     try {
-        const deletedQuestion=await Section.findByIdAndUpdate(sectionId,{
-            $pull:{Questions:{_id:id}}
-        },{new:true})
-        if(!deletedQuestion){
-            return res.status(400).json({message:"Question didn't found"})
+        const deletedQuestion = await Section.findByIdAndUpdate(sectionId, {
+            $pull: { Questions: { _id: id } }
+        }, { new: true })
+        if (!deletedQuestion) {
+            return res.status(400).json({ message: "Question didn't found" })
         }
-        res.status(200).json({message:"Question deleted succesfully",data:deletedQuestion})
-        
+        res.status(200).json({ message: "Question deleted succesfully", data: deletedQuestion })
+
     } catch (error) {
         console.log(error);
-        
+
     }
 
 
 }
 
-export { sectionPost, questionsSection, getSections, McqSection, deleteSections,getSectionsById ,deleteSectionMcq,deleteSectionDescripive}
+export { sectionPost, questionsSection, getSections, McqSection, deleteSections, getSectionsById, deleteSectionMcq, deleteSectionDescripive }
