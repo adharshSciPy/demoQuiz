@@ -75,6 +75,10 @@ function Session() {
     }
     
   }
+  const sectionStart=(sectionId)=>{
+console.log(sectionId);
+
+  }
 
 
   return (
@@ -105,6 +109,11 @@ function Session() {
                   icon={faTrash}
                   onClick={() => openDeleteModal(item._id)}
                 />
+              </div>
+              <div className={styles.buttonDisplay}>
+                <button className={styles.actionButtonStart} onClick={()=>sectionStart(item._id)}>Start</button>
+                <button className={styles.actionButtonEnd}>End</button>
+
               </div>
             </div>
           ))}

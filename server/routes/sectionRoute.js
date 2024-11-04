@@ -10,7 +10,7 @@ sectionRoute.route("/getsectionsbyid/:sectionId").get(getSectionsById);
 sectionRoute.route("/mcqsections/:sectionId").put(McqSection);
 sectionRoute.route("/deletesection/:sectionId").delete(deleteSections);
 sectionRoute.route("/deletesectionmcq/:sectionId").put(deleteSectionMcq);
-sectionRoute.route("/deletesectionmcq/:sectionId").put(deleteSectionMcq);
+// sectionRoute.route("/deletesectionmcq/:sectionId").put(deleteSectionMcq);
 sectionRoute.route("/deletesectiondescriptive/:sectionId").put(deleteSectionDescripive);
 
 
