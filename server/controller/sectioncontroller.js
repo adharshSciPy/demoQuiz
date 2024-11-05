@@ -1,4 +1,6 @@
 import { Section } from "../models/sectionmodel.js";
+import { QuizSection } from "../models/quizSection.js";
+
 
 const sectionPost = async (req, res) => {
     const { sectionName, date, questionType } = req.body;
@@ -133,4 +135,58 @@ const deleteSectionDescripive = async (req, res) => {
 
 }
 
-export { sectionPost, questionsSection, getSections, McqSection, deleteSections, getSectionsById, deleteSectionMcq, deleteSectionDescripive }
+// controller to get the section details on the user side used on the Instruction page of user(on the startquiz function)
+
+const getQuizSection = async (req, res) => {
+    
+
+    try {
+        const sections = await QuizSection.find();
+        res.status(200).json({ message: "Section retrieved successfully", data: sections })
+    } catch (error) {
+        res.status(500).json({ message: "Internal Server Error", err: error.message })
+    }
+}
+
+
+const getQuestionsFromSection = async (req, res) => {
+    try {
+      // Extract sectionId from the request parameters
+      const { sectionId } = req.params;
+  
+      // Find the section by its ID
+      const section = await Section.findById(sectionId); // No need to populate as questions are embedded
+  
+      // Check if the section exists
+      if (!section) {
+        return res.status(404).json({ message: 'Section not found' });
+      }
+  
+      // Respond with the questions from the found section
+      return res.status(200).json({
+        data: {
+          shortAnswerQuestions: section.Questions,
+          mcqQuestions: section.MCQ,
+        },
+      });
+    } catch (error) {
+      console.error('Error fetching questions:', error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+
+
+  const startQuiz= async (req, res) => {
+    const { sectionId, questionType } = req.body;
+    console.log("section id:",sectionId)
+    console.log("type",questionType);
+   
+    await QuizSection.findOneAndUpdate(
+        {}, // Assuming only one active session at a time
+        { sectionId, questionType, isActive: true, startTime: new Date() },
+        { upsert: true, new: true }
+    );
+    res.status(200).json({ message: "Quiz started",data:{sectionId,questionType} });
+};
+
+export { sectionPost, questionsSection, getSections, McqSection, deleteSections, getSectionsById, deleteSectionMcq, deleteSectionDescripive,getQuizSection,getQuestionsFromSection,startQuiz }

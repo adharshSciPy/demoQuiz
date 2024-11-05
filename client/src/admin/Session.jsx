@@ -47,6 +47,7 @@ function Session() {
   const getSessions = async () => {
     try {
       const res = await axios.get("http://localhost:8000/api/v1/section/getsections");
+
       setSessions(Array.isArray(res.data.data) ? res.data.data : []);
     } catch (error) {
       console.log(error);
@@ -68,6 +69,7 @@ function Session() {
 
   }
   const viewQuestions=async(id,questionType)=>{
+    console.log(id)
     if(questionType==="MCQ"){
       navigate(`/questions/${id}`)
     }else if(questionType==="Descriptive"){
@@ -75,10 +77,19 @@ function Session() {
     }
     
   }
-  const sectionStart=(sectionId)=>{
-console.log(sectionId);
+  const sectionStart = async (sectionId) => {
+    try {
+      const response = await axios.patch("http://localhost:8000/api/v1/section/startquiz", {
+        sectionId,
+        questionType: sessions.find(session => session._id === sectionId)?.questionType,
+      });
+      console.log( response);
+      // Optionally, update UI or show a success message here
+    } catch (error) {
+      console.error('Error starting quiz:', error);
+    }
+  };
 
-  }
 
 
   return (
