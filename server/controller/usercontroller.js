@@ -307,6 +307,11 @@ const getDescriptiveQuestions=async(req,res)=>{
 // @POST
 // user/submit-quiz
 // desc: Submit quiz answers and calculate score
+
+
+// Working SUBMITQUIZ controller with automated mark calculation used in the earlier version of Quiz app used for MCQ quiz submit 
+//   ********------START------********* 
+
 const submitQuiz = async (req, res) => {
     try {
         const { userId } = req.params;
@@ -442,6 +447,148 @@ const submitQuiz = async (req, res) => {
     }
 };
 
+//   ********------SUBMITQUIZ controller END------********* 
+const submitQuizMcq = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { answers, disqualified } = req.body;
+
+        if (disqualified) {
+            // Handle disqualified users
+            const user = await User.findById(userId);
+            if (user) {
+                user.score = 0;
+                user.performance = 'Disqualified';
+                user.userStrength = null;
+                user.hasLoggedIn = true;
+                await user.save();
+            } else {
+                return res.status(404).json({ message: "User not found" });
+            }
+
+            return res.status(200).json({
+                message: "Quiz submitted successfully",
+                data: {
+                    score: 0,
+                    percentageScore: 0,
+                    performance: 'Disqualified',
+                    totalQuestions: 0,
+                    evaluation: [],
+                    userStrength: null
+                }
+            });
+        }
+
+        if (!answers || answers.length === 0) {
+            return res.status(400).json({ message: "No answers submitted" });
+        }
+
+        // Retrieve all MCQ questions within the relevant section
+        const section = await Section.findOne({
+            "MCQ._id": { $in: answers.map(a => a.questionId) }
+        });
+
+        if (!section || section.MCQ.length === 0) {
+            return res.status(404).json({ message: "MCQ questions not found" });
+        }
+
+        // Filter MCQ questions based on the submitted answers
+        const questions = section.MCQ.filter(mcq => 
+            answers.some(answer => answer.questionId === mcq._id.toString())
+        );
+
+        if (questions.length === 0) {
+            return res.status(404).json({ message: "MCQ questions not found in section" });
+        }
+
+        // Score calculation and evaluation
+        let score = 0;
+        let technicalCorrect = 0;
+        let nonTechnicalCorrect = 0;
+        const totalQuestions = questions.length;
+
+        const evaluation = questions.map(question => {
+            const submittedAnswer = answers.find(answer => answer.questionId === question._id.toString());
+            let isCorrect = false;
+            let selectedOption = null;
+
+            if (!submittedAnswer || !submittedAnswer.selectedOption) {
+                isCorrect = false;
+            } else {
+                selectedOption = submittedAnswer.selectedOption;
+                isCorrect = question.correctAns === selectedOption;
+                if (isCorrect) {
+                    score += 1;
+                    if (question.category === "Technical") {
+                        technicalCorrect += 1;
+                    } else if (question.category === "NonTechnical") {
+                        nonTechnicalCorrect += 1;
+                    }
+                }
+            }
+
+            return {
+                category: question.category,
+                questionId: question._id.toString(),
+                question: question.question,
+                selectedOption: selectedOption,
+                correctAnswer: question.correctAns,
+                isCorrect: isCorrect,
+                isSkipped: !submittedAnswer || !submittedAnswer.selectedOption
+            };
+        });
+
+        // Determine user's strength
+        let strength = "Equal";
+        if (technicalCorrect > nonTechnicalCorrect) {
+            strength = "Technical";
+        } else if (nonTechnicalCorrect > technicalCorrect) {
+            strength = "NonTechnical";
+        }
+
+        const percentageScore = (score / totalQuestions) * 100;
+        let performance;
+        if (percentageScore >= 80) {
+            performance = 'High';
+        } else if (percentageScore >= 50) {
+            performance = 'Medium';
+        } else if (percentageScore >= 30) {
+            performance = 'Low';
+        } else {
+            performance = 'Very Low';
+        }
+
+        // Update user's score and performance
+        const user = await User.findById(userId);
+        if (user) {
+            user.score = score;
+            user.performance = performance;
+            user.userStrength = strength;
+            user.hasLoggedIn = true;
+            await user.save();
+        } else {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Respond with the score and detailed evaluation
+        return res.status(200).json({
+            message: "Quiz submitted successfully",
+            data: {
+                score,
+                percentageScore,
+                performance,
+                totalQuestions,
+                evaluation,
+                userStrength: strength
+            }
+        });
+    } catch (error) {
+        console.error("Error submitting quiz:", error);
+        return res.status(500).json({ message: `Internal Server Error: ${error.message}` });
+    }
+};
+
+
 // get all  users
 const getAllUsers = async (request, response) => {
 
@@ -462,6 +609,7 @@ export {
     getMcquestions,
     getDescriptiveQuestions,
     submitQuiz,
+    submitQuizMcq,
     getAllUsers
 };
 
