@@ -23,8 +23,8 @@ function StudentPage() {
       setSectionId(sectionId); // Store the section ID in state
       setQuestionType(questionType); // Store the question type in state
       setStartQuiz(true); // Set state to true to switch to the quiz component
-      console.log("section id on state", sectionId);
-      console.log("Question type on state", questionType);
+      // console.log("section id on state", sectionId);
+      // console.log("Question type on state", questionType);
       
     } catch (error) {
       console.error('Error fetching section data:', error);

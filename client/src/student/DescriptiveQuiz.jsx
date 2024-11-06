@@ -5,7 +5,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setLogout } from '../features/slice/authSlice';
 
-const DescriptiveQuiz = () => {
+const DescriptiveQuiz = ({sectionId}) => {
   const { loggedInUserId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -22,20 +22,18 @@ const DescriptiveQuiz = () => {
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [disqualified, setDisqualified] = useState(false);
 
-  const fetchQuestions = async (page) => {
+  const fetchQuestions = async () => {
+    if (!sectionId) return;
     try {
-      const response = await axios.get('http://localhost:8000/api/v1/user/getQuestions', {
-        params: {
-          page: page,
-          limit: 500,
-        },
-      });
-      const shuffledQuestions = response.data.data.questions.sort(() => Math.random() - 0.5);
+      const response = await axios.get(`http://localhost:8000/api/v1/section/getsectionsbyid/${sectionId}`);
+      console.log("response from axios ",response)
+      const shuffledQuestions = response.data.data.Questions.sort(() => Math.random() - 0.5);
       setQuestions(shuffledQuestions);
 
+      // Initialize the selectedAnswers with null values for each question
       const initialAnswers = shuffledQuestions.map((q) => ({
         questionId: q._id,
-        writtenAnswer: '', // Initialize with empty string for descriptive answer
+        selectedOption: null, // Start as null, meaning unanswered/skipped
       }));
       setSelectedAnswers(initialAnswers);
     } catch (error) {
@@ -44,8 +42,10 @@ const DescriptiveQuiz = () => {
   };
 
   useEffect(() => {
-    fetchQuestions(1);
-
+    if(sectionId){
+    fetchQuestions(); // Fetch questions when the component mounts
+    }
+    // Only add event listeners if the quiz hasn't been submitted yet
     if (!quizSubmitted) {
       const handleVisibilityChange = () => {
         if (document.visibilityState === 'hidden') {
@@ -65,7 +65,7 @@ const DescriptiveQuiz = () => {
         window.removeEventListener('blur', handleWindowBlur);
       };
     }
-  }, [quizSubmitted, disqualified]);
+  }, [quizSubmitted, disqualified, sectionId]);
 
   const handleMalpractice = () => {
     if (!disqualified && !quizSubmitted) {
@@ -171,6 +171,7 @@ const DescriptiveQuiz = () => {
                     placeholder="Write your answer here..."
                     value={selectedAnswers[currentQuestionIndex]?.writtenAnswer || ""}
                     onChange={(e) => handleAnswerSelect(e.target.value)}
+                    rows='4'
                   />
                 </div>
               </>

@@ -5,10 +5,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setLogout } from '../features/slice/authSlice';
 
-const Quiz = () => {
+const Quiz = ({ sectionId }) => { // Receive sectionId as a prop
   const { loggedInUserId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  console.log("section id on quiz page",sectionId)
+
 
   const handleLogout = () => {
     dispatch(setLogout()); // Dispatch the logout action
@@ -30,17 +32,13 @@ const Quiz = () => {
 
   const [disqualified, setDisqualified] = useState(false);
 
-  // Fetch questions with pagination
-  const fetchQuestions = async (page) => {
+  // Fetch questions with the specified sectionId
+  const fetchQuestions = async () => {
+    if (!sectionId) return;
     try {
-      const response = await axios.get('http://localhost:8000/api/v1/user/getQuestions', {
-        params: {
-          page: page,
-          limit: 500, // Fetch all questions (or adjust limit if needed)
-        },
-      });
-      // Shuffle the questions randomly
-      const shuffledQuestions = response.data.data.questions.sort(() => Math.random() - 0.5);
+      const response = await axios.get(`http://localhost:8000/api/v1/section/getsectionsbyid/${sectionId}`);
+      console.log("response from axios ",response)
+      const shuffledQuestions = response.data.data.MCQ.sort(() => Math.random() - 0.5);
       setQuestions(shuffledQuestions);
 
       // Initialize the selectedAnswers with null values for each question
@@ -55,8 +53,9 @@ const Quiz = () => {
   };
 
   useEffect(() => {
-    fetchQuestions(1); // Fetch page 1 on initial load
-
+    if(sectionId){
+    fetchQuestions(); // Fetch questions when the component mounts
+    }
     // Only add event listeners if the quiz hasn't been submitted yet
     if (!quizSubmitted) {
       const handleVisibilityChange = () => {
@@ -77,7 +76,7 @@ const Quiz = () => {
         window.removeEventListener('blur', handleWindowBlur);
       };
     }
-  }, [quizSubmitted, disqualified]);
+  }, [quizSubmitted, disqualified, sectionId]); // Add sectionId to dependency array
 
   const handleMalpractice = () => {
     if (!disqualified && !quizSubmitted) {
@@ -112,7 +111,6 @@ const Quiz = () => {
   // Submit the quiz and send skipped questions as well
   const handleSubmitQuiz = async (isDisqualified = false) => {
     try {
-      // Ensure that skipped questions (null values) are marked as "skipped"
       const processedAnswers = selectedAnswers.map(answer => ({
         questionId: answer.questionId,
         selectedOption: answer.selectedOption || 'skipped',
@@ -129,37 +127,36 @@ const Quiz = () => {
       console.error('Error submitting quiz:', error);
     }
   };
-  // timer functionality
+
+  // Timer functionality
   const [hours, setHours] = useState(0); // Start with 0 hours
-    const [minutes, setMinutes] = useState(1); // Start with 1 minute
-    const [seconds, setSeconds] = useState(0); // Start with 0 seconds
+  const [minutes, setMinutes] = useState(1); // Start with 1 minute
+  const [seconds, setSeconds] = useState(0); // Start with 0 seconds
 
-    useEffect(() => {
-      // If the timer has reached zero, auto-submit the quiz
-      if (hours === 0 && minutes === 0 && seconds === 0 && !quizSubmitted) {
-        handleSubmitQuiz();
-        return; // Exit early to prevent further countdown
+  useEffect(() => {
+    if (hours === 0 && minutes === 0 && seconds === 0 && !quizSubmitted) {
+      handleSubmitQuiz();
+      return; // Exit early to prevent further countdown
+    }
+
+    const intervalId = setInterval(() => {
+      if (seconds > 0) {
+        setSeconds(prevSeconds => prevSeconds - 1);
+      } else if (minutes > 0) {
+        setMinutes(prevMinutes => prevMinutes - 1);
+        setSeconds(59);
+      } else if (hours > 0) {
+        setHours(prevHours => prevHours - 1);
+        setMinutes(59);
+        setSeconds(59);
       }
-    
-      const intervalId = setInterval(() => {
-        if (seconds > 0) {
-          setSeconds(prevSeconds => prevSeconds - 1);
-        } else if (minutes > 0) {
-          setMinutes(prevMinutes => prevMinutes - 1);
-          setSeconds(59);
-        } else if (hours > 0) {
-          setHours(prevHours => prevHours - 1);
-          setMinutes(59);
-          setSeconds(59);
-        }
-      }, 1000);
-    
-      return () => clearInterval(intervalId); // Cleanup interval on component unmount
-    }, [hours, minutes, seconds, quizSubmitted]); // Add quizSubmitted to dependency array
-     // Dependency array includes hours, minutes, and seconds
+    }, 1000);
 
-    // Determine if the timer is in the last minute
-    const isLastMinute = hours === 0 && minutes === 0 && seconds <= 60;
+    return () => clearInterval(intervalId); // Cleanup interval on component unmount
+  }, [hours, minutes, seconds, quizSubmitted]);
+
+  // Determine if the timer is in the last minute
+  const isLastMinute = hours === 0 && minutes === 0 && seconds <= 60;
 
   return (
     <div className="mt-5 d-flex align-items-center justify-content-center">
@@ -168,26 +165,22 @@ const Quiz = () => {
           <h1 className="display-4">Quiz</h1>
           {quizSubmitted ? (
             <p className="text-success">Quiz submitted successfully!</p>
-          ) : 
-          (
+          ) : (
             <p></p>
-          )
-          }
+          )}
         </header>
 
         <main>
           <form>
-         
             {/* Prevent accessing undefined question */}
             {questions[currentQuestionIndex] && !quizSubmitted ? (
               <>
                 {/* Question */}
                 <div className='timerMain'>
-                  
-            <h6 className={`${'timerHead'} ${isLastMinute ? 'timerRed' : ''}`}>
-                {hours}:{minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}
-            </h6>
-        </div>
+                  <h6 className={`${'timerHead'} ${isLastMinute ? 'timerRed' : ''}`}>
+                    {hours}:{minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+                  </h6>
+                </div>
                 <div className="mb-4 text-center">
                   <h4>Question {currentQuestionIndex + 1}: {questions[currentQuestionIndex]?.question}</h4>
                 </div>
@@ -209,16 +202,14 @@ const Quiz = () => {
                         {questions[currentQuestionIndex][optionKey]}
                       </label>
                     </div>
-                  ))} 
+                  ))}
                 </div>
               </>
             ) : quizSubmitted ? (
               <div className="text-center">Thank you for completing the quiz!</div>
-            ) : 
-            (
+            ) : (
               <div className="text-center">No more questions available.</div>
-            )
-            }
+            )}
 
             {/* Navigation Buttons */}
             {!quizSubmitted && (
