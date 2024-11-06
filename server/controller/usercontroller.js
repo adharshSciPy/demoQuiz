@@ -588,6 +588,78 @@ const submitQuizMcq = async (req, res) => {
     }
 };
 
+const submitQuizDescriptive = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { answers, disqualified } = req.body;
+
+        if (disqualified) {
+            const user = await User.findById(userId);
+            if (user) {
+                user.performance = 'Disqualified';
+                user.hasLoggedIn = true;
+                await user.save();
+            } else {
+                return res.status(404).json({ message: "User not found" });
+            }
+
+            return res.status(200).json({
+                message: "Quiz submitted successfully",
+                data: { performance: 'Disqualified' }
+            });
+        }
+
+        if (!answers || answers.length === 0) {
+            return res.status(400).json({ message: "No answers submitted" });
+        }
+
+        const section = await Section.findOne({
+            "Questions._id": { $in: answers.map(a => a.questionId) }
+        });
+
+        if (!section) {
+            return res.status(404).json({ message: "Section not found" });
+        }
+
+        const questions = section.Questions.filter(question => 
+            answers.some(answer => answer.questionId === question._id.toString())
+        );
+
+        if (questions.length === 0) {
+            return res.status(404).json({ message: "No descriptive questions found in the section" });
+        }
+
+        const evaluation = questions.map(question => {
+            const submittedAnswer = answers.find(answer => answer.questionId === question._id.toString());
+            return {
+                questionId: question._id.toString(),
+                question: question.question,
+                submittedAnswer: submittedAnswer ? submittedAnswer.writtenAnswer : null,
+                isSkipped: !submittedAnswer || !submittedAnswer.writtenAnswer
+            };
+        });
+
+        const user = await User.findById(userId);
+        if (user) {
+            user.hasLoggedIn = true;
+            await user.save();
+        } else {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        return res.status(200).json({
+            message: "Descriptive quiz submitted successfully",
+            data: { evaluation }
+        });
+
+    } catch (error) {
+        console.error("Error submitting descriptive quiz:", error);
+        return res.status(500).json({ message: `Internal Server Error: ${error.message}` });
+    }
+};
+
+
+
 
 // get all  users
 const getAllUsers = async (request, response) => {
@@ -610,6 +682,7 @@ export {
     getDescriptiveQuestions,
     submitQuiz,
     submitQuizMcq,
-    getAllUsers
+    getAllUsers,
+    submitQuizDescriptive
 };
 

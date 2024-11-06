@@ -100,7 +100,7 @@ const DescriptiveQuiz = ({sectionId}) => {
         writtenAnswer: answer.writtenAnswer || 'skipped',
       }));
 
-      const response = await axios.patch(`http://localhost:8000/api/v1/user/quizSubmit/${loggedInUserId}`, {
+      const response = await axios.post(`http://localhost:8000/api/v1/user/quizsubmitdescriptive/${loggedInUserId}`, {
         answers: processedAnswers,
         disqualified: isDisqualified,
       });
