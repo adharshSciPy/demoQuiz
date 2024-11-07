@@ -2,7 +2,20 @@ import { mongoose, Schema } from "mongoose";
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 
-const defaultRole = process.env.USER_ROLE
+const defaultRole = process.env.USER_ROLE;
+const descriptiveAnswers=new Schema({
+    sectionId: {
+        type: Schema.Types.ObjectId,
+        ref: "Section"
+    },
+    questionId:{
+        type:Schema.Types.ObjectId,
+        ref:"Questions"
+    },
+    answerText:{
+        type:String
+    }
+})
 const userSchema = new Schema({
     fullName: {
         type: String
@@ -35,7 +48,8 @@ const userSchema = new Schema({
     },
     date:{
         type:String
-    }
+    },
+    Answers:[descriptiveAnswers]
 
 }, { timestamps: true })
 

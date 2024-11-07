@@ -658,6 +658,45 @@ const submitQuizDescriptive = async (req, res) => {
     }
 };
 
+// to post the answers from user to the descriptiveAnswers Schema
+const descriptiveQuizSubmit = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { answers, disqualified } = req.body;
+
+        // Find the user
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Update user's performance based on disqualification status
+        user.performance = disqualified ? 'Disqualified' : 'Qualified';
+        user.hasLoggedIn = true;
+
+        // Format answers and push to the Answers array
+        const formattedAnswers = answers.map(answer => ({
+            sectionId: answer.sectionId,
+            questionId: answer.questionId,
+            answerText: answer.answerText, // Correctly mapped answer text
+        }));
+
+        user.Answers.push(...formattedAnswers);
+
+        // Save the updated user data
+        await user.save();
+
+        return res.status(200).json({
+            message: "Quiz submitted successfully",
+            data: user
+        });
+    } catch (error) {
+        console.error('Error in descriptiveQuizSubmit:', error);
+        return res.status(500).json({ message: `Internal Server Error: ${error.message}` });
+    }
+};
+
+
 
 
 
@@ -683,6 +722,7 @@ export {
     submitQuiz,
     submitQuizMcq,
     getAllUsers,
-    submitQuizDescriptive
+    submitQuizDescriptive,
+    descriptiveQuizSubmit
 };
 

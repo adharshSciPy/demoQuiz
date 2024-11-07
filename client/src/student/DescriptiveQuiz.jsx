@@ -95,22 +95,26 @@ const DescriptiveQuiz = ({sectionId}) => {
 
   const handleSubmitQuiz = async (isDisqualified = false) => {
     try {
-      const processedAnswers = selectedAnswers.map(answer => ({
-        questionId: answer.questionId,
-        writtenAnswer: answer.writtenAnswer || 'skipped',
-      }));
+        // Ensure each answer includes the sectionId, questionId, and the writtenAnswer
+        const processedAnswers = selectedAnswers.map(answer => ({
+            sectionId, // Include the sectionId for each answer
+            questionId: answer.questionId,
+            answerText: answer.writtenAnswer || 'skipped', // Send as "skipped" if unanswered
+        }));
 
-      const response = await axios.post(`http://localhost:8000/api/v1/user/quizsubmitdescriptive/${loggedInUserId}`, {
-        answers: processedAnswers,
-        disqualified: isDisqualified,
-      });
+        // Send the answers and disqualification status to the backend
+        const response = await axios.post(`http://localhost:8000/api/v1/user/descriptivequizsubmit/${loggedInUserId}`, {
+            answers: processedAnswers,
+            disqualified: isDisqualified,
+        });
 
-      console.log('Quiz submitted successfully:', response.data);
-      setQuizSubmitted(true);
+        console.log('Quiz submitted successfully:', response.data);
+        setQuizSubmitted(true);
     } catch (error) {
-      console.error('Error submitting quiz:', error);
+        console.error('Error submitting quiz:', error);
     }
-  };
+};
+
 
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(1);
