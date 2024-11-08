@@ -22,6 +22,13 @@ function ReportTable() {
 
   useEffect(() => {
     fetchData();
+
+    const interval = setInterval(() => {
+      fetchData();
+    }, 5000);
+
+    // Clear interval on component unmount
+    return () => clearInterval(interval);
   }, []);
 
   // Function to filter table data based on selected rating
@@ -92,10 +99,10 @@ function ReportTable() {
           <option value="Disqualified">Disqualified</option>
         </select>
         <button className="download-button" onClick={downloadCSV} title="Download">
-          <i className="fa fa-download"></i> 
+          <i className="fa fa-download"></i>
         </button>
       </div>
-      
+
       <Table striped>
         <thead>
           <tr>
