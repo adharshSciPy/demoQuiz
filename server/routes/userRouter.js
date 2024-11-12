@@ -11,9 +11,9 @@ userRouter.route('/getMcquestions/:sectionId').get(getMcquestions)
 userRouter.route('/getDescriptiveQuestions/:sectionId').get(getDescriptiveQuestions)
 
 userRouter.route('/quizSubmit/:userId').patch(submitQuiz)
-userRouter.route('/quizsubmitmcq/:userId').patch(submitQuizMcq)
+userRouter.route('/quizsubmitmcq/:userId/:sectionId').patch(submitQuizMcq)
 userRouter.route('/quizsubmitdescriptive/:userId').post(submitQuizDescriptive)
-userRouter.route('/descriptivequizsubmit/:userId').post(descriptiveQuizSubmit)
+userRouter.route('/descriptivequizsubmit/:userId/:sectionId').post(descriptiveQuizSubmit)
 
 
 

@@ -103,7 +103,7 @@ const DescriptiveQuiz = ({sectionId}) => {
         }));
 
         // Send the answers and disqualification status to the backend
-        const response = await axios.post(`http://localhost:8000/api/v1/user/descriptivequizsubmit/${loggedInUserId}`, {
+        const response = await axios.post(`http://localhost:8000/api/v1/user/descriptivequizsubmit/${loggedInUserId}/${sectionId}`, {
             answers: processedAnswers,
             disqualified: isDisqualified,
         });

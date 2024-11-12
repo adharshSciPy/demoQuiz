@@ -116,7 +116,7 @@ const Quiz = ({ sectionId }) => { // Receive sectionId as a prop
         selectedOption: answer.selectedOption || 'skipped',
       }));
 
-      const response = await axios.patch(`http://localhost:8000/api/v1/user/quizsubmitmcq/${loggedInUserId}`, {
+      const response = await axios.patch(`http://localhost:8000/api/v1/user/quizsubmitmcq/${loggedInUserId}/${sectionId}`, {
         answers: processedAnswers,
         disqualified: isDisqualified,
       });

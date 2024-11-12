@@ -45,7 +45,7 @@ const registerUser = async (req, res) => {
 
         // User creation
         const role = process.env.USER_ROLE || 'user'; // Default to 'user' if environment variable is not set
-        const user = await User.create({ fullName, email, password, role, batch, date });
+        const user = await User.create({ fullName, email, password, role, batch, date,sessions:[] });
         const createdUser = await User.findById(user._id).select("-password");
         if (!createdUser) {
             return res.status(500).json({ message: "User registration failed" });
@@ -87,9 +87,9 @@ const loginUser = async (req, res) => {
         }
 
         // Check if the user has already logged in
-        if (user.hasLoggedIn) {
-            return res.status(403).json({ message: "You have already submitted." });
-        }
+        // if (user.hasLoggedIn) {
+        //     return res.status(403).json({ message: "You have already submitted." });
+        // }
 
         // Verify password
         const isPasswordCorrect = await user.isPasswordCorrect(password);
@@ -423,7 +423,7 @@ const submitQuiz = async (req, res) => {
             user.score = score;
             user.performance = performance;
             user.userStrength = strength;
-            user.hasLoggedIn = true;
+            // user.hasLoggedIn = true;
             await user.save();
         } else {
             return res.status(404).json({ message: "User not found" });
@@ -448,32 +448,57 @@ const submitQuiz = async (req, res) => {
 };
 
 //   ********------SUBMITQUIZ controller END------********* 
+
+// Working mcq quiz submit controller
 const submitQuizMcq = async (req, res) => {
     try {
-        const { userId } = req.params;
+        const { userId, sectionId } = req.params;
         const { answers, disqualified } = req.body;
 
+        // Find the user
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Check if the session already exists for the given sectionId
+        let sessionIndex = user.sessions.findIndex(s => s.sectionId.toString() === sectionId);
+
+        if (sessionIndex === -1) {
+            // Session does not exist, create a new one and push it to the sessions array
+            user.sessions.push({
+                sectionId,
+                mcqAnswers: [],
+                descriptiveAnswers: [],
+                score: 0,
+                performance: null,
+                completedAt: null
+            });
+            sessionIndex = user.sessions.length - 1; // Update index to the new session's position
+        }
+
+        const session = user.sessions[sessionIndex];
+
+        // Handle disqualification case
         if (disqualified) {
-            // Handle disqualified users
-            const user = await User.findById(userId);
-            if (user) {
-                user.score = 0;
-                user.performance = 'Disqualified';
-                user.userStrength = null;
-                user.hasLoggedIn = true;
-                await user.save();
-            } else {
-                return res.status(404).json({ message: "User not found" });
-            }
+            session.mcqAnswers = [{
+                questionId: null,
+                selectedOption: null,
+                isCorrect: false,
+                performance: 'Disqualified',
+                completedAt: new Date()
+            }];
+            session.score = 0;
+            session.performance = "Disqualified";
+            session.completedAt = new Date();
+
+            await user.save();
 
             return res.status(200).json({
-                message: "Quiz submitted successfully",
+                message: "You have been disqualified",
                 data: {
                     score: 0,
-                    percentageScore: 0,
                     performance: 'Disqualified',
-                    totalQuestions: 0,
-                    evaluation: [],
                     userStrength: null
                 }
             });
@@ -483,92 +508,56 @@ const submitQuizMcq = async (req, res) => {
             return res.status(400).json({ message: "No answers submitted" });
         }
 
-        // Retrieve all MCQ questions within the relevant section
-        const section = await Section.findOne({
-            "MCQ._id": { $in: answers.map(a => a.questionId) }
-        });
-
-        if (!section || section.MCQ.length === 0) {
-            return res.status(404).json({ message: "MCQ questions not found" });
-        }
-
-        // Filter MCQ questions based on the submitted answers
-        const questions = section.MCQ.filter(mcq => 
-            answers.some(answer => answer.questionId === mcq._id.toString())
-        );
-
-        if (questions.length === 0) {
+        // Retrieve MCQ questions for the section
+        const section = await Section.findById(sectionId);
+        if (!section || !section.MCQ || section.MCQ.length === 0) {
             return res.status(404).json({ message: "MCQ questions not found in section" });
         }
 
-        // Score calculation and evaluation
+        // Process answers and calculate scores
         let score = 0;
         let technicalCorrect = 0;
         let nonTechnicalCorrect = 0;
-        const totalQuestions = questions.length;
+        const totalQuestions = section.MCQ.length;
+        const mcqAnswers = [];
 
-        const evaluation = questions.map(question => {
-            const submittedAnswer = answers.find(answer => answer.questionId === question._id.toString());
-            let isCorrect = false;
-            let selectedOption = null;
-
-            if (!submittedAnswer || !submittedAnswer.selectedOption) {
-                isCorrect = false;
-            } else {
-                selectedOption = submittedAnswer.selectedOption;
-                isCorrect = question.correctAns === selectedOption;
+        section.MCQ.forEach(question => {
+            const answer = answers.find(a => a.questionId === question._id.toString());
+            if (answer) {
+                const isCorrect = answer.selectedOption === question.correctAns;
                 if (isCorrect) {
-                    score += 1;
+                    score++;
                     if (question.category === "Technical") {
-                        technicalCorrect += 1;
-                    } else if (question.category === "NonTechnical") {
-                        nonTechnicalCorrect += 1;
+                        technicalCorrect++;
+                    } else {
+                        nonTechnicalCorrect++;
                     }
                 }
-            }
 
-            return {
-                category: question.category,
-                questionId: question._id.toString(),
-                question: question.question,
-                selectedOption: selectedOption,
-                correctAnswer: question.correctAns,
-                isCorrect: isCorrect,
-                isSkipped: !submittedAnswer || !submittedAnswer.selectedOption
-            };
+                mcqAnswers.push({
+                    questionId: question._id,
+                    selectedOption: answer.selectedOption,
+                    isCorrect: isCorrect
+                });
+            }
         });
 
-        // Determine user's strength
-        let strength = "Equal";
-        if (technicalCorrect > nonTechnicalCorrect) {
-            strength = "Technical";
-        } else if (nonTechnicalCorrect > technicalCorrect) {
-            strength = "NonTechnical";
-        }
-
+        // Calculate user's strength and performance
+        const userStrength = technicalCorrect > nonTechnicalCorrect ? 'Technical' : 'NonTechnical';
         const percentageScore = (score / totalQuestions) * 100;
-        let performance;
-        if (percentageScore >= 80) {
-            performance = 'High';
-        } else if (percentageScore >= 50) {
-            performance = 'Medium';
-        } else if (percentageScore >= 30) {
-            performance = 'Low';
-        } else {
-            performance = 'Very Low';
-        }
+        const performance = 
+            percentageScore >= 80 ? 'High' :
+            percentageScore >= 50 ? 'Medium' :
+            percentageScore >= 30 ? 'Low' : 'Very Low';
 
-        // Update user's score and performance
-        const user = await User.findById(userId);
-        if (user) {
-            user.score = score;
-            user.performance = performance;
-            user.userStrength = strength;
-            user.hasLoggedIn = true;
-            await user.save();
-        } else {
-            return res.status(404).json({ message: "User not found" });
-        }
+        // Update session-specific data
+        session.mcqAnswers.push(...mcqAnswers);
+        session.score = score;
+        session.performance = performance;
+        session.completedAt = new Date();
+
+        // Save the updated user data
+        await user.save();
 
         // Respond with the score and detailed evaluation
         return res.status(200).json({
@@ -578,8 +567,7 @@ const submitQuizMcq = async (req, res) => {
                 percentageScore,
                 performance,
                 totalQuestions,
-                evaluation,
-                userStrength: strength
+                userStrength
             }
         });
     } catch (error) {
@@ -587,6 +575,10 @@ const submitQuizMcq = async (req, res) => {
         return res.status(500).json({ message: `Internal Server Error: ${error.message}` });
     }
 };
+
+
+
+
 
 const submitQuizDescriptive = async (req, res) => {
     try {
@@ -641,7 +633,7 @@ const submitQuizDescriptive = async (req, res) => {
 
         const user = await User.findById(userId);
         if (user) {
-            user.hasLoggedIn = true;
+            // user.hasLoggedIn = true;
             await user.save();
         } else {
             return res.status(404).json({ message: "User not found" });
@@ -661,8 +653,8 @@ const submitQuizDescriptive = async (req, res) => {
 // to post the answers from user to the descriptiveAnswers Schema
 const descriptiveQuizSubmit = async (req, res) => {
     try {
-        const { userId } = req.params;
-        const { answers, disqualified } = req.body;
+        const { userId,sectionId} = req.params; // Get sectionId from params
+        const { answers, disqualified} = req.body;
 
         // Find the user
         const user = await User.findById(userId);
@@ -670,31 +662,75 @@ const descriptiveQuizSubmit = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-        // Update user's performance based on disqualification status
-        user.performance = disqualified ? 'Disqualified' : 'Qualified';
-        user.hasLoggedIn = true;
+        // Check if the session already exists for the given sectionId
+        let sessionIndex = user.sessions.findIndex(s => s.sectionId.toString() === sectionId);
 
-        // Format answers and push to the Answers array
-        const formattedAnswers = answers.map(answer => ({
-            sectionId: answer.sectionId,
+        if (sessionIndex === -1) {
+            // Session does not exist, create a new one and push it to the sessions array
+            user.sessions.push({
+                sectionId,
+                mcqAnswers: [],
+                descriptiveAnswers: [],
+                performance: null,
+                completedAt: null
+            });
+            sessionIndex = user.sessions.length - 1; // Update index to the new session's position
+        }
+
+        const session = user.sessions[sessionIndex];
+
+        // Handle disqualification case
+        if (disqualified) {
+            session.descriptiveAnswers = [{
+                questionId: null,
+                answerText: null,
+                performance: 'Disqualified',
+                completedAt: new Date()
+            }];
+            session.performance = "Disqualified";
+            session.completedAt = new Date();
+
+            await user.save();
+
+            return res.status(200).json({
+                message: "You have been disqualified",
+                data: {
+                    performance: 'Disqualified'
+                }
+            });
+        }
+
+        if (!answers || answers.length === 0) {
+            return res.status(400).json({ message: "No answers submitted" });
+        }
+
+        // Process descriptive answers and include sectionId
+        const descriptiveAnswers = answers.map(answer => ({
             questionId: answer.questionId,
-            answerText: answer.answerText, // Correctly mapped answer text
+            answerText: answer.answerText,
+            sectionId
         }));
 
-        user.Answers.push(...formattedAnswers);
+        // Update session-specific data
+        session.descriptiveAnswers.push(...descriptiveAnswers);
+        session.completedAt = new Date();
 
         // Save the updated user data
         await user.save();
 
+        // Respond with success message
         return res.status(200).json({
-            message: "Quiz submitted successfully",
-            data: user
+            message: "Descriptive quiz submitted successfully",
+            data: {
+                descriptiveAnswers: session.descriptiveAnswers
+            }
         });
     } catch (error) {
-        console.error('Error in descriptiveQuizSubmit:', error);
+        console.error("Error submitting descriptive quiz:", error);
         return res.status(500).json({ message: `Internal Server Error: ${error.message}` });
     }
 };
+
 
 
 

@@ -1,4 +1,5 @@
 import { Admin } from '../models/adminmodel.js'
+import { User } from '../models/usermodel.js';
 import { passwordValidator } from '../utils/passwordValidator.js';
 
 // POST /admin/register
@@ -99,6 +100,39 @@ const adminlogout = async (req, res) => {
     }
 }
 
+// to get descriptive answers from respective users using userid
+
+const getUserDescriptiveAnswers=async(req,res)=>{
+    const{userId}=req.body;
+    try {
+        const user=await User. findById(userId);
+        if(!user){
+            res.status(400).json({message:"User not found"})
+        }
+        const descriptiveSession=user.sessions.filter(session=>session.descriptiveAnswers&&session.descriptiveAnswers.length>0);
+        if(descriptiveSession.length===0){
+            return res.status(200).json({message:"No answers found"})
+        }
+        return res.status(200).json({message:"user data found",descriptiveSession})
+        
+    } catch (error) {
+        console.log("new error",error)
+       return res.status(400).json({message:"Internal Server Error",error}) 
+       
+    }
+}
+
+// to post mark for respective users for  descriptiveQuestions
+const descriptiveMark=async(req,res)=>{
+    const{userId,questionId,sectionId}=req.body;
+    try {
+        
+        
+    } catch (error) {
+        
+    }
+} 
+
 export {
-    registerAdmin, adminlogin, adminlogout
+    registerAdmin, adminlogin, adminlogout,getUserDescriptiveAnswers
 }
