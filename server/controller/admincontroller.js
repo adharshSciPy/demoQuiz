@@ -102,36 +102,55 @@ const adminlogout = async (req, res) => {
 
 // to get descriptive answers from respective users using userid
 
-const getUserDescriptiveAnswers=async(req,res)=>{
-    const{userId}=req.body;
+const getUserDescriptiveAnswers = async (req, res) => {
+    const { userId } = req.body;
+
     try {
-        const user=await User. findById(userId);
-        if(!user){
-            res.status(400).json({message:"User not found"})
+        // Find the user by userId
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(400).json({ message: "User not found" });
         }
-        const descriptiveSession=user.sessions.filter(session=>session.descriptiveAnswers&&session.descriptiveAnswers.length>0);
-        if(descriptiveSession.length===0){
-            return res.status(200).json({message:"No answers found"})
+
+        // Log the user sessions for debugging
+        console.log("User sessions:", user.sessions);
+
+        // Check if any session has been disqualified (whether or not descriptiveAnswers are present)
+        const disqualifiedSession = user.sessions.find(session =>
+            session.performance === "Disqualified"&&session.mcqAnswers.length===0
+        );
+
+        if (disqualifiedSession) {
+            console.log("Disqualified session found:", disqualifiedSession);
+            return res.status(200).json({ message: "User has been Disqualified" });
         }
-        return res.status(200).json({message:"user data found",descriptiveSession})
-        
+
+        // Filter the sessions to get descriptive sessions where answers exist and performance is not "Disqualified"
+        const descriptiveSessions = user.sessions.filter(session =>
+            session.descriptiveAnswers && session.descriptiveAnswers.length > 0 && session.performance !== "Disqualified"
+        );
+
+        console.log("Filtered descriptive sessions:", descriptiveSessions); // Log filtered sessions
+
+        // If no valid descriptive sessions are found
+        if (descriptiveSessions.length === 0) {
+            return res.status(200).json({ message: "No answers found" });
+        }
+
+        // If valid descriptive sessions are found, return the session data
+        return res.status(200).json({ message: "User data found", descriptiveSessions });
+
     } catch (error) {
-        console.log("new error",error)
-       return res.status(400).json({message:"Internal Server Error",error}) 
-       
+        console.log("Error:", error);
+        return res.status(500).json({ message: "Internal Server Error", error });
     }
-}
+};
+
+
+
 
 // to post mark for respective users for  descriptiveQuestions
-const descriptiveMark=async(req,res)=>{
-    const{userId,questionId,sectionId}=req.body;
-    try {
-        
-        
-    } catch (error) {
-        
-    }
-} 
 
 export {
     registerAdmin, adminlogin, adminlogout,getUserDescriptiveAnswers
