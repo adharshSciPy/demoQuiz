@@ -151,7 +151,56 @@ const getUserDescriptiveAnswers = async (req, res) => {
 
 
 // to post mark for respective users for  descriptiveQuestions
+const descriptiveMark = async (req, res) => {
+    const { userId, questionId, sectionId, mark } = req.body;
+
+    try {
+        // Find the user by ID
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(200).json({ message: "No user found" });
+        }
+
+        // Find the specific session by sectionId
+        const session = user.sessions.find(s => s.sectionId.toString() === sectionId);
+        if (!session) {
+            return res.status(200).json({ message: "No session found for this section" });
+        }
+
+        // Find the specific descriptive answer by questionId
+        const descriptiveAnswer = session.descriptiveAnswers.find(answer => answer.questionId.toString() === questionId);
+        if (!descriptiveAnswer) {
+            return res.status(200).json({ message: "No descriptive answer found for this question" });
+        }
+
+        // Update the mark for this descriptive answer
+        descriptiveAnswer.markObtained = mark;
+
+        // Recalculate the total score for the session
+        let totalScore = 0;
+        session.descriptiveAnswers.forEach(answer => {
+            totalScore += answer.markObtained;
+        });
+
+        // Update the session's score
+        session.score = totalScore;
+
+        // Save the updated user document
+        await user.save();
+
+        // Return a success response
+        return res.status(200).json({
+            message: "Marks updated successfully",
+            updatedScore: totalScore
+        });
+
+    } catch (error) {
+        console.error("Error in descriptiveMark:", error);
+        return res.status(500).json({ message: "Internal Server Error", error });
+    }
+};
+
 
 export {
-    registerAdmin, adminlogin, adminlogout,getUserDescriptiveAnswers
+    registerAdmin, adminlogin, adminlogout,getUserDescriptiveAnswers,descriptiveMark
 }

@@ -18,6 +18,10 @@ const descriptiveAnswersSchema = new Schema({
     },
     answerText: {
         type: String
+    },
+    markObtained:{
+        type:Number,
+        default:0
     }
 });
 
