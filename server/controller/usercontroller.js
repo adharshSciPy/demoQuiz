@@ -748,6 +748,66 @@ const getAllUsers = async (request, response) => {
     }
 }
 
+    const checkUserQuizSubmit = async (req, res) => {
+        const { userId, sectionId } = req.params;
+
+        try {
+            // Find the user by ID
+            const user = await User.findById(userId);
+
+            // Check if user exists
+            if (!user) {
+                return res.status(404).json({ message: "User not found" });
+            }
+
+            // Check if the user has an active session for the specific section
+            const session = user.sessions.find(s => s.sectionId.toString() === sectionId);
+
+            // If no session exists for the section, assume it's the user's first attempt for this section
+            if (!session) {
+                return res.status(200).json({
+                    attempted: false,
+                    disqualified: false,
+                    message: "User has no prior attempts for this section. Proceed with the quiz."
+                });
+            }
+
+            // Check if the user has been disqualified in this section
+            const mcqDisqualified = session.mcqAnswers.length !== 0 && session.performance === "Disqualified";
+            const descriptiveDisqualified = session.descriptiveAnswers.length !== 0 && session.performance === "Disqualified";
+
+            if (mcqDisqualified || descriptiveDisqualified) {
+                return res.status(200).json({
+                    attempted: true,
+                    disqualified: true,
+                    message: "User has been disqualified form this section."
+                });
+            }
+
+            // Check if the user has already attempted this section
+            const hasAttempted = (session.mcqAnswers.length !== 0&& session.mcqAnswers.performance!="Disqualified") || (session.descriptiveAnswers.length !== 0&& session.descriptiveAnswers.performance!="Disqualified");
+            if (hasAttempted) {
+                return res.status(200).json({
+                    attempted: true,
+                    disqualified: false,
+                    message: "User has already completed this section."
+                });
+            }
+
+            // If the user hasn't attempted or been disqualified, allow the quiz to proceed
+            return res.status(200).json({
+                attempted: false,
+                disqualified: false,
+                message: "User can proceed with the quiz for this section."
+            });
+
+        } catch (error) {
+            console.error("Error in checkUserQuizSubmit:", error);
+            return res.status(500).json({ message: "Server error" });
+        }
+    };
+
+
 export {
     registerUser,
     loginUser,
@@ -759,6 +819,7 @@ export {
     submitQuizMcq,
     getAllUsers,
     submitQuizDescriptive,
-    descriptiveQuizSubmit
+    descriptiveQuizSubmit,
+    checkUserQuizSubmit
 };
 

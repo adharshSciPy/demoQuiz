@@ -2,53 +2,73 @@ import React, { useState, useEffect } from 'react';
 import NavbarStudent from '../navbar/NavbarStudent';
 import '../assets/css/adminPage.css';
 import Quiz from './Quiz';
-import DescriptiveQuiz from './DescriptiveQuiz'; // Import DescriptiveQuiz component
+import DescriptiveQuiz from './DescriptiveQuiz';
 import axios from 'axios';
-import Instructions from './Instructions'
+import Instructions from './Instructions';
+import { useParams } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify'; // Import useParams to access userId from URL
 
 function StudentPage() {
+  const { loggedInUserId } = useParams(); // Get userId from the route parameter
   const [startQuiz, setStartQuiz] = useState(false);
   const [sectionId, setSectionId] = useState(null);
   const [questionType, setQuestionType] = useState(null);
+  
+  const notifyError = (message) => toast.error(message);//to set the toast error
 
-  // Function to handle starting the quiz
   const handleStartQuiz = async () => {
     try {
+      // Get section data (for the example, assume the first section from the API response)
       const response = await axios.get(`http://localhost:8000/api/v1/section/getquizsection`);
-      
-      // Assuming response.data.data is an array and you want the first element
-      const sectionData = response.data.data[0]; // Access the first element
-      const { sectionId, questionType } = sectionData; // Destructure sectionId and questionType
-  
-      setSectionId(sectionId); // Store the section ID in state
-      setQuestionType(questionType); // Store the question type in state
-      setStartQuiz(true); // Set state to true to switch to the quiz component
-      // console.log("section id on state", sectionId);
-      // console.log("Question type on state", questionType);
-      
+      const sectionData = response.data.data[0];
+      const { sectionId, questionType } = sectionData;
+
+      setSectionId(sectionId);
+      setQuestionType(questionType);
+
+      // Check if the user is allowed to take this quiz section
+      const checkResponse = await axios.get(
+        `http://localhost:8000/api/v1/user/checkuserquizsubmit/${loggedInUserId}/${sectionId}`
+      );
+
+      const { attempted, disqualified, message } = checkResponse.data;
+      console.log("check response",checkResponse.data)
+      if (attempted||disqualified) {
+        notifyError(message); // Set error message if user already attempted/disqualified
+        setStartQuiz(false); // Prevent starting quiz
+      } else {
+        setStartQuiz(true); // Allow user to start the quiz
+      }
     } catch (error) {
-      console.error('Error fetching section data:', error);
+      console.error('Error fetching section data or user status:', error);
+      notifyError('There was an issue retrieving quiz information.');
     }
   };
-  
 
   return (
     <div className="main">
+       <ToastContainer position="bottom-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        pauseOnHover />
       <NavbarStudent />
+      
       {startQuiz ? (
-        questionType === "MCQ" ? ( // Conditional rendering based on question type
-          <Quiz sectionId={sectionId} /> // Pass sectionId as a prop to Quiz
+        questionType === "MCQ" ? (
+          <Quiz sectionId={sectionId} />
         ) : (
-          <DescriptiveQuiz sectionId={sectionId} /> // Pass sectionId as a prop to DescriptiveQuiz
+          <DescriptiveQuiz sectionId={sectionId} />
         )
       ) : (
-        <Instructions onStartQuiz={handleStartQuiz} /> // Render Instructions by default
+        <Instructions onStartQuiz={handleStartQuiz} />
       )}
 
       <footer className="footer">
-        <div className="right-panel">
-          Scipy Technologies &copy; 2024
-        </div>
+        <div className="right-panel">Scipy Technologies &copy; 2024</div>
       </footer>
     </div>
   );

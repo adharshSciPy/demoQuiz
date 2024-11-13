@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { registerUser, loginUser, refreshAccessToken, logoutUser, getMcquestions,getDescriptiveQuestions, submitQuiz,submitQuizMcq, getAllUsers,submitQuizDescriptive ,descriptiveQuizSubmit} from '../controller/usercontroller.js'
+import { registerUser, loginUser, refreshAccessToken, logoutUser, getMcquestions,getDescriptiveQuestions, submitQuiz,submitQuizMcq, getAllUsers,submitQuizDescriptive ,descriptiveQuizSubmit, checkUserQuizSubmit} from '../controller/usercontroller.js'
 
 const userRouter = Router()
 
@@ -14,6 +14,9 @@ userRouter.route('/quizSubmit/:userId').patch(submitQuiz)
 userRouter.route('/quizsubmitmcq/:userId/:sectionId').patch(submitQuizMcq)
 userRouter.route('/quizsubmitdescriptive/:userId').post(submitQuizDescriptive)
 userRouter.route('/descriptivequizsubmit/:userId/:sectionId').post(descriptiveQuizSubmit)
+userRouter.route('/checkuserquizsubmit/:userId/:sectionId').get(checkUserQuizSubmit)
+
+
 
 
 
