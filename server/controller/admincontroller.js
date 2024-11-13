@@ -1,6 +1,7 @@
 import { Admin } from '../models/adminmodel.js'
 import { User } from '../models/usermodel.js';
 import { passwordValidator } from '../utils/passwordValidator.js';
+import { Section } from '../models/sectionmodel.js';
 
 // POST /admin/register
 
@@ -167,7 +168,24 @@ const descriptiveMark = async (req, res) => {
             return res.status(200).json({ message: "No session found for this section" });
         }
 
-        // Find the specific descriptive answer by questionId
+        // Find the section to get the maximum marks for the question
+        const section = await Section.findById(sectionId);
+        if (!section) {
+            return res.status(200).json({ message: "No section found" });
+        }
+
+        // Find the question from the section's Questions or MCQs (assuming you are looking for descriptive question in Questions)
+        const question = section.Questions.find(q => q._id.toString() === questionId);
+        if (!question) {
+            return res.status(200).json({ message: "No question found for this ID" });
+        }
+
+        // Check if the provided mark is greater than the maximum allowed mark for the question
+        if (mark > question.mark) {
+            return res.status(400).json({ message: `Mark cannot exceed the maximum mark of ${question.mark} for this question.` });
+        }
+
+        // Find the specific descriptive answer by questionId in the session
         const descriptiveAnswer = session.descriptiveAnswers.find(answer => answer.questionId.toString() === questionId);
         if (!descriptiveAnswer) {
             return res.status(200).json({ message: "No descriptive answer found for this question" });
@@ -199,6 +217,7 @@ const descriptiveMark = async (req, res) => {
         return res.status(500).json({ message: "Internal Server Error", error });
     }
 };
+
 
 
 export {
