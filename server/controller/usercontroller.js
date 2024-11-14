@@ -818,6 +818,39 @@ const getUserById = async (request, response) => {
         }
     };
 
+    // to retrive the mcq sections session wise(session inside user)
+    const getUserWiseMcq = async (req, res) => {
+        const { userId, sessionId } = req.params;
+    
+        if (!userId || !sessionId) {
+            return res.status(400).json({ message: "Missing userId or sessionId" });
+        }
+    
+        try {
+            const user = await User.findById(userId);
+            if (!user) {
+                return res.status(404).json({ message: "User not found" });
+            }
+    
+            const session = user.sessions.find((s) => s._id.toString() === sessionId);
+            if (!session) {
+                return res.status(404).json({ message: "Session not found in user's data" });
+            }
+    
+            // Check for the MCQ array and performance status
+            if (session.mcq && session.performance !== "disqualified") {
+                res.status(200).json({ mcq: session.mcq });
+            } else {
+                res.status(200).json({ message: "No MCQ or performance is disqualified" });
+            }
+        } catch (error) {
+            console.error("Error fetching user or session:", error);
+            res.status(500).json({ message: "An error occurred", error: error.message });
+        }
+    };
+    
+      
+
 
 export {
     registerUser,
@@ -832,6 +865,7 @@ export {
     getUserById,
     submitQuizDescriptive,
     descriptiveQuizSubmit,
-    checkUserQuizSubmit
+    checkUserQuizSubmit,
+    getUserWiseMcq
 };
 

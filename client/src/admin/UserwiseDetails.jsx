@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import styles from "./../assets/css/userwiseDetails.module.css";
 import Navbar from "../navbar/Navbar";
 import Footer from "../footer/Footer";
-import { useParams } from "react-router-dom";
+import { useParams,useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function UserwiseDetails() {
   const { userId } = useParams();
   const [details, setDetails] = useState({});
-  const [sectionNames, setSectionNames] = useState({}); // Store section names by sectionId
-
+  const [sectionData, setSectionData] = useState({}); // Store section names and question types by sectionId
+  const navigate=useNavigate();
   const fetchUserData = async () => {
     try {
       // Fetch user details
@@ -24,21 +24,25 @@ function UserwiseDetails() {
         new Set(userData.sessions.map((session) => session.sectionId))
       );
 
-      // Fetch section names for each unique sectionId
+      // Fetch section names and question types for each unique sectionId
       const sectionPromises = uniqueSectionIds.map((sectionId) =>
         axios
           .get(`http://localhost:8000/api/v1/section/getsectionsbyid/${sectionId}`)
-          .then((res) => ({ id: sectionId, name: res.data.data.sectionName }))
+          .then((res) => ({
+            id: sectionId,
+            name: res.data.data.sectionName,
+            questionType: res.data.data.questionType, // Assume questionType is part of the response
+          }))
       );
 
-      // Resolve all promises and map sectionIds to section names
+      // Resolve all promises and map sectionIds to section details
       const resolvedSections = await Promise.all(sectionPromises);
-      const sectionData = resolvedSections.reduce((acc, section) => {
-        acc[section.id] = section.name;
+      const sectionDataMap = resolvedSections.reduce((acc, section) => {
+        acc[section.id] = { name: section.name, questionType: section.questionType };
         return acc;
       }, {});
 
-      setSectionNames(sectionData); // Store fetched section names in state
+      setSectionData(sectionDataMap); // Store fetched section data in state
     } catch (error) {
       console.log("Error", error);
     }
@@ -54,8 +58,9 @@ function UserwiseDetails() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleClick = () => {
-    // Add your click handler logic here
+  const handleClick = (sessionId) => {
+    navigate(`/usermcqtable/${sessionId}`)
+    
   };
 
   return (
@@ -64,7 +69,7 @@ function UserwiseDetails() {
       <div className={styles.main}>
         <h1 className={styles.mainHead}>User Details</h1>
         <div className={styles.subDiv}>
-          <h3 className={styles.userName}>Name:{details.fullName}</h3>
+          <h3 className={styles.userName}>Name: {details.fullName}</h3>
           <div className={styles.detailsDiv}>
             <p className={styles.para}>Batch: {details.batch}</p>
             <p className={styles.para}>Email: {details.email}</p>
@@ -77,13 +82,15 @@ function UserwiseDetails() {
               {details.sessions.map((session, index) => (
                 <div key={index} className={styles.card}>
                   <h4>
-                     {sectionNames[session.sectionId] || "Loading..."}
+                    {sectionData[session.sectionId]?.name || "Loading..."}
                   </h4>
                   <button
                     className={styles.button}
-                    onClick={() => handleClick()}
+                    onClick={() => handleClick(session._id)}
                   >
-                    View
+                    {sectionData[session.sectionId]?.questionType === "MCQ"
+                      ? "View"
+                      : "Evaluate"}
                   </button>
                 </div>
               ))}

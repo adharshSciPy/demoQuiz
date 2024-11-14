@@ -20,7 +20,7 @@ import ShortAnswerQuestion from './admin/ShortAnswerQuestions';
 import DescriptiveQuestions from './admin/DescriptiveQuestions';
 import DescriptiveQuiz from './student/DescriptiveQuiz';
 import UserwiseDetails from './admin/UserwiseDetails';
-import UserSectionDetails from './admin/UserSectionDetails';
+import UserMcqTable from './admin/UserMcqTable';
 
 function App() {
   return (
@@ -35,7 +35,9 @@ function App() {
             {/* unprotected route */}
             <Route path='/descriptivequiz' element={<DescriptiveQuiz/>}/>
             <Route path='/userwisedetails/:userId' element={<UserwiseDetails/>}/>
-            <Route path='/newpage' element={<UserSectionDetails/>}/>
+            <Route path='/usermcqtable/:sessionId' element={<UserMcqTable/>}/>
+
+            
 
 
 
