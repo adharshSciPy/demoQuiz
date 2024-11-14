@@ -748,6 +748,17 @@ const getAllUsers = async (request, response) => {
     }
 }
 
+// get users by id
+const getUserById = async (request, response) => {
+        const{userId}=request.params;
+    try {
+        const userData = await User.findById(userId);
+        response.status(200).json({ message: "userdata fetched succesfully", data: userData })
+
+    } catch (error) {
+        response.status(400).json({ message: `internal server error due to ${error}` })
+    }
+}
     const checkUserQuizSubmit = async (req, res) => {
         const { userId, sectionId } = req.params;
 
@@ -818,6 +829,7 @@ export {
     submitQuiz,
     submitQuizMcq,
     getAllUsers,
+    getUserById,
     submitQuizDescriptive,
     descriptiveQuizSubmit,
     checkUserQuizSubmit

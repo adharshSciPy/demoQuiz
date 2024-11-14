@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { registerUser, loginUser, refreshAccessToken, logoutUser, getMcquestions,getDescriptiveQuestions, submitQuiz,submitQuizMcq, getAllUsers,submitQuizDescriptive ,descriptiveQuizSubmit, checkUserQuizSubmit} from '../controller/usercontroller.js'
+import { registerUser, loginUser, refreshAccessToken, logoutUser, getMcquestions,getDescriptiveQuestions, submitQuiz,submitQuizMcq, getAllUsers,submitQuizDescriptive ,descriptiveQuizSubmit, checkUserQuizSubmit,getUserById} from '../controller/usercontroller.js'
 
 const userRouter = Router()
 
@@ -18,6 +18,7 @@ userRouter.route('/checkuserquizsubmit/:userId/:sectionId').get(checkUserQuizSub
 
 
 
+userRouter.route('/getuserById/:userId').get(getUserById)
 
 
 userRouter.route('/getUsers').get(getAllUsers)

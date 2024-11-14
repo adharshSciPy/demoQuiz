@@ -3,13 +3,14 @@ import Table from 'react-bootstrap/Table';
 import "../assets/css/table.css";
 import axios from 'axios';
 import 'font-awesome/css/font-awesome.min.css';
+import {useNavigate} from "react-router-dom"
 
 
 function ReportTable() {
   const [table, setTable] = useState([]);
   const [filteredTable, setFilteredTable] = useState([]); // State for filtered data
   // const [selectedRating, setSelectedRating] = useState(''); // State for selected rating
-
+  const navigate =useNavigate();
   const fetchData = async () => {
     try {
       const response = await axios.get(`http://localhost:8000/api/v1/user/getUsers`);
@@ -96,6 +97,10 @@ function ReportTable() {
     const year=date.getFullYear()
     return `${day}-${month}-${year}`
   }
+  const handleClick=(id)=>{
+    navigate(`/userwisedetails/${id}`)
+    // console.log("hai",id)
+  }
 
   return (
     <div>
@@ -137,7 +142,7 @@ function ReportTable() {
                 <td>{item.userStrength}</td> */}
                 <td>{item.batch}</td>
                 <td>{formatDate(item.date)}</td>
-                <td><button className='btn btn-primary btn-sm p-1 w-50 '>View</button></td>
+                <td><button className='btn btn-primary btn-sm p-1 w-50 ' onClick={()=>handleClick(item._id)} >View</button></td>
 
               </tr>
             ))
