@@ -35,7 +35,7 @@ function App() {
             {/* unprotected route */}
             <Route path='/descriptivequiz' element={<DescriptiveQuiz/>}/>
             <Route path='/userwisedetails/:userId' element={<UserwiseDetails/>}/>
-            <Route path='/usermcqtable/:sessionId' element={<UserMcqTable/>}/>
+            <Route path='/usermcqtable/:userId/:sessionId' element={<UserMcqTable/>}/>
 
             
 

@@ -58,8 +58,14 @@ function UserwiseDetails() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleClick = (sessionId) => {
-    navigate(`/usermcqtable/${sessionId}`)
+  const handleClick = (userId,sessionId,sectionId) => {
+    const specificSectionData={...sectionData[sectionId],sectionId}
+  
+    navigate(`/usermcqtable/${userId}/${sessionId}`,
+      {state:{sectionDetails:specificSectionData}
+   } )
+    
+    // console.log("userId",userId)
     
   };
 
@@ -86,7 +92,7 @@ function UserwiseDetails() {
                   </h4>
                   <button
                     className={styles.button}
-                    onClick={() => handleClick(session._id)}
+                    onClick={() => handleClick(userId,session._id,session.sectionId)}
                   >
                     {sectionData[session.sectionId]?.questionType === "MCQ"
                       ? "View"

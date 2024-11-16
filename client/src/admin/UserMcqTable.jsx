@@ -1,71 +1,88 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './../assets/css/userMcqTable.module.css';
 import Navbar from '../navbar/Navbar';
 import Footer from '../footer/Footer';
 import axios from 'axios';
+import { useParams, useLocation } from 'react-router-dom';
 
 function UserMcqTable() {
-    const[details,setDetails]=useState([]);
-    
-    const fetchSectionData=async()=>{
+    const [details, setDetails] = useState([]);
+    const [questions, setQuestions] = useState([]);
+    const { userId, sessionId } = useParams();
+    const location = useLocation();
+    const { sectionDetails } = location.state || {};
+
+    const fetchSectionData = async () => {
         try {
-           const response=await axios.get(``) 
-        } catch (error) {
+            // Fetch user-specific MCQ details
+            const response = await axios.get(`http://localhost:8000/api/v1/user/getuserwisemcq/${userId}/${sessionId}`);
+            const questionDetails = response.data.data;
+            setDetails(questionDetails);
+
+            // Fetch each question based on its questionId
+            const questionPromises = questionDetails.map(async (item) => {
+                const questionResponse = await axios.get(
+                    `http://localhost:8000/api/v1/user/getsinglemcqquestion/${sectionDetails.sectionId}`,
+                    { params: { questionId: item.questionId } } // Pass questionId as a query parameter
+                );
+
+                // Include the question text and status (isCorrect) in the final data
+                return { 
+                    ...item, 
+                    question: questionResponse.data.data.question, 
+                    isCorrect: item.isCorrect // Preserve isCorrect from the original response
+                };
+             
+            });
             
+
+            const questionsWithText = await Promise.all(questionPromises);
+            setQuestions(questionsWithText);
+        } catch (error) {
+            console.error("Error fetching data:", error);
         }
-    }
-  return (
-    <div>
-      <Navbar />
-      <div className={styles.mainDiv}>
-        <div className={styles.subDiv}>
-          <h1 className={styles.userHead}>Akshay</h1>
-          <div className={styles.detailsDiv}>
-            <p>Section Name: Section One</p>
-            <p>Start Time: 12:35</p>
-            <p>End Time: 12:20</p>
-          </div>
-          <table className={styles.table}>
-            <thead className={styles.thead}>
-              <tr>
-                <th>SlNo</th>
-                <th>Question</th>
-                <th>Selected Option</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody className={styles.tbody}>
-              <tr>
-                <td>1</td>
-                <td>What is 2+2?</td>
-                <td>Option 1</td>
-                <td>Skipped</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>What is the capital of France?</td>
-                <td>Option 3</td>
-                <td>Answered</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>What is the square root of 16?</td>
-                <td>Option 2</td>
-                <td>Answered</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Who wrote "Hamlet"?</td>
-                <td>Option 4</td>
-                <td>Skipped</td>
-              </tr>
-            </tbody>
-          </table>
+    };
+
+    useEffect(() => {
+        fetchSectionData();
+    }, []);
+
+    return (
+        <div>
+            <Navbar />
+            <div className={styles.mainDiv}>
+                <div className={styles.subDiv}>
+                    <h1 className={styles.userHead}>User MCQ Table</h1>
+                    <div className={styles.detailsDiv}>
+                        <p>Section Name: Section One</p>
+                        <p>Start Time: 12:35</p>
+                        <p>End Time: 12:20</p>
+                    </div>
+                    <table className={styles.table}>
+                        <thead className={styles.thead}>
+                            <tr>
+                                <th>SlNo</th>
+                                <th>Question</th>
+                                <th>Selected Option</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody className={styles.tbody}>
+                            {questions.map((item, index) => (
+                                <tr key={index}>
+                                    <td>{index + 1}</td>
+                                    <td>{item.question}</td>
+                                    <td>{item.selectedOption}</td>
+                                    <td>{item.selectedOption==="skipped"?"Skipped":item.isCorrect?"Correct":"InCorrect"}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <Footer />
         </div>
-      </div>
-      <Footer />
-    </div>
-  );
+    );
 }
 
 export default UserMcqTable;

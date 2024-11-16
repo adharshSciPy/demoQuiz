@@ -838,8 +838,8 @@ const getUserById = async (request, response) => {
             }
     
             // Check for the MCQ array and performance status
-            if (session.mcq && session.performance !== "disqualified") {
-                res.status(200).json({ mcq: session.mcq });
+            if (session.mcqAnswers && session.performance !== "disqualified") {
+                res.status(200).json({message:"Session retrival succefull",data:session.mcqAnswers});
             } else {
                 res.status(200).json({ message: "No MCQ or performance is disqualified" });
             }
@@ -848,6 +848,30 @@ const getUserById = async (request, response) => {
             res.status(500).json({ message: "An error occurred", error: error.message });
         }
     };
+    // to retrive mcq questions so that we can display questions.
+    const getSingleMcquestions = async (req, res) => {
+        const { sectionId } = req.params;
+        const { questionId } = req.query; // Read questionId from query parameters
+    
+        try {
+            const section = await Section.findById(sectionId);
+            if (!section) {
+                return res.status(404).json({ message: "Section not found" });
+            }
+    
+            const question = section.MCQ?.find((q) => q._id.toString() === questionId);
+            if (!question) {
+                return res.status(404).json({ message: "Question not found" });
+            }
+    
+            return res.status(200).json({ message: "Question fetch successful", data: question });
+        } catch (error) {
+            console.error("Error fetching question:", error);
+            res.status(500).json({ message: "Internal server error", error: error.message });
+        }
+    };
+    
+    
     
       
 
@@ -866,6 +890,7 @@ export {
     submitQuizDescriptive,
     descriptiveQuizSubmit,
     checkUserQuizSubmit,
-    getUserWiseMcq
+    getUserWiseMcq,
+    getSingleMcquestions
 };
 
