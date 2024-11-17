@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import styles from "./../assets/css/userwiseDetails.module.css";
 import Navbar from "../navbar/Navbar";
 import Footer from "../footer/Footer";
-import { useParams,useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function UserwiseDetails() {
   const { userId } = useParams();
   const [details, setDetails] = useState({});
   const [sectionData, setSectionData] = useState({}); // Store section names and question types by sectionId
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const fetchUserData = async () => {
     try {
       // Fetch user details
@@ -27,7 +27,9 @@ function UserwiseDetails() {
       // Fetch section names and question types for each unique sectionId
       const sectionPromises = uniqueSectionIds.map((sectionId) =>
         axios
-          .get(`http://localhost:8000/api/v1/section/getsectionsbyid/${sectionId}`)
+          .get(
+            `http://localhost:8000/api/v1/section/getsectionsbyid/${sectionId}`
+          )
           .then((res) => ({
             id: sectionId,
             name: res.data.data.sectionName,
@@ -38,7 +40,10 @@ function UserwiseDetails() {
       // Resolve all promises and map sectionIds to section details
       const resolvedSections = await Promise.all(sectionPromises);
       const sectionDataMap = resolvedSections.reduce((acc, section) => {
-        acc[section.id] = { name: section.name, questionType: section.questionType };
+        acc[section.id] = {
+          name: section.name,
+          questionType: section.questionType,
+        };
         return acc;
       }, {});
 
@@ -58,15 +63,16 @@ function UserwiseDetails() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleClick = (userId,sessionId,sectionId) => {
-    const specificSectionData={...sectionData[sectionId],sectionId}
-  
-    navigate(`/usermcqtable/${userId}/${sessionId}`,
-      {state:{sectionDetails:specificSectionData}
-   } )
-    
+  const handleClick = (userId, sessionId, sectionId) => {
+    const specificSectionData = { ...sectionData[sectionId], sectionId };
+    if(sectionData[sectionId]?.questionType==="MCQ"){
+    navigate(`/usermcqtable/${userId}/${sessionId}`, {
+      state: { sectionDetails: specificSectionData },
+    });
+  } else{
+    navigate(`/userdescriptiveanswerget/${userId}`)
+  }
     // console.log("userId",userId)
-    
   };
 
   return (
@@ -91,10 +97,20 @@ function UserwiseDetails() {
                     {sectionData[session.sectionId]?.name || "Loading..."}
                   </h4>
                   <button
-                    className={styles.button}
-                    onClick={() => handleClick(userId,session._id,session.sectionId)}
+                    className={`${styles.button} ${
+                      session.performance === "Disqualified"
+                        ? styles.disqualified
+                        : sectionData[session.sectionId]?.questionType === "MCQ"
+                        ? styles.view
+                        : styles.evaluate
+                    }`}
+                    onClick={() =>
+                      handleClick(userId, session._id, session.sectionId)
+                    }
                   >
-                    {sectionData[session.sectionId]?.questionType === "MCQ"
+                    {session.performance === "Disqualified"
+                      ? "Disqualified"
+                      : sectionData[session.sectionId]?.questionType === "MCQ"
                       ? "View"
                       : "Evaluate"}
                   </button>

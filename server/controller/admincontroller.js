@@ -104,7 +104,7 @@ const adminlogout = async (req, res) => {
 // to get descriptive answers from respective users using userid
 
 const getUserDescriptiveAnswers = async (req, res) => {
-    const { userId } = req.body;
+    const { userId } = req.query;
 
     try {
         // Find the user by userId
@@ -115,7 +115,7 @@ const getUserDescriptiveAnswers = async (req, res) => {
         }
 
         // Log the user sessions for debugging
-        console.log("User sessions:", user.sessions);
+        // console.log("User sessions:", user.sessions);
 
         // Check if any session has been disqualified (whether or not descriptiveAnswers are present)
         const disqualifiedSession = user.sessions.find(session =>
@@ -123,7 +123,7 @@ const getUserDescriptiveAnswers = async (req, res) => {
         );
 
         if (disqualifiedSession) {
-            console.log("Disqualified session found:", disqualifiedSession);
+            // console.log("Disqualified session found:", disqualifiedSession);
             return res.status(200).json({ message: "User has been Disqualified" });
         }
 
@@ -132,7 +132,7 @@ const getUserDescriptiveAnswers = async (req, res) => {
             session.descriptiveAnswers && session.descriptiveAnswers.length > 0 && session.performance !== "Disqualified"
         );
 
-        console.log("Filtered descriptive sessions:", descriptiveSessions); // Log filtered sessions
+        // console.log("Filtered descriptive sessions:", descriptiveSessions); // Log filtered sessions
 
         // If no valid descriptive sessions are found
         if (descriptiveSessions.length === 0) {

@@ -91,6 +91,35 @@
 .button:hover {
   background-color: #a6c4ed; /* Darker green on hover */
 }
+/* Style for the "Disqualified" button */
+.disqualified {
+  background-color: #ff4d4d;
+  color: white;
+}
+
+.disqualified:hover {
+  background-color: #ff3333;
+}
+
+/* Style for the "View" button (MCQ type) */
+.view {
+  background-color: #4caf50;
+  color: white;
+}
+
+.view:hover {
+  background-color: #45a049;
+}
+
+/* Style for the "Evaluate" button */
+.evaluate {
+  background-color: #ff9800;
+  color: white;
+}
+
+.evaluate:hover {
+  background-color: #fb8c00;
+}
 
 /* Responsive Styles */
 @media (max-width: 1200px) {
