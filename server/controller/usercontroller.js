@@ -894,6 +894,49 @@ const getUserById = async (request, response) => {
         }
     };
       
+    const getSingleDescriptiveAnswers = async (req, res) => {
+        const { answerId } = req.query; // Get answerId from query params
+    
+        try {
+            // Check if answerId is provided
+            if (!answerId) {
+                return res.status(400).json({ message: "No answer found" });
+            }
+    
+            // Find the user and the session containing the descriptive answer
+            const user = await User.findOne({
+                "sessions.descriptiveAnswers._id": answerId, // Search for answerId inside descriptiveAnswers in any session
+            });
+    
+            if (!user) {
+                return res.status(400).json({ message: "No answer found for the provided answerId" });
+            }
+    
+            // Iterate over the sessions to find the exact session and the answer
+            let answer = null;
+            for (let session of user.sessions) {
+                // Find the answer within each session's descriptiveAnswers array
+                answer = session.descriptiveAnswers.find(ans => ans._id.toString() === answerId);
+                if (answer) break; // Stop the loop if the answer is found
+            }
+    
+            // If the answer is not found, return an error
+            if (!answer) {
+                return res.status(400).json({ message: "Answer not found in the session" });
+            }
+    
+            // Return the found answer
+            return res.status(200).json({
+                message: "Answer retrieved successfully",
+                data: answer, // Send the specific answer data
+            });
+    
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: "Server error" });
+        }
+    };
+    
 
 
 export {
@@ -912,6 +955,7 @@ export {
     checkUserQuizSubmit,
     getUserWiseMcq,
     getSingleMcquestions,
-    getSingleDescriptiveQuestions
+    getSingleDescriptiveQuestions,
+    getSingleDescriptiveAnswers
 };
 

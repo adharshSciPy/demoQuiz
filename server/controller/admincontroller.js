@@ -153,7 +153,9 @@ const getUserDescriptiveAnswers = async (req, res) => {
 
 // to post mark for respective users for  descriptiveQuestions
 const descriptiveMark = async (req, res) => {
-    const { userId, questionId, sectionId, mark } = req.body;
+    const{userId}=req.params;
+    const{mark}=req.body;
+    const { questionId, sectionId} = req.query;
 
     try {
         // Find the user by ID
