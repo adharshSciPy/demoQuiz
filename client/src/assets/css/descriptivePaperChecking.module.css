@@ -1,0 +1,153 @@
+/* General styles */
+.main {
+  padding: 20px;
+  /* margin: 4rem auto; */
+  /* max-width: 1200px; */
+  background-color:#76a8ee;
+  /* border-radius: 8px; */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  height: 100vh;
+  width: 100%;
+}
+
+/* Section name header */
+.sectionName {
+  font-size: 24px;
+  font-weight: bold;
+  color: #f0eded;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Sub-div container */
+.subDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+/* Question and answer field */
+.displayField {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  width: 100%;
+  max-width: 900px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+}
+
+.questionHead,
+.AnswerHead {
+  font-size: 18px;
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.questionDisplay,
+.answerDisplay {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* Mark input field */
+.mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.mark label {
+  font-size: 16px;
+  color: #333;
+}
+
+.mark input {
+  max-width: 80px;
+  padding: 5px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.mark input:focus {
+  border-color: #007bff;
+}
+.button{
+  background-color: #007bff;
+  border-radius: 4px;
+  border: none;
+  margin:10px;
+  min-width: 100px;
+  padding: 8px;
+  color: #f0eded;
+  
+}
+.buttonDiv{
+  display: flex;
+  justify-content: flex-end;
+}
+/* Responsive Design */
+
+/* Small screens (phones) */
+@media screen and (max-width: 576px) {
+  .main {
+    padding: 10px;
+  }
+
+  .sectionName {
+    font-size: 20px;
+  }
+
+  .displayField {
+    width: 100%;
+    padding: 15px;
+  }
+
+  .questionHead,
+  .AnswerHead {
+    font-size: 16px;
+  }
+
+  .questionDisplay,
+  .answerDisplay {
+    font-size: 14px;
+  }
+
+  .mark input {
+    width: 100%;
+  }
+}
+
+/* Medium screens (tablets) */
+@media screen and (max-width: 768px) {
+  .main {
+    padding: 15px;
+  }
+
+  .subDiv {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .displayField {
+    max-width: 100%;
+  }
+}
+
+/* Large screens (desktops) */
+@media screen and (min-width: 992px) {
+  .main {
+    max-width: 100%;
+  }
+}

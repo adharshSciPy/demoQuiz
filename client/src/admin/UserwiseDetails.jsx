@@ -70,7 +70,10 @@ function UserwiseDetails() {
       state: { sectionDetails: specificSectionData },
     });
   } else{
-    navigate(`/userdescriptiveanswerget/${userId}`)
+    navigate(`/userdescriptiveanswerget/${userId}/${sessionId}`, {
+      state: { sectionDetails: specificSectionData },
+   });
+   
   }
     // console.log("userId",userId)
   };

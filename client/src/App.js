@@ -22,6 +22,7 @@ import DescriptiveQuiz from './student/DescriptiveQuiz';
 import UserwiseDetails from './admin/UserwiseDetails';
 import UserMcqTable from './admin/UserMcqTable';
 import UserDescriptiveAnswerGet from './admin/UserDescriptiveAnswerGet';
+import DescriptivePaperChecking from './admin/DescriptivePaperChecking';
 
 function App() {
   return (
@@ -37,7 +38,9 @@ function App() {
             <Route path='/descriptivequiz' element={<DescriptiveQuiz/>}/>
             <Route path='/userwisedetails/:userId' element={<UserwiseDetails/>}/>
             <Route path='/usermcqtable/:userId/:sessionId' element={<UserMcqTable/>}/>
-            <Route path='/userdescriptiveanswerget/:userId' element={<UserDescriptiveAnswerGet/>}/>
+            <Route path='/userdescriptiveanswerget/:userId/:sessionId' element={<UserDescriptiveAnswerGet/>}/>
+            <Route path='/descriptivepaper/:userId/:sessionId'element={<DescriptivePaperChecking/>}/>
+
 
 
 

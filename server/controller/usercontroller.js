@@ -872,7 +872,27 @@ const getUserById = async (request, response) => {
     };
     
     
+    const getSingleDescriptiveQuestions = async (req, res) => {
+        const { sectionId } = req.params;
+        const { questionId } = req.query; // Read questionId from query parameters
     
+        try {
+            const section = await Section.findById(sectionId);
+            if (!section) {
+                return res.status(404).json({ message: "Section not found" });
+            }
+    
+            const question = section.Questions?.find((q) => q._id.toString() === questionId);
+            if (!question) {
+                return res.status(404).json({ message: "Question not found" });
+            }
+    
+            return res.status(200).json({ message: "Question fetch successful", data: question });
+        } catch (error) {
+            console.error("Error fetching question:", error);
+            res.status(500).json({ message: "Internal server error", error: error.message });
+        }
+    };
       
 
 
@@ -891,6 +911,7 @@ export {
     descriptiveQuizSubmit,
     checkUserQuizSubmit,
     getUserWiseMcq,
-    getSingleMcquestions
+    getSingleMcquestions,
+    getSingleDescriptiveQuestions
 };
 
