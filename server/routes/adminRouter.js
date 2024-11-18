@@ -7,7 +7,7 @@ adminRouter.route('/register').post(registerAdmin)
 adminRouter.route('/login').post(adminlogin)
 adminRouter.route('/logout').post(adminlogout)
 adminRouter.route('/getdescriptiveAnswerfromUser').get(getUserDescriptiveAnswers)
-adminRouter.route('/descriptiveMark').post(descriptiveMark)
+adminRouter.route('/descriptiveMark/:userId').patch(descriptiveMark)
 
 
 

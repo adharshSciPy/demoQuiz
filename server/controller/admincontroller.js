@@ -153,54 +153,70 @@ const getUserDescriptiveAnswers = async (req, res) => {
 
 // to post mark for respective users for  descriptiveQuestions
 const descriptiveMark = async (req, res) => {
-    const{userId}=req.params;
-    const{mark}=req.body;
-    const { questionId, sectionId} = req.query;
+    const { questionId, sectionId, mark } = req.body;
+    const { userId } = req.params;
 
     try {
+        const numericMark = parseFloat(mark);
+        if (isNaN(numericMark)) {
+            return res.status(400).json({
+                message: "Invalid mark. Please provide a valid numeric value.",
+            });
+        }
+
         // Find the user by ID
         const user = await User.findById(userId);
         if (!user) {
-            return res.status(200).json({ message: "No user found" });
+            return res.status(404).json({ message: "User not found" });
         }
 
         // Find the specific session by sectionId
         const session = user.sessions.find(s => s.sectionId.toString() === sectionId);
         if (!session) {
-            return res.status(200).json({ message: "No session found for this section" });
+            return res.status(404).json({ message: "Session not found for this section" });
         }
 
         // Find the section to get the maximum marks for the question
         const section = await Section.findById(sectionId);
         if (!section) {
-            return res.status(200).json({ message: "No section found" });
+            return res.status(404).json({ message: "Section not found" });
         }
 
-        // Find the question from the section's Questions or MCQs (assuming you are looking for descriptive question in Questions)
+        // Find the question in the section's Questions array
         const question = section.Questions.find(q => q._id.toString() === questionId);
         if (!question) {
-            return res.status(200).json({ message: "No question found for this ID" });
+            return res.status(404).json({ message: "Question not found" });
         }
 
-        // Check if the provided mark is greater than the maximum allowed mark for the question
-        if (mark > question.mark) {
-            return res.status(400).json({ message: `Mark cannot exceed the maximum mark of ${question.mark} for this question.` });
+        const maxMark = parseFloat(question.mark);
+        if (isNaN(maxMark)) {
+            return res.status(500).json({
+                message: "Invalid maximum mark in question. Please check the question data.",
+            });
         }
 
-        // Find the specific descriptive answer by questionId in the session
-        const descriptiveAnswer = session.descriptiveAnswers.find(answer => answer.questionId.toString() === questionId);
+        // Check if the provided mark exceeds the maximum allowed mark
+        if (numericMark > maxMark) {
+            return res.status(400).json({
+                message: `Mark cannot exceed the maximum mark of ${maxMark} for this question.`,
+            });
+        }
+
+        // Find the specific descriptive answer in the session
+        const descriptiveAnswer = session.descriptiveAnswers.find(
+            answer => answer.questionId.toString() === questionId
+        );
         if (!descriptiveAnswer) {
-            return res.status(200).json({ message: "No descriptive answer found for this question" });
+            return res.status(404).json({ message: "Descriptive answer not found" });
         }
 
-        // Update the mark for this descriptive answer
-        descriptiveAnswer.markObtained = mark;
+        // Update the mark for this answer
+        descriptiveAnswer.markObtained = numericMark;
 
         // Recalculate the total score for the session
-        let totalScore = 0;
-        session.descriptiveAnswers.forEach(answer => {
-            totalScore += answer.markObtained;
-        });
+        let totalScore = session.descriptiveAnswers.reduce((total, answer) => {
+            return total + (answer.markObtained || 0); // Fallback for undefined marks
+        }, 0);
 
         // Update the session's score
         session.score = totalScore;
@@ -208,17 +224,17 @@ const descriptiveMark = async (req, res) => {
         // Save the updated user document
         await user.save();
 
-        // Return a success response
         return res.status(200).json({
             message: "Marks updated successfully",
-            updatedScore: totalScore
+            updatedScore: totalScore,
         });
-
     } catch (error) {
         console.error("Error in descriptiveMark:", error);
         return res.status(500).json({ message: "Internal Server Error", error });
     }
 };
+
+
 
 
 
