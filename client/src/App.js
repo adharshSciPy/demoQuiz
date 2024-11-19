@@ -23,6 +23,7 @@ import UserwiseDetails from './admin/UserwiseDetails';
 import UserMcqTable from './admin/UserMcqTable';
 import UserDescriptiveAnswerGet from './admin/UserDescriptiveAnswerGet';
 import DescriptivePaperChecking from './admin/DescriptivePaperChecking';
+import UserDescriptiveTable from './admin/UserDescriptiveTable';
 
 function App() {
   return (
@@ -40,6 +41,8 @@ function App() {
             <Route path='/usermcqtable/:userId/:sessionId' element={<UserMcqTable/>}/>
             <Route path='/userdescriptiveanswerget/:userId/:sessionId' element={<UserDescriptiveAnswerGet/>}/>
             <Route path='/descriptivepaper/:userId/:sessionId'element={<DescriptivePaperChecking/>}/>
+            <Route path='/userdescriptivetable/:userId/:sessionId' element={<UserDescriptiveTable/>}/>
+
 
 
 
