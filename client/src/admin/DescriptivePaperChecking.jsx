@@ -2,29 +2,29 @@ import React, { useEffect, useState } from "react";
 import styles from "./../assets/css/descriptivePaperChecking.module.css";
 import Navbar from "../navbar/Navbar";
 import Footer from "../footer/Footer";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import styles for toastify
 
 function DescriptivePaperChecking() {
   const [question, setQuestion] = useState({});
   const [answers, setAnswers] = useState({});
   const [mark, setMark] = useState("");
-
   const { userId, sessionId } = useParams();
   const location = useLocation();
   const { sectionDetails, answerId, questionId } = location.state || {};
+  const navigate = useNavigate();
 
   // Fetch question and answer data
   const fetchDescriptiveData = async () => {
     try {
-      // Fetch the question
       const questionResponse = await axios.get(
         `http://localhost:8000/api/v1/user/getsingledescriptivequestion/${sectionDetails.sectionId}`,
         { params: { questionId } }
       );
       setQuestion(questionResponse.data.data);
 
-      // Fetch the answer
       const answerResponse = await axios.get(
         `http://localhost:8000/api/v1/user/getsingledescriptiveanswers`,
         { params: { answerId } }
@@ -32,48 +32,38 @@ function DescriptivePaperChecking() {
       setAnswers(answerResponse.data.data);
     } catch (error) {
       console.error("Error fetching descriptive data:", error);
-      alert("Failed to fetch data. Please try again later.");
+      toast.error("Failed to fetch data. Please try again later.");
     }
   };
 
-  // Submit marks for the question
+  // Handle submitting the mark
   const handleClick = async () => {
-    if (!mark) {
-        alert("Please enter a valid mark before submitting.");
-        return;
-    }
-
-    if (parseFloat(mark) > question.mark) {
-        alert(`Mark cannot exceed the maximum allowed mark of ${question.mark}.`);
-        return;
+    if (!mark || parseFloat(mark) > question.mark) {
+      toast.error(`Please enter a valid mark (0 - ${question.mark}).`);
+      return;
     }
 
     try {
-        const response = await axios.patch(
-            `http://localhost:8000/api/v1/admin/descriptiveMark/${userId}`,
-            {
-                sectionId: sectionDetails.sectionId,
-                questionId,
-                mark: parseFloat(mark),
-            }
-        );
-        alert("Mark submitted successfully!");
-        setMark("");
+      await axios.patch(
+        `http://localhost:8000/api/v1/admin/descriptiveMark/${userId}`,
+        {
+          sectionId: sectionDetails.sectionId,
+          questionId,
+          mark: parseFloat(mark),
+        }
+      );
+      toast.success("Mark submitted successfully!");
+      setTimeout(()=>{
+        navigate(`/userdescriptiveanswerget/${userId}/${sessionId}`, {
+          state: { sectionDetails },
+        });
+        
+      },3000) 
     } catch (error) {
-        console.error("Error submitting marks:", error);
-        alert("Failed to submit marks. Please try again.");
+      console.error("Error submitting marks:", error);
+      toast.error("Failed to submit marks. Please try again.");
     }
-};
-
-const handleMarkInputChange = (e) => {
-    const inputMark = e.target.value;
-    if (inputMark <= question.mark) {
-        setMark(inputMark);
-    } else {
-        alert(`Mark cannot exceed the maximum allowed mark of ${question.mark}.`);
-    }
-};
-
+  };
 
   useEffect(() => {
     fetchDescriptiveData();
@@ -88,19 +78,16 @@ const handleMarkInputChange = (e) => {
         </h2>
         <div className={styles.subDiv}>
           <div className={styles.displayField}>
-            {/* Display Question */}
             <h5 className={styles.questionHead}>Question</h5>
-            <p className={styles.questionDisplay}>{question.question || "Loading question..."}</p>
-
-            {/* Display User's Answer */}
+            <p className={styles.questionDisplay}>
+              {question.question || "Loading question..."}
+            </p>
             <h5 className={styles.AnswerHead}>User Answer</h5>
             {answers.answerText !== "skipped" ? (
               <p className={styles.answerDisplay}>{answers.answerText}</p>
             ) : (
               <p className={styles.answerDisplay}>The question was skipped.</p>
             )}
-
-            {/* Mark Input and Submit Button */}
             {answers.answerText !== "skipped" && (
               <>
                 <div className={styles.mark}>
@@ -110,15 +97,11 @@ const handleMarkInputChange = (e) => {
                     id="markInput"
                     value={mark}
                     onChange={(e) => setMark(e.target.value)}
-                    placeholder="Enter marks"
+                    // placeholder="Enter marks"
                   />
                 </div>
                 <div className={styles.buttonDiv}>
-                  <button
-                    className={styles.button}
-                    onClick={handleClick}
-                    disabled={!mark}
-                  >
+                  <button className={styles.button} onClick={handleClick}>
                     Submit
                   </button>
                 </div>
@@ -128,6 +111,15 @@ const handleMarkInputChange = (e) => {
         </div>
       </div>
       <Footer />
+      {/* toast container to show the errors */}
+      <ToastContainer position="bottom-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        pauseOnHover />
     </div>
   );
 }

@@ -63,20 +63,34 @@ function UserwiseDetails() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleClick = (userId, sessionId, sectionId) => {
+  const handleClick = (userId, sessionId, sectionId, buttonType) => {
     const specificSectionData = { ...sectionData[sectionId], sectionId };
-    if(sectionData[sectionId]?.questionType==="MCQ"){
-    navigate(`/usermcqtable/${userId}/${sessionId}`, {
-      state: { sectionDetails: specificSectionData },
-    });
-  } else{
-    navigate(`/userdescriptiveanswerget/${userId}/${sessionId}`, {
-      state: { sectionDetails: specificSectionData },
-   });
-   
-  }
-    // console.log("userId",userId)
+  
+    switch (buttonType) {
+      case "view":
+        navigate(`/usermcqtable/${userId}/${sessionId}`, {
+          state: { sectionDetails: specificSectionData },
+        });
+        break;
+  
+      case "evaluate":
+        navigate(`/userdescriptiveanswerget/${userId}/${sessionId}`, {
+          state: { sectionDetails: specificSectionData },
+        });
+        break;
+  
+      case "show":
+        // Additional navigation or logic for "Evaluate"
+        navigate(`/userdescriptivetable/${userId}/${sessionId}`, {
+          state: { sectionDetails: specificSectionData },
+        });
+        break;
+  
+      default:
+        console.error("Invalid button type");
+    }
   };
+  
 
   return (
     <div>
@@ -93,33 +107,48 @@ function UserwiseDetails() {
             </p>
           </div>
           {details.sessions && details.sessions.length > 0 ? (
-            <div className={styles.detailCards}>
-              {details.sessions.map((session, index) => (
-                <div key={index} className={styles.card}>
-                  <h4>
-                    {sectionData[session.sectionId]?.name || "Loading..."}
-                  </h4>
+          <div className={styles.detailCards}>
+          {details.sessions.map((session, index) => (
+            <div key={index} className={styles.card}>
+              <h4>
+                {sectionData[session.sectionId]?.name || "Loading..."}
+              </h4>
+              {/* Render buttons based on questionType */}
+              {sectionData[session.sectionId]?.questionType === "MCQ" ? (
+                // For MCQ, show only "View" button
+                <button
+                  className={`${styles.button} ${styles.view}`}
+                  onClick={() =>
+                    handleClick(userId, session._id, session.sectionId, "view")
+                  }
+                >
+                  View
+                </button>
+              ) : (
+                // For non-MCQ, show both "Show" and "Evaluate" buttons
+                <>
                   <button
-                    className={`${styles.button} ${
-                      session.performance === "Disqualified"
-                        ? styles.disqualified
-                        : sectionData[session.sectionId]?.questionType === "MCQ"
-                        ? styles.view
-                        : styles.evaluate
-                    }`}
+                    className={`${styles.button} ${styles.show}`}
                     onClick={() =>
-                      handleClick(userId, session._id, session.sectionId)
+                      handleClick(userId, session._id, session.sectionId, "show")
                     }
                   >
-                    {session.performance === "Disqualified"
-                      ? "Disqualified"
-                      : sectionData[session.sectionId]?.questionType === "MCQ"
-                      ? "View"
-                      : "Evaluate"}
+                    Show
                   </button>
-                </div>
-              ))}
+                  <button
+                    className={`${styles.button} ${styles.evaluate}`}
+                    onClick={() =>
+                      handleClick(userId, session._id, session.sectionId, "evaluate")
+                    }
+                  >
+                    Evaluate
+                  </button>
+                </>
+              )}
             </div>
+          ))}
+        </div>
+        
           ) : (
             <div className={styles.noData}>No data available</div>
           )}
