@@ -22,3 +22,35 @@
 }
 
 /* Navbar Styling */
+
+/* Chart Styling */
+
+.chartpie {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  max-width: 1200px; /* Optional: Limit grid width on large screens */
+}
+
+/* Small screens (mobile devices) */
+@media (max-width: 600px) {
+  .gridContainer {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Medium screens (tablets) */
+@media (min-width: 601px) and (max-width: 900px) {
+  .gridContainer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Large screens (desktops) */
+@media (min-width: 901px) {
+  .gridContainer {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
