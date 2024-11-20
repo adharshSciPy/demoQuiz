@@ -18,27 +18,47 @@ function UserwiseDetails() {
       );
       const userData = response.data.data;
       setDetails(userData);
-
+      console.log("details",details.sessions)
+  
       // Get unique sectionIds from user sessions
       const uniqueSectionIds = Array.from(
         new Set(userData.sessions.map((session) => session.sectionId))
       );
-
-      // Fetch section names and question types for each unique sectionId
-      const sectionPromises = uniqueSectionIds.map((sectionId) =>
-        axios
-          .get(
+  
+      // Fetch section details using async/await and Promise.all
+      const sectionPromises = uniqueSectionIds.map(async (sectionId) => {
+        try {
+          const res = await axios.get(
             `http://localhost:8000/api/v1/section/getsectionsbyid/${sectionId}`
-          )
-          .then((res) => ({
+          );
+          if (res.data && res.data.data) {
+            return {
+              id: sectionId,
+              name: res.data.data.sectionName,
+              questionType: res.data.data.questionType,
+            };
+          } else {
+            console.error(`Invalid section data for sectionId: ${sectionId}`);
+            return {
+              id: sectionId,
+              name: "Unknown Section",
+              questionType: "Unknown",
+            };
+          }
+        } catch (error) {
+          console.error(`Error fetching section data for sectionId: ${sectionId}`, error);
+          return {
             id: sectionId,
-            name: res.data.data.sectionName,
-            questionType: res.data.data.questionType, // Assume questionType is part of the response
-          }))
-      );
-
-      // Resolve all promises and map sectionIds to section details
+            name: "Error Loading",
+            questionType: "Error",
+          };
+        }
+      });
+  
+      // Wait for all sectionPromises to resolve
       const resolvedSections = await Promise.all(sectionPromises);
+  
+      // Map resolved sections to sectionData
       const sectionDataMap = resolvedSections.reduce((acc, section) => {
         acc[section.id] = {
           name: section.name,
@@ -46,12 +66,13 @@ function UserwiseDetails() {
         };
         return acc;
       }, {});
-
-      setSectionData(sectionDataMap); // Store fetched section data in state
+  
+      setSectionData(sectionDataMap); // Update state with resolved section data
     } catch (error) {
-      console.log("Error", error);
+      console.log("Error fetching user data:", error);
     }
   };
+  
 
   useEffect(() => {
     fetchUserData();
@@ -109,44 +130,50 @@ function UserwiseDetails() {
           {details.sessions && details.sessions.length > 0 ? (
           <div className={styles.detailCards}>
           {details.sessions.map((session, index) => (
-            <div key={index} className={styles.card}>
-              <h4>
-                {sectionData[session.sectionId]?.name || "Loading..."}
-              </h4>
-              {/* Render buttons based on questionType */}
-              {sectionData[session.sectionId]?.questionType === "MCQ" ? (
-                // For MCQ, show only "View" button
-                <button
-                  className={`${styles.button} ${styles.view}`}
-                  onClick={() =>
-                    handleClick(userId, session._id, session.sectionId, "view")
-                  }
-                >
-                  View
-                </button>
-              ) : (
-                // For non-MCQ, show both "Show" and "Evaluate" buttons
-                <>
-                  <button
-                    className={`${styles.button} ${styles.show}`}
-                    onClick={() =>
-                      handleClick(userId, session._id, session.sectionId, "show")
-                    }
-                  >
-                    Show
-                  </button>
-                  <button
-                    className={`${styles.button} ${styles.evaluate}`}
-                    onClick={() =>
-                      handleClick(userId, session._id, session.sectionId, "evaluate")
-                    }
-                  >
-                    Evaluate
-                  </button>
-                </>
-              )}
-            </div>
-          ))}
+  <div key={index} className={styles.card}>
+    <h4>
+      {sectionData[session.sectionId]?.name || "Loading..."}
+    </h4>
+    {/* Render buttons based on questionType */}
+    {session.performance === "Disqualified" ? (
+      // Render the "Disqualified" button
+      <button className={`${styles.button} ${styles.disqualified}`} disabled>
+        Disqualified
+      </button>
+    ) : sectionData[session.sectionId]?.questionType === "MCQ" ? (
+      // For MCQ, show only "View" button
+      <button
+        className={`${styles.button} ${styles.view}`}
+        onClick={() =>
+          handleClick(userId, session._id, session.sectionId, "view")
+        }
+      >
+        View
+      </button>
+    ) : (
+      // For non-MCQ, show "Show" and "Evaluate" buttons
+      <>
+        <button
+          className={`${styles.button} ${styles.show}`}
+          onClick={() =>
+            handleClick(userId, session._id, session.sectionId, "show")
+          }
+        >
+          Show
+        </button>
+        <button
+          className={`${styles.button} ${styles.evaluate}`}
+          onClick={() =>
+            handleClick(userId, session._id, session.sectionId, "evaluate")
+          }
+        >
+          Evaluate
+        </button>
+      </>
+    )}
+  </div>
+))}
+
         </div>
         
           ) : (
