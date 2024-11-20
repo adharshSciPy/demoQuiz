@@ -26,11 +26,13 @@ function UserDescriptiveTable() {
                     `http://localhost:8000/api/v1/user/getsingledescriptivequestion/${sectionDetails.sectionId}`,
                     { params: { questionId: item.questionId } } // Pass questionId as a query parameter
                 );
-
+                // fetch each question mark from section
                 // Include the question text and status (isCorrect) in the final data
+                console.log("question response",questionResponse)
                 return { 
                     ...item, 
                     question: questionResponse.data.data.question, 
+                    totalMark:questionResponse.data.data.mark,
                     isCorrect: item.isCorrect // Preserve isCorrect from the original response
                 };
              
@@ -78,7 +80,7 @@ function UserDescriptiveTable() {
                                     <td>{index+1}</td>
                                     <td>{item.question}</td>
                                     <td>{item.markObtained}</td>
-                                    <td>5</td>
+                                    <td>{item.totalMark}</td>
                                     <td>{(item.answerText!=="skipped")?"Answered":"Skipped"}</td>
                                 </tr>
                                 ))}
