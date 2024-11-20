@@ -1,56 +1,59 @@
-/* General Styles */
-* {
-  box-sizing: border-box;
-}
+/* adminPage.css */
 
-/* Main Background */
 .main {
-  background: linear-gradient(to right, #82a9e5, #6095de);
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
-  /* overflow: scroll; */
+  background-color: #f9f9f9;
 }
-/* footer */
-.footer {
-  background-color: rgba(0, 0, 0, 0.8);
-  padding: 8px;
-  textalign: center;
-  color: white;
-  fontsize: 14px;
-  width: 100vw;
-  bottom: 0;
-  position: fixed;
-}
-
-/* Navbar Styling */
-
-/* Chart Styling */
 
 .chartpie {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  gap: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  gap: 20px;
+}
+
+.containerpie {
+  flex: 1;
+  max-width: 600px;
+  display: flex;
+  justify-content: center;
+}
+
+.containerpie .ant-card {
   width: 100%;
-  max-width: 1200px; /* Optional: Limit grid width on large screens */
+  border-radius: 8px;
 }
 
-/* Small screens (mobile devices) */
-@media (max-width: 600px) {
-  .gridContainer {
-    grid-template-columns: 1fr;
+.containerpie .ant-card .ant-card-body {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.chartpie .ant-card h4 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.navbar,
+.footer {
+  padding: 10px 20px;
+  position: fixed;
+  bottom: 0;
+  z-index: 100;
+}
+
+@media (max-width: 768px) {
+  .chartpie {
+    flex-direction: column;
+  }
+
+  .containerpie {
+    max-width: 100%;
   }
 }
-
-/* Medium screens (tablets) */
-@media (min-width: 601px) and (max-width: 900px) {
-  .gridContainer {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* Large screens (desktops) */
-@media (min-width: 901px) {
-  .gridContainer {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-

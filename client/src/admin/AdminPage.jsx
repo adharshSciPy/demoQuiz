@@ -61,8 +61,8 @@ function AdminPage() {
             }}
           >
             <Chart type="pie"
-              // width={700}
-              height={300}
+              width={500}
+              height={250}
               series={[userLength, sectionLength]}
               options={{
                 title: { text: "Assessment PieChart" },
@@ -88,8 +88,8 @@ function AdminPage() {
             }}
           >
             <Chart type="pie"
-              // width={700}
-              height={300}
+              width={500}
+              height={250}
               series={[24, 25, 35, 10]}
               options={{
                 title: { text: "User Performance" },
