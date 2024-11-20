@@ -8,6 +8,7 @@ import { useParams, useLocation } from 'react-router-dom';
 function UserMcqTable() {
     const [details, setDetails] = useState([]);
     const [questions, setQuestions] = useState([]);
+    const[sectionName,setSectionName]=useState([])
     const { userId, sessionId } = useParams();
     const location = useLocation();
     const { sectionDetails } = location.state || {};
@@ -42,9 +43,21 @@ function UserMcqTable() {
             console.error("Error fetching data:", error);
         }
     };
+    const fetchSectionName=async()=>{
+        try {
+            const response=await axios.get(`http://localhost:8000/api/v1/section/getsectionsbyid/${sectionDetails.sectionId}`)
+            
+            setSectionName(response.data.data.sectionName);
+            console.log("response for section name",response.data.data.sectionName)
+
+        } catch (error) {
+            console.log("Error",error)
+        }
+    }
 
     useEffect(() => {
         fetchSectionData();
+        fetchSectionName();
     }, []);
 
     return (
@@ -54,7 +67,7 @@ function UserMcqTable() {
                 <div className={styles.subDiv}>
                     <h1 className={styles.userHead}>User MCQ Table</h1>
                     <div className={styles.detailsDiv}>
-                        <p>Section Name: Section One</p>
+                        <p>Section Name:{sectionName}</p>
                         <p>Start Time: 12:35</p>
                         <p>End Time: 12:20</p>
                     </div>

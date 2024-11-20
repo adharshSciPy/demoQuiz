@@ -8,6 +8,7 @@ import { useParams, useLocation } from 'react-router-dom';
 function UserDescriptiveTable() {
     const [details, setDetails] = useState([]);
     const [questions, setQuestions] = useState([]);
+    const [sectionName,setSectionName]=useState([])
     const { userId, sessionId } = useParams();
     const location = useLocation();
     const { sectionDetails } = location.state || {};
@@ -18,6 +19,7 @@ function UserDescriptiveTable() {
             const response = await axios.get(`http://localhost:8000/api/v1/user/getuserwisedescriptive/${userId}/${sessionId}`);
             const questionDetails = response.data.data;
             setDetails(questionDetails);
+            
            
 
             // Fetch each question based on its questionId
@@ -26,9 +28,9 @@ function UserDescriptiveTable() {
                     `http://localhost:8000/api/v1/user/getsingledescriptivequestion/${sectionDetails.sectionId}`,
                     { params: { questionId: item.questionId } } // Pass questionId as a query parameter
                 );
-                // fetch each question mark from section
+                
                 // Include the question text and status (isCorrect) in the final data
-                console.log("question response",questionResponse)
+                // console.log("question response",questionResponse)
                 return { 
                     ...item, 
                     question: questionResponse.data.data.question, 
@@ -38,17 +40,30 @@ function UserDescriptiveTable() {
              
             });
             
-
+          
             const questionsWithText = await Promise.all(questionPromises);
             setQuestions(questionsWithText);
         } catch (error) {
             console.error("Error fetching data:", error);
         }
     };
+    const fetchSectionName=async()=>{
+        try {
+            const response=await axios.get(`http://localhost:8000/api/v1/section/getsectionsbyid/${sectionDetails.sectionId}`)
+            
+            setSectionName(response.data.data.sectionName);
+            console.log("response for section name",response.data.data.sectionName)
 
+        } catch (error) {
+            console.log("Error",error)
+        }
+    }
+    
     useEffect(() => {
         fetchSectionData();
-    }, []);
+        fetchSectionName();
+    }, []); // Empty dependency array to ensure it runs only once on mount
+    
     // console.log("haiiiiiii",details)
     // console.log("hellllooo",questions)
     return (
@@ -58,9 +73,12 @@ function UserDescriptiveTable() {
                 <div className={styles.subDiv}>
                     <h1 className={styles.userHead}>User Descriptive Table</h1>
                     <div className={styles.detailsDiv}>
-                        <p>Section Name: Section One</p>
+                        <p>Section Name: {sectionName}</p>
                         <p>Start Time: 12:35</p>
                         <p>End Time: 12:20</p>
+                    </div>
+                    <div className={styles.totalScoreDiv}>
+                        <h4 className={styles.totalScore}>Total Score:40</h4>
                     </div>
                     <table className={styles.table}>
                         <thead className={styles.thead}>
