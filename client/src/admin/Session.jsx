@@ -53,17 +53,30 @@ function Session() {
 
   const handleStartSession = async () => {
     try {
-      const session = sessions.find(item => item._id === sessionToStart);
+      const sessionIndex = sessions.findIndex(item => item._id === sessionToStart);
+      const session = sessions[sessionIndex];
+  
+      // Update on the server
       await axios.patch("http://localhost:8000/api/v1/section/startquiz", {
         sectionId: sessionToStart,
         questionType: session?.questionType,
       });
+  
+      // Update state: Set only the current session to active
+      const updatedSessions = sessions.map(item => ({
+        ...item,
+        isActive: item._id === sessionToStart,
+      }));
+      setSessions(updatedSessions);
+  
       console.log('Session started successfully');
       closeStartModal();
     } catch (error) {
       console.error('Error starting session:', error);
     }
   };
+  
+  
 
   const getSessions = async () => {
     try {
@@ -108,23 +121,42 @@ function Session() {
 
           {/* List of Sessions */}
           {sessions.map((item) => (
-            <div className={styles.sessionsListCard} key={item.id}>
-              <div className={styles.fontHead}>
-                <h5>{item.sectionName}</h5>
-                <p>{item.date}</p>
-                <h6>{`${item.questionType} Question`}</h6>
-              </div>
-              <div className={styles.icons}>
-                <FontAwesomeIcon className={styles.editIcon} icon={faPen} onClick={() => addQuestions(item._id, item.questionType)} />
-                <FontAwesomeIcon className={styles.viewIcon} icon={faEye} onClick={() => viewQuestions(item._id, item.questionType)} />
-                <FontAwesomeIcon className={styles.trashIcon} icon={faTrash} onClick={() => openDeleteModal(item._id)} />
-              </div>
-              <div className={styles.buttonDisplay}>
-                <button className={styles.actionButtonStart} onClick={() => openStartModal(item._id)}>Start</button>
-                <button className={styles.actionButtonEnd}>End</button>
-              </div>
-            </div>
-          ))}
+  <div className={styles.sessionsListCard} key={item._id}>
+    <div className={styles.fontHead}>
+      <h5>{item.sectionName}</h5>
+      <p>{item.date}</p>
+      <h6>{`${item.questionType} Question`}</h6>
+      {item.isActive && <span className={styles.activeBadge}>Active</span>}
+    </div>
+    <div className={styles.icons}>
+      <FontAwesomeIcon
+        className={styles.editIcon}
+        icon={faPen}
+        onClick={() => addQuestions(item._id, item.questionType)}
+      />
+      <FontAwesomeIcon
+        className={styles.viewIcon}
+        icon={faEye}
+        onClick={() => viewQuestions(item._id, item.questionType)}
+      />
+      <FontAwesomeIcon
+        className={styles.trashIcon}
+        icon={faTrash}
+        onClick={() => openDeleteModal(item._id)}
+      />
+    </div>
+    <div className={styles.buttonDisplay}>
+      <button
+        className={styles.actionButtonStart}
+        onClick={() => openStartModal(item._id)}
+      >
+        Start
+      </button>
+      {/* <button className={styles.actionButtonEnd}>End</button> */}
+    </div>
+  </div>
+))}
+
         </div>
       </div>
 
