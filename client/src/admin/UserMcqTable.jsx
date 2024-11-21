@@ -8,7 +8,10 @@ import { useParams, useLocation } from 'react-router-dom';
 function UserMcqTable() {
     const [details, setDetails] = useState([]);
     const [questions, setQuestions] = useState([]);
-    const[sectionName,setSectionName]=useState([])
+    const[sectionName,setSectionName]=useState([]);
+    const [performance,setPerformance]=useState('');
+    const [score,setScore]=useState();
+
     const { userId, sessionId } = useParams();
     const location = useLocation();
     const { sectionDetails } = location.state || {};
@@ -16,10 +19,19 @@ function UserMcqTable() {
     const fetchSectionData = async () => {
         try {
             // Fetch user-specific MCQ details
-            const response = await axios.get(`http://localhost:8000/api/v1/user/getuserwisemcq/${userId}/${sessionId}`);
-            const questionDetails = response.data.data;
+            const response = await axios.get(`http://localhost:8000/api/v1/user/getusermcqperfomance/${userId}/${sessionId}`);
+            const questionDetails = response.data.data.sessionDetails.mcqAnswers;
+            // console.log("question details response",response.data.data.sessionDetails)
+            const performanceDetails=response.data.data;
+            const scoreDetails=response.data.data.score;
+            console.log("score details",scoreDetails)
+            // console.log("perfomance details ghbhj",performanceDetails)
+            setPerformance(performanceDetails.performance);
+            
+            setScore(scoreDetails)
             setDetails(questionDetails);
-
+            
+            // console.log("state",performance)
             // Fetch each question based on its questionId
             const questionPromises = questionDetails.map(async (item) => {
                 const questionResponse = await axios.get(
@@ -48,8 +60,8 @@ function UserMcqTable() {
             const response=await axios.get(`http://localhost:8000/api/v1/section/getsectionsbyid/${sectionDetails.sectionId}`)
             
             setSectionName(response.data.data.sectionName);
-            console.log("response for section name",response.data.data.sectionName)
-
+            console.log("response aaaaaaaaaaa",response.data)
+            
         } catch (error) {
             console.log("Error",error)
         }
@@ -66,10 +78,17 @@ function UserMcqTable() {
             <div className={styles.mainDiv}>
                 <div className={styles.subDiv}>
                     <h1 className={styles.userHead}>User MCQ Table</h1>
+                    <div className={styles.mainDetailsDiv}>
                     <div className={styles.detailsDiv}>
                         <p>Section Name:{sectionName}</p>
                         <p>Start Time: 12:35</p>
                         <p>End Time: 12:20</p>
+                       
+                    </div>
+                    <div className={styles.perfomanceDiv}>
+                    <h6>Perfomance:{performance}</h6>
+                    <p>Total Score:{score}</p>
+                    </div>
                     </div>
                     <table className={styles.table}>
                         <thead className={styles.thead}>

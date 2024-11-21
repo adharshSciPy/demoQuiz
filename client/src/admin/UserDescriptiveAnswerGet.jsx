@@ -60,7 +60,7 @@ function UserDescriptiveAnswerGet() {
                     <h4>Question {index + 1}</h4>
                     {/* Uncomment these lines if you want to display more details */}
                     {/* <p>Answer: {answer.answerText}</p> */}
-                    {/* <p>Marks: {answer.markObtained}</p> */}
+                    <p>Marks: {answer.markObtained}</p>
                     <button
                       className={styles.viewButton}
                       onClick={() =>
