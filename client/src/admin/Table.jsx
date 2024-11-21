@@ -142,7 +142,14 @@ function ReportTable() {
                 <td>{item.userStrength}</td> */}
                 <td>{item.batch}</td>
                 <td>{formatDate(item.date)}</td>
-                <td><button className='btn btn-primary btn-sm p-1 w-50 ' onClick={()=>handleClick(item._id)} >View</button></td>
+                <td>
+  <button 
+    className="btn btn-primary btn-sm p-1  d-inline-block" 
+    style={{ width: '100px' }} 
+    onClick={() => handleClick(item._id)}>
+    View
+  </button>
+</td>
 
               </tr>
             ))

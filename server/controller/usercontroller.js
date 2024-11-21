@@ -1078,6 +1078,53 @@ const getUserWiseDescriptive = async (req, res) => {
   }
 };
 
+const getUserMcqPerformance = async (req, res) => {
+  const { userId, sessionId } = req.params;
+
+  // Validate input parameters
+  if (!userId || !sessionId) {
+    return res.status(400).json({ message: "Missing userId or sessionId" });
+  }
+
+  try {
+    // Fetch user by ID
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Find the session inside the user's sessions array
+    const session = user.sessions.find((s) => s._id.toString() === sessionId);
+    if (!session) {
+      return res
+        .status(404)
+        .json({ message: "Session not found in user's data" });
+    }
+
+    // Check performance and score in the session
+    if (session.performance !== "disqualified") {
+      const { performance, score } = session;
+
+      return res.status(200).json({
+        message: "Session retrieval successful",
+        data: {
+          performance,
+          score,
+          sessionDetails: session, // Include all session details for context
+        },
+      });
+    } else {
+      return res.status(200).json({
+        message: "User's performance is disqualified for this session",
+        data: { performance: session.performance },
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching user or session:", error);
+    return res.status(500).json({ message: "An error occurred", error: error.message });
+  }
+};
+
 
 export {
   registerUser,
@@ -1098,4 +1145,5 @@ export {
   getSingleDescriptiveQuestions,
   getSingleDescriptiveAnswers,
   getUserWiseDescriptive,
+  getUserMcqPerformance
 };

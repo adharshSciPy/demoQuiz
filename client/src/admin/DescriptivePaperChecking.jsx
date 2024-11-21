@@ -58,7 +58,7 @@ function DescriptivePaperChecking() {
           state: { sectionDetails },
         });
         
-      },2000) 
+      },1000) 
     } catch (error) {
       console.error("Error submitting marks:", error);
       toast.error("Failed to submit marks. Please try again.");

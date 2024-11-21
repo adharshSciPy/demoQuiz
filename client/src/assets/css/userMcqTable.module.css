@@ -1,3 +1,7 @@
+.mainDetailsDiv{
+  display: flex;
+  justify-content: space-between;
+}
 .mainDiv {
     display: flex;
     justify-content: center;
@@ -29,6 +33,14 @@
     font-size: 1rem;
     margin-bottom: 5px;
     align-items: flex-start;
+  }
+  .perfomanceDiv{
+    display: flex;
+    flex-direction: column;
+    /* gap: 5px; */
+    font-size: 1rem;
+    margin-bottom: 5px;
+    align-items: flex-end;
   }
   
   .table {
@@ -86,6 +98,13 @@
       text-align: left;
       color: #666;
       font-weight: normal;
+    }
+    .mainDetailsDiv{
+      display: block;
+    }
+    .perfomanceDiv{
+      align-items: self-start;
+      margin-top: 10px;
     }
   }
   

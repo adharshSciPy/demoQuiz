@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { registerUser, loginUser, refreshAccessToken, logoutUser, getMcquestions,getDescriptiveQuestions, submitQuiz,submitQuizMcq, getAllUsers,submitQuizDescriptive ,descriptiveQuizSubmit, checkUserQuizSubmit,getUserById, getUserWiseMcq, getSingleMcquestions, getSingleDescriptiveQuestions, getSingleDescriptiveAnswers, getUserWiseDescriptive} from '../controller/usercontroller.js'
+import { registerUser, loginUser, refreshAccessToken, logoutUser, getMcquestions,getDescriptiveQuestions, submitQuiz,submitQuizMcq, getAllUsers,submitQuizDescriptive ,descriptiveQuizSubmit, checkUserQuizSubmit,getUserById, getUserWiseMcq, getSingleMcquestions, getSingleDescriptiveQuestions, getSingleDescriptiveAnswers, getUserWiseDescriptive,getUserMcqPerformance} from '../controller/usercontroller.js'
 
 const userRouter = Router()
 
@@ -27,6 +27,8 @@ userRouter.route('/getsinglemcqquestion/:sectionId').get(getSingleMcquestions)
 userRouter.route('/getsingledescriptivequestion/:sectionId').get(getSingleDescriptiveQuestions)
 userRouter.route('/getsingledescriptiveanswers').get(getSingleDescriptiveAnswers)
 userRouter.route('/getuserwisedescriptive/:userId/:sessionId').get(getUserWiseDescriptive)
+userRouter.route('/getusermcqperfomance/:userId/:sessionId').get(getUserMcqPerformance)
+
 
 
 
