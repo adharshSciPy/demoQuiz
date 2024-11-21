@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setLogout } from '../features/slice/authSlice';
+import Logo from '../assets/img/Logo.png'
 import "./navbar.css"
 
 function NavbarStudent() {
@@ -17,7 +18,9 @@ function NavbarStudent() {
   return (
     <div>
       <nav>
-        <Link to='#' className='title'>eduapp</Link>
+        <div className='title'>
+          <img src={Logo} width={100} alt='logo' />
+        </div>
         <div className="menubar" onClick={() => { setmenuOpen(!menuOpen) }}>
           <span></span>
           <span></span>
