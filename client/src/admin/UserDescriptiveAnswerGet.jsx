@@ -3,11 +3,15 @@ import styles from "./../assets/css/userDescriptiveAnswerGet.module.css";
 import Navbar from "../navbar/Navbar";
 import Footer from "../footer/Footer";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import styles for toastify
+
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 
 function UserDescriptiveAnswerGet() {
-  const [data, setData] = useState([]);
-  const { userId } = useParams();
+  const [data, setData] = useState([]); // Data state
+  const [loading, setLoading] = useState(true); // Loading state
+  const { userId, sessionId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const { sectionDetails } = location.state || {};
@@ -17,19 +21,20 @@ function UserDescriptiveAnswerGet() {
     try {
       const response = await axios.get(
         `http://localhost:8000/api/v1/admin/getdescriptiveAnswerfromUser`,
-        { params: { userId } }
+        { params: { userId, sessionId } }
       );
-      setData(response.data.descriptiveSessions || []); // Fallback to empty array if undefined
-      console.log('response',response)
+      setData(response.data.descriptiveAnswers || []); // Update data state
     } catch (error) {
       console.error("Error fetching descriptive answers:", error);
-      alert("Failed to fetch data. Please try again later.");
+      toast.error("Failed to fetch data. Please try again later.");
+    } finally {
+      setLoading(false); // Stop loading once the request completes
     }
   };
 
   useEffect(() => {
     fetchDescriptiveData();
-  }, []);
+  }, []); // Dependency array ensures this runs only once
 
   const handleClick = (sessionId, sectionId, answerId, questionId) => {
     navigate(`/descriptivepaper/${userId}/${sessionId}`, {
@@ -45,31 +50,32 @@ function UserDescriptiveAnswerGet() {
           <h1 className={styles.userHead}>User Descriptive Answer Table</h1>
           <div className={styles.mainCard}>
             <div className={styles.cardContainer}>
-              {/* Conditional rendering for empty data */}
-              {data.length > 0 ? (
-                data.map((session) =>
-                  (session.descriptiveAnswers || []).map((answer, index) => (
-                    <div
-                      className={styles.card}
-                      key={`${session._id}-${index}`}
+              {/* Show loader if loading */}
+              {loading ? (
+                <p>Loading answers...</p>
+              ) : data.length > 0 ? (
+                // Render data when available
+                data.map((answer, index) => (
+                  <div className={styles.card} key={answer._id}>
+                    <h4>Question {index + 1}</h4>
+                    {/* Uncomment these lines if you want to display more details */}
+                    {/* <p>Answer: {answer.answerText}</p> */}
+                    {/* <p>Marks: {answer.markObtained}</p> */}
+                    <button
+                      className={styles.viewButton}
+                      onClick={() =>
+                        handleClick(
+                          sessionId, // Assuming sessionId is from params
+                          answer.sectionId,
+                          answer._id,
+                          answer.questionId
+                        )
+                      }
                     >
-                      <h4>Question {index + 1}</h4>
-                      <button
-                        className={styles.viewButton}
-                        onClick={() =>
-                          handleClick(
-                            session._id,
-                            session.sectionId,
-                            answer._id,
-                            answer.questionId
-                          )
-                        }
-                      >
-                        View
-                      </button>
-                    </div>
-                  ))
-                )
+                      View
+                    </button>
+                  </div>
+                ))
               ) : (
                 <p>No descriptive answers available.</p>
               )}
