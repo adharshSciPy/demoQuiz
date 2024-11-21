@@ -8,7 +8,8 @@ import { useParams, useLocation } from 'react-router-dom';
 function UserDescriptiveTable() {
     const [details, setDetails] = useState([]);
     const [questions, setQuestions] = useState([]);
-    const [sectionName,setSectionName]=useState([])
+    const [sectionName,setSectionName]=useState([]);
+    const[score,setScore]=useState('')
     const { userId, sessionId } = useParams();
     const location = useLocation();
     const { sectionDetails } = location.state || {};
@@ -16,9 +17,14 @@ function UserDescriptiveTable() {
     const fetchSectionData = async () => {
         try {
             // Fetch user-specific descriptive details
-            const response = await axios.get(`http://localhost:8000/api/v1/user/getuserwisedescriptive/${userId}/${sessionId}`);
-            const questionDetails = response.data.data;
+            const response = await axios.get(`http://localhost:8000/api/v1/user/getuserdescriptiveperfomance/${userId}/${sessionId}`);
+            const questionDetails = response.data.data.sessionDetails.descriptiveAnswers;
+            // console.log("question details",questionDetails)
+            const score=response.data.data.score;
+            // console.log("perfo",score)
             setDetails(questionDetails);
+            setScore(score)
+            // console.log("question details",questionDetails)
             
            
 
@@ -72,13 +78,15 @@ function UserDescriptiveTable() {
             <div className={styles.mainDiv}>
                 <div className={styles.subDiv}>
                     <h1 className={styles.userHead}>User Descriptive Table</h1>
+                    <div className={styles.mainDetailsDiv}>
                     <div className={styles.detailsDiv}>
                         <p>Section Name: {sectionName}</p>
                         <p>Start Time: 12:35</p>
                         <p>End Time: 12:20</p>
                     </div>
                     <div className={styles.totalScoreDiv}>
-                        <h4 className={styles.totalScore}>Total Score:40</h4>
+                        <h6 className={styles.totalScore}>Total Score:{score}</h6>
+                    </div>
                     </div>
                     <table className={styles.table}>
                         <thead className={styles.thead}>

@@ -55,7 +55,11 @@ const SectionSchema = new Schema({
         type: String
     },
     Questions: [ShortSchema],
-    MCQ: [McqSchema]
+    MCQ: [McqSchema],
+    // isActive:{
+    //     type:Boolean,
+    //     default:false
+    // }
 
 })
 
