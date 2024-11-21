@@ -9,7 +9,9 @@ function UserMcqTable() {
     const [details, setDetails] = useState([]);
     const [questions, setQuestions] = useState([]);
     const[sectionName,setSectionName]=useState([]);
-    const [perfomance,setPerfomance]=useState([]);
+    const [performance,setPerformance]=useState('');
+    const [score,setScore]=useState();
+
     const { userId, sessionId } = useParams();
     const location = useLocation();
     const { sectionDetails } = location.state || {};
@@ -17,13 +19,19 @@ function UserMcqTable() {
     const fetchSectionData = async () => {
         try {
             // Fetch user-specific MCQ details
-            const response = await axios.get(`http://localhost:8000/api/v1/user/getuserwisemcq/${userId}/${sessionId}`);
-            const questionDetails = response.data.data;
-            // console.log("question details response",response)
-
+            const response = await axios.get(`http://localhost:8000/api/v1/user/getusermcqperfomance/${userId}/${sessionId}`);
+            const questionDetails = response.data.data.sessionDetails.mcqAnswers;
+            // console.log("question details response",response.data.data.sessionDetails)
+            const performanceDetails=response.data.data;
+            const scoreDetails=response.data.data.score;
+            console.log("score details",scoreDetails)
+            // console.log("perfomance details ghbhj",performanceDetails)
+            setPerformance(performanceDetails.performance);
+            
+            setScore(scoreDetails)
             setDetails(questionDetails);
             
-
+            // console.log("state",performance)
             // Fetch each question based on its questionId
             const questionPromises = questionDetails.map(async (item) => {
                 const questionResponse = await axios.get(
@@ -78,8 +86,8 @@ function UserMcqTable() {
                        
                     </div>
                     <div className={styles.perfomanceDiv}>
-                    <h6>Perfomance:High</h6>
-                    <p>Total Score:90</p>
+                    <h6>Perfomance:{performance}</h6>
+                    <p>Total Score:{score}</p>
                     </div>
                     </div>
                     <table className={styles.table}>
