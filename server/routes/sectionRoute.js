@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { sectionPost, questionsSection, getSections, McqSection, deleteSections ,getSectionsById,deleteSectionMcq,deleteSectionDescripive,getQuizSection,getQuestionsFromSection,startQuiz} from "../controller/sectioncontroller.js"
+import { sectionPost, questionsSection, getSections, McqSection, deleteSections ,getSectionsById,deleteSectionMcq,deleteSectionDescripive,getQuizSection,getQuestionsFromSection,startQuiz, changeIsActiveBadge, checkActiveBadge, toggleReverse} from "../controller/sectioncontroller.js"
 
 const sectionRoute = Router();
 
@@ -14,6 +14,12 @@ sectionRoute.route("/deletesectiondescriptive/:sectionId").put(deleteSectionDesc
 sectionRoute.route("/startquiz").patch(startQuiz);
 sectionRoute.route("/getquizsection").get(getQuizSection)
 sectionRoute.route("/getquestionsfromsections/:sectionId").get(getQuestionsFromSection);
+sectionRoute.route("/togglestatus").patch(changeIsActiveBadge)
+sectionRoute.route("/checkactivebadge").get(checkActiveBadge)
+sectionRoute.route("/togglereverse").patch(toggleReverse)
+
+
+
 
 
 

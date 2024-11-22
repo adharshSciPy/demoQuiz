@@ -189,4 +189,94 @@ const getQuestionsFromSection = async (req, res) => {
     res.status(200).json({ message: "Quiz started",data:{sectionId,questionType} });
 };
 
-export { sectionPost, questionsSection, getSections, McqSection, deleteSections, getSectionsById, deleteSectionMcq, deleteSectionDescripive,getQuizSection,getQuestionsFromSection,startQuiz }
+const changeIsActiveBadge = async (req, res) => {
+    const { sectionId } = req.body;
+
+    if (!sectionId) {
+        return res.status(400).json({ message: "sectionId is required" });
+    }
+
+    try {
+        // Toggle isActiveBadge based on current value
+        const section = await Section.findById(sectionId);
+
+        if (!section) {
+            return res.status(404).json({ message: "Section not found" });
+        }
+
+        const updatedSection = await Section.findByIdAndUpdate(
+            sectionId,
+            { isActiveBadge: !section.isActiveBadge },
+            { new: true }
+        );
+
+        return res.status(200).json({
+            message: "Status toggled successfully",
+            data: updatedSection,
+        });
+    } catch (error) {
+        console.error("Error updating isActiveBadge:", error);
+        return res.status(500).json({ message: "Internal server error", error });
+    }
+};
+const toggleReverse=async(req,res)=>{
+    const { sectionId } = req.body;
+
+    if (!sectionId) {
+        return res.status(400).json({ message: "sectionId is required" });
+    }
+
+    try {
+        // Toggle isActiveBadge based on current value
+        const section = await Section.findById(sectionId);
+
+        if (!section) {
+            return res.status(404).json({ message: "Section not found" });
+        }
+
+        const updatedSection = await Section.findByIdAndUpdate(
+            sectionId,
+            { isActiveBadge: !section.isActiveBadge },
+            { new: true }
+        );
+
+        return res.status(200).json({
+            message: "Status toggled successfully",
+            data: updatedSection,
+        });
+    } catch (error) {
+        console.error("Error updating isActiveBadge:", error);
+        return res.status(500).json({ message: "Internal server error", error });
+    }
+}
+const checkActiveBadge = async (req, res) => {
+    const { sectionId } = req.query;
+  
+    // Validate the presence of sectionId
+    if (!sectionId) {
+      return res.status(400).json({ message: "sectionId is required" });
+    }
+  
+    try {
+      // Fetch the section by ID
+      const section = await Section.findById(sectionId);
+  
+      // Handle case where the section is not found
+      if (!section) {
+        return res.status(404).json({ message: "Section not found" });
+      }
+  
+      // Check the isActiveBadge status
+      const data = section.isActiveBadge === true;
+      return res.status(200).json({
+        message: "Data retrieval successful",
+        sectionId: section._id,
+        isActiveBadge: data,
+      });
+    } catch (error) {
+      // Return error details
+      return res.status(500).json({ message: "An error occurred", error });
+    }
+  };
+  
+export { sectionPost, questionsSection, getSections, McqSection, deleteSections, getSectionsById, deleteSectionMcq, deleteSectionDescripive,getQuizSection,getQuestionsFromSection,startQuiz,changeIsActiveBadge,checkActiveBadge ,toggleReverse}

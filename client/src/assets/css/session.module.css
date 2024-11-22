@@ -123,6 +123,21 @@
 .viewIcon:hover {
   color: #434344;
 }
+.activeBadge {
+  background-color: green;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+
+.endedBadge {
+  background-color: red;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
 
 /* Responsive Adjustments */
 

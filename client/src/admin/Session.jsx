@@ -16,6 +16,9 @@ function Session() {
   const [sessionToDelete, setSessionToDelete] = useState(null);
   const [sessionToStart, setSessionToStart] = useState(null); // Store the session ID to start
   const [sessions, setSessions] = useState([]);
+  const [statusCheck,setStatusCheck]=useState('')
+  const [statusCheck2,setStatusCheck2]=useState('')
+
   const navigate = useNavigate();
 
   const openAddModal = () => setIsAddModalOpen(true);
@@ -56,37 +59,74 @@ function Session() {
       const sessionIndex = sessions.findIndex(item => item._id === sessionToStart);
       const session = sessions[sessionIndex];
   
-      // Update on the server
+      // Step 1: Update on the server with `startquiz`
       await axios.patch("http://localhost:8000/api/v1/section/startquiz", {
         sectionId: sessionToStart,
         questionType: session?.questionType,
       });
   
-      // Update state: Set only the current session to active
+      // Step 2: Update on the server with `togglestatus`
+      await axios.patch("http://localhost:8000/api/v1/section/togglestatus", {
+        sectionId: sessionToStart,
+      });
+  
+      // Step 3: Call `checkactivebadge` and log the response
+      const { data } = await axios.get("http://localhost:8000/api/v1/section/checkactivebadge", {
+        params: { sectionId: sessionToStart },
+      });
+  
+      console.log('Check Active Badge Response:', data.isActiveBadge);
+      setStatusCheck(data.isActiveBadge)
+
+  
+      // Step 4: Update state: Set only the current session to active
       const updatedSessions = sessions.map(item => ({
         ...item,
         isActive: item._id === sessionToStart,
+        isActiveBadge: item._id === sessionToStart ? !item.isActiveBadge : item.isActiveBadge,
       }));
       setSessions(updatedSessions);
   
-      console.log('Session started successfully');
+      console.log('Session started, status toggled, and badge status checked successfully');
       closeStartModal();
     } catch (error) {
-      console.error('Error starting session:', error);
+      console.error('Error starting session, toggling status, or checking badge:', error);
     }
   };
   
   
-
+  const handleEndSession = async (sessionId) => {
+    try {
+      // Step 1: Call the `togglereverse` API
+      const { data } = await axios.patch("http://localhost:8000/api/v1/section/togglereverse", {
+        sectionId: sessionId,
+      });
+  
+      console.log('Toggle Reverse Response:', data.data.isActiveBadge);
+  setStatusCheck2(data.data.isActiveBadge)
+      // Step 2: Update the session state locally
+      const updatedSessions = sessions.map(item => 
+        item._id === sessionId ? { ...item, isActive: false, isActiveBadge: false } : item
+      );
+      setSessions(updatedSessions);
+  
+      console.log('Session ended successfully and state updated');
+    } catch (error) {
+      console.error('Error ending session:', error);
+    }
+  };
+  
+  
   const getSessions = async () => {
     try {
       const res = await axios.get("http://localhost:8000/api/v1/section/getsections");
+      // Ensure the backend includes `isActive` and `isActiveBadge` in the response
       setSessions(Array.isArray(res.data.data) ? res.data.data : []);
     } catch (error) {
-      console.log(error);
+      console.log("Error fetching sessions:", error);
     }
   };
-
+  
   useEffect(() => {
     getSessions();
   }, []);
@@ -118,71 +158,92 @@ function Session() {
               <h5>Add Session</h5>
             </div>
           </div>
-
+  
           {/* List of Sessions */}
           {sessions.map((item) => (
-  <div className={styles.sessionsListCard} key={item._id}>
-    <div className={styles.fontHead}>
-      <h5>{item.sectionName}</h5>
-      <p>{item.date}</p>
-      <h6>{`${item.questionType} Question`}</h6>
-      {item.isActive && <span className={styles.activeBadge}>Active</span>}
-    </div>
-    <div className={styles.icons}>
-      <FontAwesomeIcon
-        className={styles.editIcon}
-        icon={faPen}
-        onClick={() => addQuestions(item._id, item.questionType)}
-      />
-      <FontAwesomeIcon
-        className={styles.viewIcon}
-        icon={faEye}
-        onClick={() => viewQuestions(item._id, item.questionType)}
-      />
-      <FontAwesomeIcon
-        className={styles.trashIcon}
-        icon={faTrash}
-        onClick={() => openDeleteModal(item._id)}
-      />
-    </div>
-    <div className={styles.buttonDisplay}>
-      <button
-        className={styles.actionButtonStart}
-        onClick={() => openStartModal(item._id)}
-      >
-        Start
-      </button>
-      {/* <button className={styles.actionButtonEnd}>End</button> */}
-    </div>
-  </div>
-))}
+            <div className={styles.sessionsListCard} key={item._id}>
+              <div className={styles.fontHead}>
+                <h5>{item.sectionName}</h5>
+                <p>{item.date}</p>
+                <h6>{`${item.questionType} Question`}</h6>
+                {/* Updated Badge Logic */}
+               {/* Updated Badge Logic */}
+<span
+  className={
+    item.isActiveBadge === undefined
+      ? ''
+      : item.isActiveBadge
+      ? `${styles.activeBadge}`
+      : ``
+  }
+>
+  {item.isActiveBadge === undefined
+    ? ''
+    : item.isActiveBadge
+    ? 'Active'
+    : ''}
+</span>
 
+              </div>
+              <div className={styles.icons}>
+                <FontAwesomeIcon
+                  className={styles.editIcon}
+                  icon={faPen}
+                  onClick={() => addQuestions(item._id, item.questionType)}
+                />
+                <FontAwesomeIcon
+                  className={styles.viewIcon}
+                  icon={faEye}
+                  onClick={() => viewQuestions(item._id, item.questionType)}
+                />
+                <FontAwesomeIcon
+                  className={styles.trashIcon}
+                  icon={faTrash}
+                  onClick={() => openDeleteModal(item._id)}
+                />
+              </div>
+              <div className={styles.buttonDisplay}>
+                <button
+                  className={styles.actionButtonStart}
+                  onClick={() => openStartModal(item._id)}
+                >
+                  Start
+                </button>
+                <button
+                  className={styles.actionButtonEnd}
+                  onClick={() => handleEndSession(item._id)}
+                >
+                  End
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-
+  
       {/* Add Session Modal */}
       {isAddModalOpen && <AddSession onClose={closeAddModal} refreshSessions={getSessions} />}
-
+  
       {/* Delete Confirmation Modal */}
       <SessionModal
-  isOpen={isDeleteModalOpen}
-  onOk={handleDelete}
-  onCancel={closeDeleteModal}
-  title="Delete Session"
-  message="Are you sure you want to delete this session?"
-  confirmButtonText="Delete" // Optional: Change the button text
-/>
-
-<SessionModal
-  isOpen={isStartModalOpen}
-  onOk={handleStartSession}
-  onCancel={closeStartModal}
-  title="Start Session"
-  message="Are you sure you want to start this session?"
-  confirmButtonText="Start" // Optional: Change the button text
-/>
-
-
+        isOpen={isDeleteModalOpen}
+        onOk={handleDelete}
+        onCancel={closeDeleteModal}
+        title="Delete Session"
+        message="Are you sure you want to delete this session?"
+        confirmButtonText="Delete"
+      />
+  
+      {/* Start Session Modal */}
+      <SessionModal
+        isOpen={isStartModalOpen}
+        onOk={handleStartSession}
+        onCancel={closeStartModal}
+        title="Start Session"
+        message="Are you sure you want to start this session?"
+        confirmButtonText="Start"
+      />
+  
       <Footer />
     </div>
   );

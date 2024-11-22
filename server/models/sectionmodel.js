@@ -56,10 +56,10 @@ const SectionSchema = new Schema({
     },
     Questions: [ShortSchema],
     MCQ: [McqSchema],
-    // isActive:{
-    //     type:Boolean,
-    //     default:false
-    // }
+    isActiveBadge:{
+        type:Boolean,
+        default:false
+    }
 
 })
 
