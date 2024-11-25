@@ -1,0 +1,323 @@
+
+/* Body Styling */
+.body {
+    /* background-image: url('../img/quizbg.png'); */
+    background: linear-gradient(to bottom, rgb(255, 255, 255), #4a148c);
+  
+  
+    width: 100%;
+    height: 100vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Adjusts spacing to fit content */
+    padding-bottom: 2rem;
+  }
+  
+  /* General Container Styling */
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    /* margin-bottom: 3rem; */
+    
+    
+  }
+  
+  /* Dashboard Styling */
+  .dashboard {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 10px;
+    width: 80%;
+    max-width: 1200px;
+    margin:  auto;
+    padding: 40px 20px;
+  }
+  
+  /* Head Section */
+  .head {
+    color: #ffffff;
+    width: 50%;
+    padding: 20px;
+  }
+  .mainhead {
+    position: relative;
+    display: inline-block;
+    color: rgb(127, 24, 200); /* Text color */
+     /* Adjust text size if needed */
+  }
+  
+  .mainhead::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background-color: rgb(127, 24, 200); /* Line color */
+    transition: width 0.4s ease-in-out; /* Smooth animation */
+  }
+  
+  .mainhead:hover::after {
+    width: 100%; /* Full width on hover */
+  }
+  
+  
+  .head h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .head p {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  
+  /* Button Section */
+  .button {
+    width: 65%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    margin: auto;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.7); /* White with 70% transparency */
+    backdrop-filter: blur(5px); /* Light blur effect */
+  }
+  
+  .landingForm {
+    width: 100%;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Adjustments for Form Fields */
+  .email,
+  .password,
+  .name,
+  .batch,
+  .date{
+    margin-bottom: 8px;
+  }
+  
+  .label-email,
+  .label-password,
+  .label-name,
+  .label-batch,
+  .label-date {
+    font-weight: bold;
+    margin-bottom: 2px;
+    display: block;
+    color: rgb(127, 24, 200);;
+  }
+  
+  /* Input Fields */
+  .input-email,
+  .input-password,
+  .input-name {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    box-sizing: border-box;
+  }
+ /* Default Layout for screens above 834px */
+.dateBatchRow {
+    display: flex;
+    justify-content: space-between; /* Distribute inputs evenly */
+    align-items: center;
+    flex-wrap: nowrap; /* Ensure inputs stay in one row */
+    gap: 10px; /* Space between inputs */
+  }
+  
+  .input-batch,
+  .input-date {
+    width: calc(50% - 10px); /* Adjust width to fit side-by-side */
+    margin: 0; /* Remove extra margin */
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    box-sizing: border-box;
+  }
+  
+  input:focus {
+    outline: 2px solid rgb(127, 24, 200); /* Highlight input on focus */
+    border: none;
+  }
+  
+  
+  /* Submit Button */
+  .btnSubmit {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: none;
+    background-color:rgb(127, 24, 200);
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 2px;
+  }
+  
+  .btnSubmit:hover {
+    background-color: rgb(167, 80, 229);;
+  }
+  
+  /* Signup Div */
+  .signupDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+  
+  .paragraph {
+    margin: 0;
+    margin-right: 5px;
+    color: #333;
+  }
+  
+  .signupLink {
+    color: rgb(127, 24, 200);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+  }
+  
+  .signupLink:hover {
+    color:rgb(127, 24, 200);;
+    text-decoration: underline;
+  }
+  
+  
+  /* Footer Styling */
+  
+  
+  /* Responsive Adjustments */
+  @media (max-width: 1024px) {
+    .dashboard {
+      flex-direction: column-reverse;
+      padding: 20px;
+    }
+  
+    .head {
+      width: 100%;
+      text-align: center;
+    }
+  
+    .button {
+      width: 80%;
+      margin-top: 20px;
+    }
+    .input-batch,
+    .input-date {
+      width: 100%; /* Make inputs full-width on smaller screens */
+      margin: 0; /* Remove side margin for full-width inputs */
+    }
+  
+    .dateBatchRow {
+      flex-direction: column; /* Stack inputs vertically */
+      align-items: stretch; /* Ensure full-width alignment */
+    }
+  }
+
+  @media (max-width: 834px) {
+    .body{
+      
+        background-size: cover; /* Ensure the background covers the whole screen */
+        background-position: center;
+        background-attachment: scroll;
+        /* display: flex;
+        flex-direction: column-reverse; */
+      
+    }
+    .dashboard {
+      padding: 10px;
+    }
+  
+    .head h1 {
+      font-size: 2rem;
+    }
+  
+    .head p {
+      font-size: 0.95rem;
+    }
+  
+    .button {
+      width: 90%;
+    }
+    .input-batch,
+  .input-date {
+    width: 100%; /* Make inputs full-width on smaller screens */
+    margin: 0; /* Remove side margin for full-width inputs */
+  }
+
+  .dateBatchRow {
+    flex-direction: column; /* Stack inputs vertically */
+    align-items: stretch; /* Ensure full-width alignment */
+  }
+  }
+  
+  @media (max-width: 480px) {
+    .body{
+      background-size: cover; /* Ensure the background covers the whole screen */
+      background-position: center;
+      background-attachment: scroll;
+     
+    }
+    .dashboard{
+      width: 100%;
+      display: flex;
+      flex-direction: column-reverse;
+    }
+    .head h1 {
+      font-size: 1.8rem;
+    }
+  
+    .head p {
+      font-size: 0.85rem;
+    }
+  
+    .button {
+      width: 100%;
+     
+    }
+  
+    .landingForm {
+      padding: 15px;
+      opacity: 70%;
+    }
+  
+    .btnSubmit {
+      font-size: 15px;
+      padding: 9px;
+      
+    }
+    .btnDiv{
+      opacity: 100%;
+    }
+    .input-batch,
+    .input-date {
+      width: 100%; /* Full-width for extra small screens */
+      font-size: 12px; /* Slightly smaller font size for better fit */
+    }
+  
+    .dateBatchRow {
+      gap: 5px; /* Reduce gap for compact layout */
+    }
+  }
+  

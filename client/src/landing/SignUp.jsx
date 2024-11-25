@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../assets/css/landing.css';
+import styles from '../assets/css/signup.module.css'
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import FormControl from '@mui/material/FormControl';
@@ -9,6 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import FilledInput from '@mui/material/FilledInput';
+import Footer from '../footer/Footer';
 
 
 function SignUp() {
@@ -61,12 +62,12 @@ function SignUp() {
   };
 
   return (
-    <div className='body'>
-      <div className='container'>
-        <div className='dashboard'>
-          <div className='button'>
-            <form className="landingForm" onSubmit={handleSignup}>
-              <div className="date">
+    <div className={styles.body}>
+      <div className={styles.container}>
+        <div className={styles.dashboard}>
+          <div className={styles.button}>
+            <form className={styles.landingForm} onSubmit={handleSignup}>
+              {/* <div className={styles.date}>
                 <FormControl sx={{ m: 1, width: { xs: '100%' } }} variant="filled">
                   <InputLabel htmlFor="filled-adornment-date"></InputLabel>
                   <FilledInput
@@ -77,8 +78,8 @@ function SignUp() {
                     onChange={handleChange}
                   />
                 </FormControl>
-              </div>
-              <div className="name">
+              </div> */}
+              <div className={styles.name}>
                 <FormControl sx={{ m: 1, width: { xs: '100%' } }} variant="filled">
                   <InputLabel htmlFor="filled-adornment-name">Name</InputLabel>
                   <FilledInput
@@ -90,7 +91,7 @@ function SignUp() {
                   />
                 </FormControl>
               </div>
-              <div className="email">
+              <div className={styles.email}>
                 <FormControl sx={{ m: 1, width: { xs: '100%' } }} variant="filled">
                   <InputLabel htmlFor="filled-adornment-email">Email</InputLabel>
                   <FilledInput
@@ -102,7 +103,7 @@ function SignUp() {
                   />
                 </FormControl>
               </div>
-              <div className="password">
+              <div className={styles.password}>
                 <FormControl sx={{ m: 1, width: { xs: '100%' } }} variant="filled">
                   <InputLabel htmlFor="filled-adornment-password">Password</InputLabel>
                   <FilledInput
@@ -128,7 +129,7 @@ function SignUp() {
                 </FormControl>
               </div>
 
-              <div className="batch">
+              {/* <div className={styles.batch}>
                 <FormControl sx={{ m: 1, width: { xs: '100%' } }} variant="filled">
                   <InputLabel htmlFor="filled-adornment-batch">Batch</InputLabel>
                   <FilledInput
@@ -139,18 +140,45 @@ function SignUp() {
                     onChange={handleChange}
                   />
                 </FormControl>
-              </div>
-              <div className="btn-div">
-                <button type="submit" className="btn-submit">Sign Up</button>
+              </div> */}
+    <div className={styles.dateBatchRow}>
+  <div className={styles.date}>
+    <FormControl sx={{ m: 1, width: '100%' }} variant="filled">
+      <InputLabel htmlFor="filled-adornment-date"></InputLabel>
+      <FilledInput
+        id="filled-adornment-date"
+        type="date"
+        name="date"
+        value={form.date}
+        onChange={handleChange}
+      />
+    </FormControl>
+  </div>
+  <div className={styles.batch}>
+    <FormControl sx={{ m: 1, width: '100%' }} variant="filled">
+      <InputLabel htmlFor="filled-adornment-batch">Batch</InputLabel>
+      <FilledInput
+        id="filled-adornment-batch"
+        type="text"
+        name="batch"
+        value={form.batch}
+        onChange={handleChange}
+      />
+    </FormControl>
+  </div>
+</div>
+
+              <div className={styles.btnDiv}>
+                <button type="submit" className={styles.btnSubmit}>Sign Up</button>
               </div>
 
-              <div className="signup-div">
-                <p className='paragraph'>Already a Member?</p>
-                <Link className='signup-link' to="/" >Log In</Link>
+              <div className={styles.signupDiv}>
+                <p className={styles.paragraph}>Already a Member?</p>
+                <Link className={styles.signupLink} to="/" >Log In</Link>
               </div>
             </form>
           </div>
-          <div className='head'>
+          <div className={styles.head}>
             <h1>Why Wait?</h1>
             <p>
               Create your account and unlock exclusive access to all of our features.
@@ -158,11 +186,12 @@ function SignUp() {
           </div>
         </div>
       </div>
-      <footer className="footer">
-        <div className="right-panel">
+      {/* <footer className={styles.footerDiv}>
+        <div className={}>
           Scipy Technologies
         </div>
-      </footer>
+      </footer> */}
+      <Footer/>
     </div>
   );
 }
