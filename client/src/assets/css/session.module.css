@@ -3,7 +3,8 @@
 }
 
 .main {
-  background: linear-gradient(to right, #82a9e5, #6095de);
+  /* background: linear-gradient(to top, rgb(15, 15, 15), rgb(127, 24, 200)); */
+  background:rgb(127, 24, 200);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -23,7 +24,8 @@
   width: 300px;
   height: 250px;
   /* background-color: aliceblue; */
-  background: linear-gradient(to right, #9ebdec, #6095de);
+  /* background: linear-gradient(to bottom, rgb(255, 255, 255), rgb(127, 24, 200)); */
+  background:#fff;
   box-shadow: 0 20px 20px rgba(5, 5, 5, 0.1);
   border-radius: 10px;
   padding: 8px;
@@ -94,18 +96,19 @@
 .actionButtonStart,.actionButtonEnd{
   padding: auto;
   margin: auto;
-  background: #5988cb;
+  background: rgb(127, 24, 200);
   outline: none;
   border: none;
   border-radius: 8px;
   width: 100px;
   height: 45px;
+  color: #fff;
 }
 .actionButtonStart:hover{
-  background: #0e8e3f;
+  background: rgb(170, 79, 235);
 }
 .actionButtonEnd:hover{
-  background: #d11818;
+  background: #dcd6d6;
 }
 .activeBadge {
   display: inline-block;

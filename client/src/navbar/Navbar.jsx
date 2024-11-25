@@ -1,42 +1,86 @@
 import React, { useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setLogout } from '../features/slice/authSlice';
-import Logo from '../assets/img/Logo.png'
-import "./navbar.css"
+import Logo from '../assets/img/Logo.png';
+import "./navbar.css";
+import adminAvatar from '../assets/img/admin-removebg-preview.png';
 
 function Navbar() {
-  const [menuOpen, setmenuOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    dispatch(setLogout()); // Dispatch the logout action
-    localStorage.removeItem('token'); // Remove the token from local storage
-    navigate('/'); // Redirect to the admin login page
+    dispatch(setLogout());
+    localStorage.removeItem('token');
+    navigate('/');
   };
+
   return (
     <div>
-      <nav>
-        <div className='title'>
-          <img src={Logo} width={100} alt='logo'/>
+      <nav className="navbar">
+        <div className="navbar-header">
+          <img src={Logo} width={100} alt="logo" onClick={() => setDrawerOpen(!drawerOpen)} />
         </div>
-        <div className="menubar" onClick={() => { setmenuOpen(!menuOpen) }}>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-        <ul className={menuOpen ? "open" : " "}>
-          <li><NavLink to='/admindashboard'>Home</NavLink></li>
-          {/* <li><NavLink to='/questions'>Questions</NavLink></li> */}
-          <li><NavLink to='/session'>Session</NavLink></li>
 
-          <li><NavLink to='/report'>Report</NavLink></li>
-          <li><NavLink onClick={handleLogout}>Logout</NavLink></li>
-        </ul>
+        <div className={`drawer ${drawerOpen ? 'open' : ''}`}>
+          <div className="mainLogoDiv">
+            <img width={100} src={Logo} alt="Insight Logo" />
+          </div>
+          <hr />
+          <div className="drawer-header">
+            <img className="adminAvatarImg" src={adminAvatar} alt="Admin Avatar" />
+          </div>
+          <ul>
+            <li>
+              <NavLink
+                to="/admindashboard"
+                className={({ isActive }) => (isActive ? 'active' : '')}
+                onClick={() => setDrawerOpen(false)}
+              >
+                Home
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/session"
+                className={({ isActive }) => (isActive ? 'active' : '')}
+                onClick={() => setDrawerOpen(false)}
+              >
+                Session
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/report"
+                className={({ isActive }) => (isActive ? 'active' : '')}
+                onClick={() => setDrawerOpen(false)}
+              >
+                Report
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/"
+                className={({ isActive }) => (isActive ? 'active' : '')}
+                onClick={() => {
+                  handleLogout();
+                  setDrawerOpen(false);
+                }}
+              >
+                Logout
+              </NavLink>
+            </li>
+          </ul>
+          <div className="drawerDiv">
+            <p className="copyRight">Copyright © 2024 SciPy Technologies. All rights reserved</p>
+          </div>
+        </div>
+        {drawerOpen && <div className="backdrop" onClick={() => setDrawerOpen(false)}></div>}
       </nav>
     </div>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;

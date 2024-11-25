@@ -12,20 +12,16 @@ function UserwiseDetails() {
   const navigate = useNavigate();
   const fetchUserData = async () => {
     try {
-      // Fetch user details
       const response = await axios.get(
         `http://localhost:8000/api/v1/user/getuserById/${userId}`
       );
       const userData = response.data.data;
-      setDetails(userData);
-      console.log("details",details.sessions)
   
-      // Get unique sectionIds from user sessions
+      // Fetch section details as before
       const uniqueSectionIds = Array.from(
         new Set(userData.sessions.map((session) => session.sectionId))
       );
   
-      // Fetch section details using async/await and Promise.all
       const sectionPromises = uniqueSectionIds.map(async (sectionId) => {
         try {
           const res = await axios.get(
@@ -37,39 +33,23 @@ function UserwiseDetails() {
               name: res.data.data.sectionName,
               questionType: res.data.data.questionType,
             };
-          } else {
-            console.error(`Invalid section data for sectionId: ${sectionId}`);
-            return {
-              id: sectionId,
-              name: "Unknown Section",
-              questionType: "Unknown",
-            };
           }
         } catch (error) {
-          console.error(`Error fetching section data for sectionId: ${sectionId}`, error);
-          return {
-            id: sectionId,
-            name: "Error Loading",
-            questionType: "Error",
-          };
+          console.error(`Error fetching section for ${sectionId}`, error);
         }
+        return null;
       });
   
-      // Wait for all sectionPromises to resolve
       const resolvedSections = await Promise.all(sectionPromises);
-  
-      // Map resolved sections to sectionData
       const sectionDataMap = resolvedSections.reduce((acc, section) => {
-        acc[section.id] = {
-          name: section.name,
-          questionType: section.questionType,
-        };
+        if (section) acc[section.id] = section;
         return acc;
       }, {});
   
-      setSectionData(sectionDataMap); // Update state with resolved section data
+      setSectionData(sectionDataMap);
+      setDetails(userData);
     } catch (error) {
-      console.log("Error fetching user data:", error);
+      console.error("Error fetching user data:", error);
     }
   };
   
@@ -129,19 +109,20 @@ function UserwiseDetails() {
           </div>
           {details.sessions && details.sessions.length > 0 ? (
           <div className={styles.detailCards}>
-          {details.sessions.map((session, index) => (
+  {details.sessions.map((session, index) => (
   <div key={index} className={styles.card}>
     <h4>
-      {sectionData[session.sectionId]?.name || "Loading..."}
+      {sectionData[session.sectionId]?.name || session.sessionName || "Unknown"}
     </h4>
-    {/* Render buttons based on questionType */}
-    {session.performance === "Disqualified" ? (
-      // Render the "Disqualified" button
+    {session.isDeleted ? (
+      <button className={`${styles.button} ${styles.disqualified}`} disabled>
+        Deleted
+      </button>
+    ) : session.performance === "Disqualified" ? (
       <button className={`${styles.button} ${styles.disqualified}`} disabled>
         Disqualified
       </button>
     ) : sectionData[session.sectionId]?.questionType === "MCQ" ? (
-      // For MCQ, show only "View" button
       <button
         className={`${styles.button} ${styles.view}`}
         onClick={() =>
@@ -151,7 +132,6 @@ function UserwiseDetails() {
         View
       </button>
     ) : (
-      // For non-MCQ, show "Show" and "Evaluate" buttons
       <>
         <button
           className={`${styles.button} ${styles.show}`}
@@ -173,6 +153,7 @@ function UserwiseDetails() {
     )}
   </div>
 ))}
+
 
         </div>
         
