@@ -10,6 +10,8 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import FilledInput from '@mui/material/FilledInput';
 import Footer from '../footer/Footer';
+import { Grid } from "@mui/material";
+
 
 
 function SignUp() {
@@ -141,32 +143,32 @@ function SignUp() {
                   />
                 </FormControl>
               </div> */}
-    <div className={styles.dateBatchRow}>
-  <div className={styles.date}>
-    <FormControl sx={{ m: 1, width: '100%' }} variant="filled">
-      <InputLabel htmlFor="filled-adornment-date"></InputLabel>
-      <FilledInput
-        id="filled-adornment-date"
-        type="date"
-        name="date"
-        value={form.date}
-        onChange={handleChange}
-      />
-    </FormControl>
-  </div>
-  <div className={styles.batch}>
-    <FormControl sx={{ m: 1, width: '100%' }} variant="filled">
-      <InputLabel htmlFor="filled-adornment-batch">Batch</InputLabel>
-      <FilledInput
-        id="filled-adornment-batch"
-        type="text"
-        name="batch"
-        value={form.batch}
-        onChange={handleChange}
-      />
-    </FormControl>
-  </div>
-</div>
+              <div className={styles.dateBatchRow}>
+                <div className={styles.date}>
+                  <FormControl sx={{ m: 1, width: '100%' }} variant="filled">
+                    <InputLabel htmlFor="filled-adornment-date"></InputLabel>
+                    <FilledInput
+                      id="filled-adornment-date"
+                      type="date"
+                      name="date"
+                      value={form.date}
+                      onChange={handleChange}
+                    />
+                  </FormControl>
+                </div>
+                <div className={styles.batch}>
+                  <FormControl sx={{ m: 1, width: '100%' }} variant="filled">
+                    <InputLabel htmlFor="filled-adornment-batch">Batch</InputLabel>
+                    <FilledInput
+                      id="filled-adornment-batch"
+                      type="text"
+                      name="batch"
+                      value={form.batch}
+                      onChange={handleChange}
+                    />
+                  </FormControl>
+                </div>
+              </div>
 
               <div className={styles.btnDiv}>
                 <button type="submit" className={styles.btnSubmit}>Sign Up</button>
@@ -179,10 +181,18 @@ function SignUp() {
             </form>
           </div>
           <div className={styles.head}>
-            <h1>Why Wait?</h1>
-            <p>
-              Create your account and unlock exclusive access to all of our features.
-            </p>
+            <Grid item xs={12} md={5} display={{ xs: "none", md: "block" }}>
+              <div>
+                <lottie-player
+                  src="https://assets4.lottiefiles.com/packages/lf20_akio2kni.json"
+                  background="rgba(0, 0, 0, 0)"
+                  speed="1"
+                  loop
+                  autoplay
+                  style={{ width: "100%", height: "100%" }}
+                ></lottie-player>
+              </div>
+            </Grid>
           </div>
         </div>
       </div>
@@ -191,7 +201,7 @@ function SignUp() {
           Scipy Technologies
         </div>
       </footer> */}
-      <Footer/>
+      <Footer />
     </div>
   );
 }

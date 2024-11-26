@@ -15,6 +15,7 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import FilledInput from '@mui/material/FilledInput';
+import { Grid } from "@mui/material";
 
 
 
@@ -162,8 +163,18 @@ function LandingPage() {
             </form>
           </div>
           <div className='head'>
-            <h1>Welcome to Eduapp</h1>
-            <p>Dive into a diverse world of quizzes with Eduapp. Whether you're a tech enthusiast or just love trivia, our app offers a rich blend of technical and non-technical questions to challenge and entertain you.</p>
+            <Grid item xs={12} md={5} display={{ xs: "none", md: "block" }}>
+              <div>
+                <lottie-player
+                  src="https://assets4.lottiefiles.com/packages/lf20_akio2kni.json"
+                  background="rgba(0, 0, 0, 0)"
+                  speed="1"
+                  loop
+                  autoplay
+                  style={{ width: "100%", height: "100%" }}
+                ></lottie-player>
+              </div>
+            </Grid>
           </div>
         </div>
       </div>
