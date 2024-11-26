@@ -1,5 +1,6 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "./App.css";
+import "@lottiefiles/lottie-player";
 import LandingPage from "./landing/LandingPage";
 import SignUp from './landing/SignUp';
 import AdminDashboard from './admin/AdminPage';
