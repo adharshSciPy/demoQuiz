@@ -117,7 +117,7 @@ const DescriptiveQuiz = ({sectionId}) => {
 
 
   const [hours, setHours] = useState(0);
-  const [minutes, setMinutes] = useState(1);
+  const [minutes, setMinutes] = useState(30);
   const [seconds, setSeconds] = useState(0);
 
   useEffect(() => {
@@ -148,7 +148,7 @@ const DescriptiveQuiz = ({sectionId}) => {
     <div className="mt-5 d-flex align-items-center justify-content-center">
       <div className="w-75 p-4 bg-light border rounded shadow">
         <header className="mb-4 text-center">
-          <h1 className="display-4">Quiz</h1>
+          <h1 className="display-4" style={{color:"#4a148c"}}>Quiz</h1>
           {quizSubmitted ? (
             <p className="text-success">Quiz submitted successfully!</p>
           ) : (
@@ -189,7 +189,8 @@ const DescriptiveQuiz = ({sectionId}) => {
               <div className="d-flex justify-content-between mt-4">
                 <button
                   type="button"
-                  className="btn btn-secondary"
+                  style={{backgroundColor:"#4a148c",padding:"5px",borderRadius:"5px",border:"none",color:"white",width:'100px'}}
+
                   onClick={() => setCurrentQuestionIndex(currentQuestionIndex - 1)}
                   disabled={currentQuestionIndex === 0}
                 >
@@ -197,7 +198,7 @@ const DescriptiveQuiz = ({sectionId}) => {
                 </button>
                 <button
                   type="button"
-                  className="btn btn-primary"
+                  style={{backgroundColor:"#4a148c",padding:"5px",borderRadius:"5px",border:"none",color:"white",width:'100px'}}
                   onClick={handleNext}
                 >
                   {currentQuestionIndex === questions.length - 1 ? 'Submit' : 'Next'}

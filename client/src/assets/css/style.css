@@ -28,7 +28,7 @@
     width: 105px;
     height: 70px;
     border-radius: 10px;
-    background: linear-gradient(to right, #82A9E5, #6095DE);
+    background-color: #e1d6ee;
     stroke:black;
     position: absolute;
     right: 15px;
@@ -44,6 +44,7 @@ align-items: center;
 .timerHead{
 font-size: larger;
 font-weight: 800;
+color: #4a148c;
 }
 .timerRed{
     /* border: 2px solid rgb(250, 81, 81); */

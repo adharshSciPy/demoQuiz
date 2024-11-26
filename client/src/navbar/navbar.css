@@ -28,6 +28,12 @@
   margin-bottom: 1rem;
   transition: width 0.3s ease; /* Smooth resizing */
 }
+.studentAvatarImg{
+  width: 100px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  transition: width 0.3s ease;
+}
 
 /* Drawer Styling */
 .drawer {

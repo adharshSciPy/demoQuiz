@@ -67,9 +67,9 @@ function StudentPage() {
         <Instructions onStartQuiz={handleStartQuiz} />
       )}
 
-      <footer className="footer">
+      {/* <footer className="footer">
         <div className="right-panel">Scipy Technologies &copy; 2024</div>
-      </footer>
+      </footer> */}
     </div>
   );
 }

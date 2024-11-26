@@ -1,38 +1,94 @@
 import React, { useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setLogout } from '../features/slice/authSlice';
-import Logo from '../assets/img/Logo.png'
-import "./navbar.css"
+import Logo from '../assets/img/Logo.png';
+import "./navbar.css";
+import studentAvatar from '../assets/img/studentavatar-removebg-preview.png'; // Add student avatar image (optional)
 
 function NavbarStudent() {
-  const [menuOpen, setmenuOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     dispatch(setLogout()); // Dispatch the logout action
     localStorage.removeItem('token'); // Remove the token from local storage
-    navigate('/'); // Redirect to the admin login page
+    navigate('/'); // Redirect to the login page
   };
+
   return (
     <div>
-      <nav>
-        <div className='title'>
-          <img src={Logo} width={100} alt='logo' />
+      <nav className="navbar">
+        <div className="navbar-header">
+          <img
+            src={Logo}
+            width={100}
+            alt="logo"
+            onClick={() => setDrawerOpen(!drawerOpen)} // Toggle drawer on logo click
+          />
         </div>
-        <div className="menubar" onClick={() => { setmenuOpen(!menuOpen) }}>
-          <span></span>
-          <span></span>
-          <span></span>
+
+        {/* Drawer Menu */}
+        <div className={`drawer ${drawerOpen ? 'open' : ''}`}>
+          <div className="mainLogoDiv">
+            <img width={100} src={Logo} alt="Insight Logo" />
+          </div>
+          <hr />
+          <div className="drawer-header">
+            <img className="studentAvatarImg" src={studentAvatar} alt="Student Avatar" />
+          </div>
+          <ul>
+            <li>
+              <NavLink
+                to="/studentdashboard"
+                className={({ isActive }) => (isActive ? 'active' : '')}
+                onClick={() => setDrawerOpen(false)}
+              >
+                Home
+              </NavLink>
+            </li>
+            {/* <li>
+              <NavLink
+                to="/instructions"
+                className={({ isActive }) => (isActive ? 'active' : '')}
+                onClick={() => setDrawerOpen(false)}
+              >
+                Instructions
+              </NavLink>
+            </li> */}
+            {/* <li>
+              <NavLink
+                to="/disqualified"
+                className={({ isActive }) => (isActive ? 'active' : '')}
+                onClick={() => setDrawerOpen(false)}
+              >
+                Disqualified
+              </NavLink>
+            </li> */}
+            <li>
+              <NavLink
+                to="/"
+                className={({ isActive }) => (isActive ? 'active' : '')}
+                onClick={() => {
+                  handleLogout();
+                  setDrawerOpen(false);
+                }}
+              >
+                Logout
+              </NavLink>
+            </li>
+          </ul>
+          <div className="drawerDiv">
+            <p className="copyRight">Copyright © 2024 SciPy Technologies. All rights reserved</p>
+          </div>
         </div>
-        <ul className={menuOpen ? "open" : " "}>
-          <li><NavLink to='/studentdashboard'>Home</NavLink></li>
-          <li><NavLink onClick={handleLogout}>Logout</NavLink></li>
-        </ul>
+
+        {/* Backdrop for closing drawer when clicked outside */}
+        {drawerOpen && <div className="backdrop" onClick={() => setDrawerOpen(false)}></div>}
       </nav>
     </div>
-  )
+  );
 }
 
-export default NavbarStudent
+export default NavbarStudent;

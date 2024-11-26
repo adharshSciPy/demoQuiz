@@ -131,7 +131,7 @@ const Quiz = ({ sectionId }) => { // Receive sectionId as a prop
   // Timer functionality
   const [hours, setHours] = useState(0); // Start with 0 hours
   const [minutes, setMinutes] = useState(1); // Start with 1 minute
-  const [seconds, setSeconds] = useState(0); // Start with 0 seconds
+  const [seconds, setSeconds] = useState(50); // Start with 50 seconds
 
   useEffect(() => {
     if (hours === 0 && minutes === 0 && seconds === 0 && !quizSubmitted) {
@@ -162,7 +162,7 @@ const Quiz = ({ sectionId }) => { // Receive sectionId as a prop
     <div className="mt-5 d-flex align-items-center justify-content-center">
       <div className="w-75 p-4 bg-light border rounded shadow">
         <header className="mb-4 text-center">
-          <h1 className="display-4">Quiz</h1>
+          <h1 className="display-4"style={{color:"#4a148c"}}>Quiz</h1>
           {quizSubmitted ? (
             <p className="text-success">Quiz submitted successfully!</p>
           ) : (
@@ -216,7 +216,8 @@ const Quiz = ({ sectionId }) => { // Receive sectionId as a prop
               <div className="d-flex justify-content-between mt-4">
                 <button
                   type="button"
-                  className="btn btn-secondary"
+                  style={{backgroundColor:"#4a148c",padding:"5px",borderRadius:"5px",border:"none",color:"white",width:'100px'}}
+
                   onClick={() => setCurrentQuestionIndex(currentQuestionIndex - 1)}
                   disabled={currentQuestionIndex === 0}
                 >
@@ -224,7 +225,8 @@ const Quiz = ({ sectionId }) => { // Receive sectionId as a prop
                 </button>
                 <button
                   type="button"
-                  className="btn btn-primary"
+                  style={{backgroundColor:"#4a148c",padding:"5px",borderRadius:"5px",border:"none",color:"white",width:'100px'}}
+                
                   onClick={handleNext}
                 >
                   {currentQuestionIndex === questions.length - 1 ? 'Submit' : 'Next'}
