@@ -44,7 +44,7 @@ function DescriptiveQuestions () {
     return (
         <div>
             <Navbar />
-
+<div className="tableMain">
             <Table striped>
                 <thead>
                     <tr>
@@ -79,7 +79,7 @@ function DescriptiveQuestions () {
                     )}
                 </tbody>
             </Table>
-
+            </div>
         </div>
     )
 }

@@ -1,6 +1,6 @@
 /* Default Styles */
 .main {
-    background-color: #6095de;
+    background: linear-gradient(to bottom, rgb(255, 255, 255), #4a148c);
     width: 100%;
     height: 100vh;
 }
@@ -17,8 +17,9 @@
     width: 10%;
     height: 45px;
     color: #fff;
-    background-color: #0d6efd;
-    border-color: #0d6efd;
+    background-color: #92969b;
+    /* border-color: #0d6efd; */
+    border:none;
     padding: auto;
     font-size: 1rem;
     font-weight: 500;
@@ -35,6 +36,7 @@
     justify-content: center;
     flex-direction: column;
     width: 85%;
+    
 }
 .inputDiv {
     width: 40%;
@@ -52,6 +54,9 @@
     padding: 10px;
     margin-bottom: 20px;
     border: none;
+}
+.formLabel{
+    color: #fff;
 }
 
 /* Extra Small Devices (up to 576px) */

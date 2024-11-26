@@ -27,6 +27,8 @@
   }
   .totalScoreDiv{
     display: flex;
+    font-size: 1rem;
+    font-weight: 700;
 
   }
   .detailsDiv {
@@ -45,14 +47,19 @@
     margin-bottom: 5px;
     align-items: flex-end;
   }
+  p{
+    font-size: 1rem;
+    font-weight: 700;
+  }
   
   .table {
     width: 100%;
     border-collapse: collapse;
+    
   }
   
   .thead {
-    background-color: #6095de;
+    background-color: #4a148c;
     color: white;
   }
   
@@ -99,7 +106,7 @@
       content: attr(data-label);
       flex-basis: 50%;
       text-align: left;
-      color: #666;
+      color: #666666;
       font-weight: normal;
     }
     .mainDetailsDiv{

@@ -11,7 +11,7 @@ function Report() {
   return (
     <div className='main'>
         <Navbar/>
-       <h3 className='text-white'>Student Report</h3>
+       <h3 className='text-black'>Student Report</h3>
         <ReportTable/>
        {/* <Footer/> */}
       

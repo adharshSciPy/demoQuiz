@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: linear-gradient(to bottom, rgb(255, 255, 255), rgb(127, 24, 200));
+  background: linear-gradient(to bottom, rgb(255, 255, 255), #4a148c);
 }
 
 .chartpie {

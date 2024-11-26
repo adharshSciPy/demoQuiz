@@ -71,7 +71,12 @@ const Question = () => {
   };
 
   return (
-    <div style={{ backgroundColor: "#6095de", minHeight: "100vh" }}>
+    <div
+  style={{
+    background: "linear-gradient(to top, #4a148c, #fff)",
+    minHeight: "100vh"
+  }}
+>
       <Navbar />
       <div className="container mt-5 pb-5">
         <ToastContainer
@@ -87,15 +92,16 @@ const Question = () => {
         <form onSubmit={submitHandler}>
           {/* Question Type */}
           <div className="mb-4">
-            <label htmlFor="type" className="form-label">Type</label>
+            <label htmlFor="type" className="form-label"style={{color:"white"}}>Type</label>
             <select
               name="category"
               id="type"
               className="form-select"
+             
               value={form.category}
               onChange={handleInputChange}
             >
-              <option value="">Select Type</option>
+              <option value=""  >Select Type</option>
               <option value="Technical">Technical</option>
               <option value="NonTechnical">Non Technical</option>
             </select>
@@ -103,7 +109,7 @@ const Question = () => {
 
           {/* Question Text */}
           <div className="mb-4">
-            <label htmlFor="question" className="form-label">Question</label>
+            <label htmlFor="question" className="form-label"style={{color:"white"}}>Question</label>
             <textarea
               name="question"
               id="question"
@@ -117,7 +123,7 @@ const Question = () => {
 
           {/* Options */}
           <div className="mb-4">
-            <label className="form-label">Options</label>
+            <label className="form-label"style={{color:"white"}}>Options</label>
             <div className="row">
               <div className="col-md-6 mb-2">
                 <input
@@ -166,7 +172,7 @@ const Question = () => {
 
           {/* Correct Answer */}
           <div className="mb-4">
-            <label htmlFor="correctAnswer" className="form-label">Correct Answer</label>
+            <label htmlFor="correctAnswer" className="form-label"style={{color:"white"}}>Correct Answer</label>
             <select
               name="correctAns"
               id="correctAnswer"
@@ -183,7 +189,7 @@ const Question = () => {
           </div>
 
           {/* Submit Button */}
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-secondary">
             Submit
           </button>
         </form>

@@ -45,7 +45,7 @@ function AdminTable() {
   return (
     <div>
       <Navbar />
-
+<div className="tableMain">
       <Table striped>
         <thead>
           <tr>
@@ -89,6 +89,7 @@ function AdminTable() {
           )}
         </tbody>
       </Table>
+      </div>
     </div>
   );
 }

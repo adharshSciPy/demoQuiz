@@ -47,7 +47,7 @@ function UserDescriptiveAnswerGet() {
       <Navbar />
       <div className={styles.main}>
         <div className={styles.subDiv}>
-          <h1 className={styles.userHead}>User Descriptive Answer Table</h1>
+          <h1 className={styles.userHead}> Descriptive Answers</h1>
           <div className={styles.mainCard}>
             <div className={styles.cardContainer}>
               {/* Show loader if loading */}

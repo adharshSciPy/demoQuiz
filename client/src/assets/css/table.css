@@ -1,3 +1,7 @@
+.tableMain{
+  background: linear-gradient(to bottom, rgb(255, 255, 255), #4a148c);
+  height: 100vh;
+}
 /* General styling for the table container */
 .table-container {
     padding: 20px;

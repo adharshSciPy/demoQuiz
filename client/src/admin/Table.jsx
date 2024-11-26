@@ -144,8 +144,8 @@ function ReportTable() {
                 <td>{formatDate(item.date)}</td>
                 <td>
   <button 
-    className="btn btn-primary btn-sm p-1  d-inline-block" 
-    style={{ width: '100px' }} 
+    className="btn-sm p-1  d-inline-block" 
+    style={{ width: '100px' ,backgroundColor:'#4a148c',color:"white",borderRadius:'8px',border:'none'}} 
     onClick={() => handleClick(item._id)}>
     View
   </button>

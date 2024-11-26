@@ -97,7 +97,7 @@ function UserwiseDetails() {
     <div>
       <Navbar />
       <div className={styles.main}>
-        <h1 className={styles.mainHead}>User Details</h1>
+        {/* <h1 className={styles.mainHead}>User Details</h1> */}
         <div className={styles.subDiv}>
           <h3 className={styles.userName}>Name: {details.fullName}</h3>
           <div className={styles.detailsDiv}>

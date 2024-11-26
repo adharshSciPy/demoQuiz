@@ -32,7 +32,7 @@
   gap: 10px;
   width: 80%;
   max-width: 1200px;
-  margin: auto;
+  margin:  auto;
   padding: 40px 20px;
 }
 
@@ -77,14 +77,15 @@
 
 /* Button Section */
 .button {
-  width: 40%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px;
-  border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.7); /* White with 70% transparency */
-  backdrop-filter: blur(5px); /* Light blur effect */
+  width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    margin: auto;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.7); /* White with 70% transparency */
+    backdrop-filter: blur(5px);
 }
 
 .landingForm {
@@ -117,10 +118,7 @@
 
 /* Input Fields */
 .input-email,
-.input-password,
-.input-name,
-.input-batch,
-.input-date {
+.input-password {
   width: 100%;
   padding: 10px;
   font-size: 14px;
@@ -194,9 +192,19 @@
     width: 80%;
     margin-top: 20px;
   }
+  .input-batch,
+  .input-date {
+    width: 100%; /* Make inputs full-width on smaller screens */
+    margin: 0; /* Remove side margin for full-width inputs */
+  }
+
+  .dateBatchRow {
+    flex-direction: column; /* Stack inputs vertically */
+    align-items: stretch; /* Ensure full-width alignment */
+  }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 834px) {
   .body{
     
       background-size: cover; /* Ensure the background covers the whole screen */
@@ -221,6 +229,16 @@
   .button {
     width: 90%;
   }
+  .input-batch,
+.input-date {
+  width: 100%; /* Make inputs full-width on smaller screens */
+  margin: 0; /* Remove side margin for full-width inputs */
+}
+
+.dateBatchRow {
+  flex-direction: column; /* Stack inputs vertically */
+  align-items: stretch; /* Ensure full-width alignment */
+}
 }
 
 @media (max-width: 480px) {
@@ -253,12 +271,22 @@
     opacity: 70%;
   }
 
-  .btn-submit {
+  .btnSubmit {
     font-size: 15px;
     padding: 9px;
     
   }
-  .btn-div{
+  .btnDiv{
     opacity: 100%;
   }
+  .input-batch,
+  .input-date {
+    width: 100%; /* Full-width for extra small screens */
+    font-size: 12px; /* Slightly smaller font size for better fit */
+  }
+
+  .dateBatchRow {
+    gap: 5px; /* Reduce gap for compact layout */
+  }
 }
+

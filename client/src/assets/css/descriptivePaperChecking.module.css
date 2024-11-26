@@ -3,7 +3,9 @@
   padding: 20px;
   /* margin: 4rem auto; */
   /* max-width: 1200px; */
-  background-color: rgb(127, 24, 250);
+  /* background-color: rgb(127, 24, 250); */
+  background: linear-gradient(to bottom, rgb(255, 255, 255), #4a148c);
+
   /* border-radius: 8px; */
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   height: 100vh;
@@ -14,7 +16,7 @@
 .sectionName {
   font-size: 24px;
   font-weight: bold;
-  color: #f0eded;
+  color: #080808;
   margin-bottom: 20px;
   text-align: center;
 }
@@ -83,10 +85,10 @@
 }
 
 .mark input:focus {
-  border-color: #007bff;
+  border-color:#4a148c;
 }
 .button{
-  background-color: #007bff;
+  background-color: #4a148c;
   border-radius: 4px;
   border: none;
   margin:10px;

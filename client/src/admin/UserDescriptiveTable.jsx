@@ -77,12 +77,12 @@ function UserDescriptiveTable() {
             <Navbar/>
             <div className={styles.mainDiv}>
                 <div className={styles.subDiv}>
-                    <h1 className={styles.userHead}>User Descriptive Table</h1>
+                    {/* <h1 className={styles.userHead}>User Descriptive Table</h1> */}
                     <div className={styles.mainDetailsDiv}>
                     <div className={styles.detailsDiv}>
                         <p>Section Name: {sectionName}</p>
-                        <p>Start Time: 12:35</p>
-                        <p>End Time: 12:20</p>
+                        {/* <p>Start Time: 12:35</p>
+                        <p>End Time: 12:20</p> */}
                     </div>
                     <div className={styles.totalScoreDiv}>
                         <h6 className={styles.totalScore}>Total Score:{score}</h6>
