@@ -7,6 +7,7 @@ import adminRouter from './routes/adminRouter.js'
 import userRouter from './routes/userRouter.js';
 import questionRouter from './routes/questionRouter.js';
 import sectionRoute from './routes/sectionRoute.js';
+import superAdminRouter from './routes/superAdminRouter.js';
 
 dotenv.config()
 
@@ -25,5 +26,7 @@ app.use('/api/v1/admin', adminRouter)
 app.use('/api/v1/user', userRouter)
 app.use('/api/v1/question', questionRouter)
 app.use('/api/v1/section', sectionRoute)
+app.use('/api/v1/superadmin', superAdminRouter)
+
 
 export { app }

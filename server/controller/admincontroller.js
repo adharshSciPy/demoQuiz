@@ -64,6 +64,11 @@ const adminlogin = async (req, res) => {
         if (!isPasswordCorrect) {
             return res.status(401).json({ message: 'Incorrect Password' });
         }
+      
+        if(!admin.isEnabled){
+            return res.status(401).json({ message: 'Admin Login has been disabled' });
+
+        }
         //generate access token
         const accessToken = await admin.generateAccessToken();
 

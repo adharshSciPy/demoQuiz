@@ -25,6 +25,8 @@ import UserMcqTable from './admin/UserMcqTable';
 import UserDescriptiveAnswerGet from './admin/UserDescriptiveAnswerGet';
 import DescriptivePaperChecking from './admin/DescriptivePaperChecking';
 import UserDescriptiveTable from './admin/UserDescriptiveTable';
+import SuperAdminLandingPage from "./superAdmin/SuperAdminLandingPage";
+import SuperAdminDashboard from "./superAdmin/SuperAdminDashboard";
 
 function App() {
   return (
@@ -43,6 +45,11 @@ function App() {
             <Route path='/userdescriptiveanswerget/:userId/:sessionId' element={<UserDescriptiveAnswerGet/>}/>
             <Route path='/descriptivepaper/:userId/:sessionId'element={<DescriptivePaperChecking/>}/>
             <Route path='/userdescriptivetable/:userId/:sessionId' element={<UserDescriptiveTable/>}/>
+
+            {/* unprotected path for superAdmin */}
+            <Route path="/superadmin" element={<SuperAdminLandingPage/>}/>
+            <Route path="/superadmindash" element={<SuperAdminDashboard/>}/>
+
 
 
 
