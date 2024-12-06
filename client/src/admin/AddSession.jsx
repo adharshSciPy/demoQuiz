@@ -8,13 +8,22 @@ function AddSession({ onClose, refreshSessions }) {
   const [sessionName, setSessionName] = useState('');
   const [sessionDate, setSessionDate] = useState('');
   const [questionType, setQuestionType] = useState('');
+  const [hours,setHours]=useState('');
+  const[minutes,setMinutes]=useState('');
+  const[seconds,setSeconds]=useState('');
 
   const handleConfirm = async () => {
     try {
       await axios.post("http://localhost:8000/api/v1/section/createsection", {
         sectionName: sessionName,
         date: sessionDate,
-        questionType: questionType
+        questionType: questionType,
+        timer:{
+          hours:hours,
+          minutes:minutes,
+          seconds:seconds
+        }
+
       });
       
       // Refresh sessions to reflect the new data
@@ -27,13 +36,16 @@ function AddSession({ onClose, refreshSessions }) {
     setSessionName('');
     setSessionDate('');
     setQuestionType('');
+    setHours('');
+    setMinutes('');
+    setSeconds('');
 
     // Close the modal after confirming
     onClose();
   };
 
   // Check if all fields are filled
-  const isFormComplete = sessionName && sessionDate && questionType;
+  const isFormComplete = sessionName && sessionDate && questionType&&hours&&minutes&&seconds;
 
   return (
     <div className={styles.modal}>
@@ -64,6 +76,32 @@ function AddSession({ onClose, refreshSessions }) {
             <option value="MCQ">Multiple Choice Questions</option>
             <option value="Descriptive">Short Answer Questions</option>
           </select>
+          <div className={styles.timerDiv}>
+          <input
+            type="number"
+            required
+            placeholder="HH"
+            className={styles.timerInputField}
+            value={hours}
+            onChange={(e) => setHours(e.target.value)}
+          />
+           <input
+            type="number"
+            required
+            placeholder="MM"
+            className={styles.timerInputField}
+            value={minutes}
+            onChange={(e) => setMinutes(e.target.value)}
+          />
+           <input
+            type="number"
+            required
+            placeholder="SS"
+            className={styles.timerInputField}
+            value={seconds}
+            onChange={(e) => setSeconds(e.target.value)}
+          />
+          </div>
         </div>
         <div className={styles.modalFooter}>
         <Flex gap="small" wrap>

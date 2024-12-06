@@ -37,9 +37,18 @@ const Quiz = ({ sectionId }) => { // Receive sectionId as a prop
     if (!sectionId) return;
     try {
       const response = await axios.get(`http://localhost:8000/api/v1/section/getsectionsbyid/${sectionId}`);
-      // console.log("response from axios ",response)
+      console.log("response from axios ",response.data.data)
       const shuffledQuestions = response.data.data.MCQ.sort(() => Math.random() - 0.5);
       setQuestions(shuffledQuestions);
+      setHours(response.data.data.timer.hours);
+      setMinutes(response.data.data.timer.minutes);
+      setSeconds(response.data.data.timer.seconds);
+
+
+      // console.log("hours",hours)
+      // console.log("minutes",minutes)
+      // console.log("hours",seconds)
+
 
       // Initialize the selectedAnswers with null values for each question
       const initialAnswers = shuffledQuestions.map((q) => ({
@@ -129,9 +138,9 @@ const Quiz = ({ sectionId }) => { // Receive sectionId as a prop
   };
 
   // Timer functionality
-  const [hours, setHours] = useState(0); // Start with 0 hours
-  const [minutes, setMinutes] = useState(1); // Start with 1 minute
-  const [seconds, setSeconds] = useState(50); // Start with 50 seconds
+  const [hours, setHours] = useState(''); // Start with 0 hours
+  const [minutes, setMinutes] = useState(''); // Start with 1 minute
+  const [seconds, setSeconds] = useState(''); // Start with 50 seconds
 
   useEffect(() => {
     if (hours === 0 && minutes === 0 && seconds === 0 && !quizSubmitted) {

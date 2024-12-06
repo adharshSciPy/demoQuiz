@@ -3,10 +3,15 @@ import { QuizSection } from "../models/quizSection.js";
 
 
 const sectionPost = async (req, res) => {
-    const { sectionName, date, questionType } = req.body;
+    const { sectionName, date, questionType,timer } = req.body;
     try {
         const newSection = await Section.create({
-            sectionName, date, questionType, Questions: []
+            sectionName, date, questionType,
+            timer:{
+            hours:timer?.hours||0,
+            minutes:timer?.minutes||0,
+            seconds:timer?.seconds||0
+            },Questions: []
         })
         res.status(200).json({ message: "Sections created successfully", data: newSection })
 

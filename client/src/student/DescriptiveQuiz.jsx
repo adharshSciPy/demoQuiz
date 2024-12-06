@@ -29,6 +29,9 @@ const DescriptiveQuiz = ({sectionId}) => {
       console.log("response from axios ",response)
       const shuffledQuestions = response.data.data.Questions.sort(() => Math.random() - 0.5);
       setQuestions(shuffledQuestions);
+      setHours(response.data.data.timer.hours);
+      setMinutes(response.data.data.timer.minutes);
+      setSeconds(response.data.data.timer.seconds);
 
       // Initialize the selectedAnswers with null values for each question
       const initialAnswers = shuffledQuestions.map((q) => ({
@@ -116,9 +119,9 @@ const DescriptiveQuiz = ({sectionId}) => {
 };
 
 
-  const [hours, setHours] = useState(0);
-  const [minutes, setMinutes] = useState(30);
-  const [seconds, setSeconds] = useState(0);
+  const [hours, setHours] = useState('');
+  const [minutes, setMinutes] = useState('');
+  const [seconds, setSeconds] = useState('');
 
   useEffect(() => {
     if (hours === 0 && minutes === 0 && seconds === 0 && !quizSubmitted) {

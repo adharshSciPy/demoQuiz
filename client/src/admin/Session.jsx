@@ -59,18 +59,18 @@ function Session() {
       const sessionIndex = sessions.findIndex(item => item._id === sessionToStart);
       const session = sessions[sessionIndex];
   
-      // Step 1: Update on the server with `startquiz`
+      //  Update on the server with `startquiz`
       await axios.patch("http://localhost:8000/api/v1/section/startquiz", {
         sectionId: sessionToStart,
         questionType: session?.questionType,
       });
   
-      // Step 2: Update on the server with `togglestatus`
+      //  Update on the server with `togglestatus`
       await axios.patch("http://localhost:8000/api/v1/section/togglestatus", {
         sectionId: sessionToStart,
       });
   
-      // Step 3: Call `checkactivebadge` and log the response
+      //  Call `checkactivebadge` and log the response
       const { data } = await axios.get("http://localhost:8000/api/v1/section/checkactivebadge", {
         params: { sectionId: sessionToStart },
       });
@@ -79,7 +79,7 @@ function Session() {
       setStatusCheck(data.isActiveBadge)
 
   
-      // Step 4: Update state: Set only the current session to active
+      //  Update state: Set only the current session to active
       const updatedSessions = sessions.map(item => ({
         ...item,
         isActive: item._id === sessionToStart,
@@ -120,7 +120,7 @@ function Session() {
   const getSessions = async () => {
     try {
       const res = await axios.get("http://localhost:8000/api/v1/section/getsections");
-      // Ensure the backend includes `isActive` and `isActiveBadge` in the response
+     
       setSessions(Array.isArray(res.data.data) ? res.data.data : []);
     } catch (error) {
       console.log("Error fetching sessions:", error);

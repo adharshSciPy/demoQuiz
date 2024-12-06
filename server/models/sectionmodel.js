@@ -54,6 +54,26 @@ const SectionSchema = new Schema({
     questionType: {
         type: String
     },
+    timer:{
+        hours:{
+            type:Number,
+            min:0,
+            max:23,
+            default:0
+        },
+        minutes:{
+            type:Number,
+            min:0,
+            max:59,
+            default:0
+        },
+        seconds:{
+            type:Number,
+            min:0,
+            max:59,
+            default:0
+        }
+    },
     Questions: [ShortSchema],
     MCQ: [McqSchema],
     isActiveBadge:{

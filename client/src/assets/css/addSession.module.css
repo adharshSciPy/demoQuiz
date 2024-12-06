@@ -57,6 +57,20 @@
     cursor: pointer;
     border-radius: 10px;
   }
+  .timerDiv{
+    display: flex;
+    padding: 10px;
+    justify-content: center;
+    gap:20px;
+    
+  }
+  .timerInputField{
+    width: 50px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+
+  }
   @media (max-width: 420px) {
    .modal{
     padding: 8px;
