@@ -15,6 +15,7 @@ function ReportTable() {
     try {
       const response = await axios.get(`http://localhost:8000/api/v1/user/getUsers`);
       setTable(response.data.data);
+      // console.log("hhaiiii",response.data.data);
       setFilteredTable(response.data.data); // Set filteredTable initially to all data
     } catch (error) {
       console.log(error);
@@ -31,7 +32,20 @@ function ReportTable() {
     // Clear interval on component unmount
     return () => clearInterval(interval);
   }, []);
-
+// to handle the status of user
+  const handleStatus=async(id)=>{
+    try {
+      const response=await axios.patch('http://localhost:8000/api/v1/admin/userstatuscontrol',{id:id})
+     
+      const updatedDetails=filteredTable.map((user)=>(
+          user._id===id?{...user,isEnabled:response.data.isEnabled}:user
+      ));
+      setFilteredTable(updatedDetails);
+      // console.log("hello",filteredTable)
+    } catch (error) {
+      console.log(error);
+    }
+  }
   // Function to filter table data based on selected rating
 
   // const handleRatingChange = (event) => {
@@ -128,13 +142,14 @@ function ReportTable() {
             <th>Performance Category</th> */}
             <th>Batch</th>
             <th>Date</th>
+            <th>Status</th>
             <th>Details</th>
           </tr>
         </thead>
         <tbody>
           {filteredTable.length > 0 ? (
             filteredTable.map((item, index) => (
-              <tr key={item.id}>
+              <tr key={item._id}>
                 <td>{index + 1}</td>
                 <td>{item.fullName}</td>
                 <td>{item.email}</td>
@@ -142,6 +157,11 @@ function ReportTable() {
                 <td>{item.userStrength}</td> */}
                 <td>{item.batch}</td>
                 <td>{formatDate(item.date)}</td>
+                <td>
+                  <button
+                      className="btn-sm p-1  d-inline-block" 
+                      style={{ width: '100px' ,backgroundColor:'#4a148c',color:"white",borderRadius:'8px',border:'none'}} 
+                 onClick={()=>handleStatus(item._id)}>{item.isEnabled?"Disable":"Enable"}</button></td>
                 <td>
   <button 
     className="btn-sm p-1  d-inline-block" 

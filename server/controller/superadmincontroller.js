@@ -75,7 +75,6 @@ const adminLoginControl = async (req, res) => {
     const { id } = req.body;
 
     try {
-        // Find admin by ID
         const admin = await Admin.findById(id);
         if (!admin) {
             return res.status(404).json({ message: 'Admin not found' });
@@ -85,7 +84,9 @@ const adminLoginControl = async (req, res) => {
         admin.isEnabled = !admin.isEnabled; 
         await admin.save();
 
-        const status = admin.isEnabled ? "enabled" : "disabled"; 
+        const status = admin.isEnabled ? "enabled" : "disabled";
+        console.log("hellooo",status)
+
         return res.status(200).json({ 
             message: `Admin has been ${status}`, 
             admin 

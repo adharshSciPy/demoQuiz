@@ -108,7 +108,10 @@ const loginUser = async (req, res) => {
     if (!isPasswordCorrect) {
       return res.status(401).json({ message: "Incorrect password" });
     }
-
+    const userStatus=await user.isEnabled;
+    if(!userStatus){
+      return res.status(401).json({message:"You have been disabled by admin"})
+    }
     // // Mark user as logged in
     // user.hasLoggedIn = true;
     // await user.save();

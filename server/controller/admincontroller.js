@@ -262,6 +262,25 @@ const resetPassword = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 };
+// to control user login
+const userControl=async(req,res)=>{
+    const{id}=req.body;
+    try {
+        const user=await User.findById(id);
+        if(!user){
+            return res.status(401).json({message:"User not found"})
+        } 
+        user.isEnabled=!user.isEnabled;
+        await user.save();
+        const status=user.isEnabled?"enabled":"disabled";
+        return res. status(200).json({
+            message:`User has been ${status}`,
+            user
+        })
+    } catch (error) {
+        return res.status(500).json({message:"Internal server Error",error})
+    }
+}
 
 
 
@@ -271,5 +290,5 @@ const resetPassword = async (req, res) => {
 
 
 export {
-    registerAdmin, adminlogin, adminlogout,getUserDescriptiveAnswers,descriptiveMark,resetPassword
+    registerAdmin, adminlogin, adminlogout,getUserDescriptiveAnswers,descriptiveMark,resetPassword,userControl
 }

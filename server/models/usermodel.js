@@ -92,6 +92,10 @@ const userSchema = new Schema({
     date: {
         type: Date,
         default: Date.now
+    },
+    isEnabled:{
+        type:Boolean,
+        default:true
     }
 }, { timestamps: true });
 

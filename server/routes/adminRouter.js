@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { registerAdmin, adminlogin, adminlogout, getUserDescriptiveAnswers ,descriptiveMark, resetPassword} from '../controller/admincontroller.js'
+import { registerAdmin, adminlogin, adminlogout, getUserDescriptiveAnswers ,descriptiveMark, resetPassword, userControl} from '../controller/admincontroller.js'
 
 const adminRouter = Router();
 
@@ -9,6 +9,8 @@ adminRouter.route('/logout').post(adminlogout)
 adminRouter.route('/getdescriptiveAnswerfromUser').get(getUserDescriptiveAnswers)
 adminRouter.route('/descriptiveMark/:userId').patch(descriptiveMark);
 adminRouter.route('/resetadminpassword').patch(resetPassword);
+adminRouter.route('/userstatuscontrol').patch(userControl);
+
 
 
 
