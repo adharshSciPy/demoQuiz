@@ -74,7 +74,7 @@ const McqSection = async (req, res) => {
 
 const getSections = async (req, res) => {
     try {
-        const sections = await Section.find();
+        const sections = await Section.find().sort({ createdAt: -1 });;
         res.status(200).json({ message: "Sections retrieved successfully", data: sections })
     } catch (error) {
         res.status(500).json({ message: "Internal Server Error", err: error.message })

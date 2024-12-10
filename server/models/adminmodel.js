@@ -19,6 +19,9 @@ const adminSchema = new Schema({
     isEnabled:{
         type:Boolean,
         default:true
+    },
+    date:{
+        type:String
     }
 }, { timestamps: true })
 
@@ -68,11 +71,11 @@ adminSchema.methods.generateRefreshToken = async function () {
 
 // matching admin password
 adminSchema.methods.isPasswordCorrect = async function (password) {
-    if (password) {
-        return await bcrypt.compare(password, this.password);
-    }
-    next();
+    return await bcrypt.compare(password, this.password);
+};
 
-}
+    // next(error);
+
+
 
 export const Admin = mongoose.model("admin", adminSchema)

@@ -81,11 +81,11 @@ const adminLoginControl = async (req, res) => {
             return res.status(404).json({ message: 'Admin not found' });
         }
 
-        // Toggle the `isEnabled` field
-        admin.isEnabled = !admin.isEnabled; // Toggle the value
+     
+        admin.isEnabled = !admin.isEnabled; 
         await admin.save();
 
-        const status = admin.isEnabled ? "enabled" : "disabled"; // Determine status
+        const status = admin.isEnabled ? "enabled" : "disabled"; 
         return res.status(200).json({ 
             message: `Admin has been ${status}`, 
             admin 

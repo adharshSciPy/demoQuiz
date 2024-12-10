@@ -44,7 +44,7 @@ function SuperAdminNav() {
               </li>
               <li>
                 <NavLink
-                  to="/session"
+                  to="/adminregister"
                   className={({ isActive }) => (isActive ? 'active' : '')}
                   onClick={() => setDrawerOpen(false)}
                 >

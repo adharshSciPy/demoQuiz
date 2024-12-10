@@ -5,12 +5,16 @@ import axios from 'axios';
 
 function SuperAdminDashboard() {
   const[details,setDetails]=useState([]);
+ 
+
+
   const fetchAdminData=async()=>{
     try {
       const response=await axios.get(`http://localhost:8000/api/v1/superadmin/getalladmins`);
       console.log("Admins list",response.data.response);
       setDetails(response.data.response)
     } catch (error) {
+      console.log("Error",error)
       
     }
 
@@ -18,6 +22,21 @@ function SuperAdminDashboard() {
   useEffect(()=>{
     fetchAdminData()
   },[])
+  const handleStatus=async(id)=>{
+    try {
+      const response=await axios.patch(`http://localhost:8000/api/v1/superadmin/adminlogincontrol`,{
+        id:id
+      })
+      const updatedDetails = details.map((admin) =>
+        admin._id === id ? { ...admin, isEnabled: response.data.admin.isEnabled } : admin
+      );
+      setDetails(updatedDetails)
+    } catch (error) {
+      console.log("Error",error)
+      
+    }
+
+  }
   return (
     <div>
     <SuperAdminNav/>
@@ -28,6 +47,7 @@ function SuperAdminDashboard() {
           <th>Sl.No</th>
           <th>Name</th>
           <th>Email</th>
+          <th>Created At</th>
           <th>Status</th>
 
         </tr>
@@ -40,7 +60,8 @@ function SuperAdminDashboard() {
             <th>{index+1}</th>
             <th>{item.fullName}</th>
             <th>{item.email}</th>
-            <th><button>Active</button></th>
+            <th>{item.date}</th>
+            <th><button onClick={()=>handleStatus(item._id)}>{item.isEnabled?"Disable":"Enable"}</button></th>
 
 
           </tr>

@@ -2,14 +2,15 @@ import { Admin } from '../models/adminmodel.js'
 import { User } from '../models/usermodel.js';
 import { passwordValidator } from '../utils/passwordValidator.js';
 import { Section } from '../models/sectionmodel.js';
+import  bcrypt from 'bcryptjs'
 
 // POST /admin/register
 
 const registerAdmin = async (req, res) => {
-    const { fullName, email, password } = req.body
+    const { fullName, email, password,date } = req.body
 
     try {
-        const isEmptyFields = [fullName, email, password].some(
+        const isEmptyFields = [fullName, email, password,date].some(
             (field) => field.trim() === '' || field === undefined
         );
         if (isEmptyFields) {
@@ -31,6 +32,7 @@ const registerAdmin = async (req, res) => {
             fullName,
             email,
             password,
+            date,
             role
         })
 
@@ -54,7 +56,7 @@ const adminlogin = async (req, res) => {
             (field) => field.trim() === '' || field === undefined
         )
         if (isEmptyField) {
-            return res.status(401).json({ message: 'All fields required    ' });
+            return res.status(401).json({ message: 'All fields required' });
         }
         const admin = await Admin.findOne({ email: email });
         if (!admin) {
@@ -63,7 +65,9 @@ const adminlogin = async (req, res) => {
         const isPasswordCorrect = await admin.isPasswordCorrect(password)
         if (!isPasswordCorrect) {
             return res.status(401).json({ message: 'Incorrect Password' });
+          
         }
+        
       
         if(!admin.isEnabled){
             return res.status(401).json({ message: 'Admin Login has been disabled' });
@@ -234,11 +238,38 @@ const descriptiveMark = async (req, res) => {
         return res.status(500).json({ message: "Internal Server Error", error });
     }
 };
+// to reset admin password
+const resetPassword = async (req, res) => {
+    const { email, oldPassword, newPassword } = req.body;
+    try {
+        const admin = await Admin.findOne({ email });
+        if (!admin) {
+            return res.status(400).json({ message: "Admin not found" });
+        }
+
+        const isOldPasswordCorrect = await admin.isPasswordCorrect(oldPassword);
+        if (!isOldPasswordCorrect) {
+            return res.status(400).json({ message: "Incorrect old password" });
+        }
+
+       
+        admin.password = newPassword;
+        await admin.save();
+
+        return res.status(200).json({ message: "Password reset successfully" });
+    } catch (error) {
+        console.error("Error resetting password:", error.message);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+
+
 
 
 
 
 
 export {
-    registerAdmin, adminlogin, adminlogout,getUserDescriptiveAnswers,descriptiveMark
+    registerAdmin, adminlogin, adminlogout,getUserDescriptiveAnswers,descriptiveMark,resetPassword
 }

@@ -27,6 +27,7 @@ import DescriptivePaperChecking from './admin/DescriptivePaperChecking';
 import UserDescriptiveTable from './admin/UserDescriptiveTable';
 import SuperAdminLandingPage from "./superAdmin/SuperAdminLandingPage";
 import SuperAdminDashboard from "./superAdmin/SuperAdminDashboard";
+import AdminRegistration from "./superAdmin/AdminRegistration";
 
 function App() {
   return (
@@ -49,6 +50,8 @@ function App() {
             {/* unprotected path for superAdmin */}
             <Route path="/superadmin" element={<SuperAdminLandingPage/>}/>
             <Route path="/superadmindash" element={<SuperAdminDashboard/>}/>
+            <Route path="/adminregister" element={<AdminRegistration/>}/>
+
 
 
 

@@ -81,7 +81,7 @@ const SectionSchema = new Schema({
         default:false
     }
 
-})
+},{timestamps:true})
 
 
 export const Section = mongoose.model("Section", SectionSchema);
