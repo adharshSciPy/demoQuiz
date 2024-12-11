@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { registerAdmin, adminlogin, adminlogout, getUserDescriptiveAnswers ,descriptiveMark, resetPassword, userControl} from '../controller/admincontroller.js'
-
+import { registerAdmin, adminlogin, adminlogout, getUserDescriptiveAnswers ,descriptiveMark, resetPassword, userControl,editAdmin} from '../controller/admincontroller.js'
+import upload from '../multer/multer.js';
 const adminRouter = Router();
 
 adminRouter.route('/register').post(registerAdmin)
@@ -10,6 +10,7 @@ adminRouter.route('/getdescriptiveAnswerfromUser').get(getUserDescriptiveAnswers
 adminRouter.route('/descriptiveMark/:userId').patch(descriptiveMark);
 adminRouter.route('/resetadminpassword').patch(resetPassword);
 adminRouter.route('/userstatuscontrol').patch(userControl);
+adminRouter.route("/uploads/:id").patch(upload.single("image"), editAdmin);
 
 
 

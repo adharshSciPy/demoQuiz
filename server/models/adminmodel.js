@@ -22,6 +22,9 @@ const adminSchema = new Schema({
     },
     date:{
         type:String
+    },
+    image:{
+        type:String
     }
 }, { timestamps: true })
 

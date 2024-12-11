@@ -282,7 +282,40 @@ const userControl=async(req,res)=>{
     }
 }
 
+const editAdmin = async (req, res) => {
+    const { id } = req.params;
+    const file = req.file;
+    const { fullName} = req.body;
 
+    if (!file) {
+        return res.status(400).json({ error: "No file uploaded" });
+    }
+
+    try {
+        // Update admin record with the provided data
+        const editResult = await Admin.findByIdAndUpdate(
+            id,
+            {
+                fullName,
+                image: `/uploads/${file.filename}`, // Save file path to the image field
+            },
+            { new: true } // Return the updated document
+        );
+
+        if (!editResult) {
+            return res.status(404).json({ error: "Admin not found" });
+        }
+
+        res.status(200).json({
+            message: "Updated successfully",
+            data: editResult,
+        });
+
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
 
 
 
@@ -290,5 +323,5 @@ const userControl=async(req,res)=>{
 
 
 export {
-    registerAdmin, adminlogin, adminlogout,getUserDescriptiveAnswers,descriptiveMark,resetPassword,userControl
+    registerAdmin, adminlogin, adminlogout,getUserDescriptiveAnswers,descriptiveMark,resetPassword,userControl,editAdmin
 }
