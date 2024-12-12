@@ -1,8 +1,11 @@
 import { Admin } from '../models/adminmodel.js'
 import { User } from '../models/usermodel.js';
+import {SuperAdmin} from '../models/superadminmodel.js'
 import { passwordValidator } from '../utils/passwordValidator.js';
 import { Section } from '../models/sectionmodel.js';
 import  bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken';
+import nodemailer from 'nodemailer'
 
 // POST /admin/register
 
@@ -50,46 +53,62 @@ const registerAdmin = async (req, res) => {
 
 // POST /admin/login
 const adminlogin = async (req, res) => {
-    const { email, password } = req.body
+    const { email, password } = req.body;
     try {
         const isEmptyField = [email, password].some(
-            (field) => field.trim() === '' || field === undefined
-        )
+            (field) => !field || field.trim() === '' 
+        );
         if (isEmptyField) {
-            return res.status(401).json({ message: 'All fields required' });
+            return res.status(400).json({ message: 'All fields are required' });
         }
-        const admin = await Admin.findOne({ email: email });
+
+        let admin = await Admin.findOne({ email: email });
+        let adminType = "Admin";
+
         if (!admin) {
-            return res.status(401).json({ message: 'Admin Doesnt exist' });
+            admin = await SuperAdmin.findOne({ email: email });
+            adminType = "SuperAdmin";
         }
-        const isPasswordCorrect = await admin.isPasswordCorrect(password)
+
+        if (!admin) {
+            return res.status(404).json({ message: 'No user found' });
+        }
+
+        const isPasswordCorrect = await admin.isPasswordCorrect(password);
         if (!isPasswordCorrect) {
             return res.status(401).json({ message: 'Incorrect Password' });
-          
         }
-        
-      
-        if(!admin.isEnabled){
-            return res.status(401).json({ message: 'Admin Login has been disabled' });
 
+        if (!admin.isEnabled) {
+            return res.status(401).json({ message: 'Admin login has been disabled' });
         }
-        //generate access token
+
         const accessToken = await admin.generateAccessToken();
 
-        //generate refresh token
         const refreshToken = await admin.generateRefreshToken();
-        //store refresh token in cookie
+
+        // Store refresh token in a cookie
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
-            secure: false, // when going to production change boolean to true
+            secure: process.env.NODE_ENV === 'production', // Set to true in production
             sameSite: "None",
-            maxAge: 7 * 24 * 60 * 60 * 1000,
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
         });
-        return res.status(200).json({ message: "Admin Login Successfull", token: accessToken })
+
+        return res.status(200).json({
+            message: `${adminType} login successful`,
+            adminType,
+
+            token: accessToken,
+            admin,
+        });
+
     } catch (error) {
-        return res.status(500).json({ message: `Internal server due to ${error.message}` })
+        console.error(error);
+        return res.status(500).json({ message: `Internal server error: ${error.message}` });
     }
-}
+};
+
 
 //admin logout
 
@@ -239,29 +258,29 @@ const descriptiveMark = async (req, res) => {
     }
 };
 // to reset admin password
-const resetPassword = async (req, res) => {
-    const { email, oldPassword, newPassword } = req.body;
-    try {
-        const admin = await Admin.findOne({ email });
-        if (!admin) {
-            return res.status(400).json({ message: "Admin not found" });
-        }
+// const resetPassword = async (req, res) => {
+//     const { email, oldPassword, newPassword } = req.body;
+//     try {
+//         const admin = await Admin.findOne({ email });
+//         if (!admin) {
+//             return res.status(400).json({ message: "Admin not found" });
+//         }
 
-        const isOldPasswordCorrect = await admin.isPasswordCorrect(oldPassword);
-        if (!isOldPasswordCorrect) {
-            return res.status(400).json({ message: "Incorrect old password" });
-        }
+//         const isOldPasswordCorrect = await admin.isPasswordCorrect(oldPassword);
+//         if (!isOldPasswordCorrect) {
+//             return res.status(400).json({ message: "Incorrect old password" });
+//         }
 
        
-        admin.password = newPassword;
-        await admin.save();
+//         admin.password = newPassword;
+//         await admin.save();
 
-        return res.status(200).json({ message: "Password reset successfully" });
-    } catch (error) {
-        console.error("Error resetting password:", error.message);
-        res.status(500).json({ message: "Internal server error" });
-    }
-};
+//         return res.status(200).json({ message: "Password reset successfully" });
+//     } catch (error) {
+//         console.error("Error resetting password:", error.message);
+//         res.status(500).json({ message: "Internal server error" });
+//     }
+// };
 // to control user login
 const userControl=async(req,res)=>{
     const{id}=req.body;
@@ -319,12 +338,92 @@ const editAdmin = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+const forgotPassword=async(req,res)=>{
+   
+    const{email}=req.body;
+const ACCESS_TOKEN_SECRET=process.env.ACCESS_TOKEN_SECRET;
+
+    try {
+        
+        const admin=await Admin.findOne({email:email})
+        if(!admin){
+            return res.status(401).json({message:"Admin not found check the email"})
+        }
+
+            const token=jwt.sign({id:admin._id},ACCESS_TOKEN_SECRET,{expiresIn:"1d"})
+            console.log("token",token);
+            console.log("secrect key",ACCESS_TOKEN_SECRET)
+            
+            
+            const resetLink = `http://localhost:3000/resetpassword/${admin._id}/${token}`;
+            let transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                  user: 'gokulskumar2015@gmail.com',//rewrite the email and passkey with Scipy gmail and passkey
+                  pass: 'sdfoqndthpizyhhi'
+                }
+              });
+              
+              let mailOptions = {
+                from: "gokulskumar2015@gmial.com",//rewrite the email too
+                to: email,
+                subject: 'Reset your Password ',
+                html: `<p>Reset your password by clicking the link below:</p>
+                <a href="${resetLink}" target="_blank">Reset Password</a>`              };
+              
+              transporter.sendMail(mailOptions, function(error, info){
+                if (error) {
+                  console.log(error);
+                } else {
+                    console.log('Email sent: ' + info.response);
+                    return res.status(200).json({message:"Email sent succesful"})
+                
+                }
+              });
+        
+    } catch (error) {
+        return res.status(500).json({message:"Internal server error",error})
+
+    }
+
+}
+
+const resetPassword = async (req, res) => {
+    const { id, token } = req.params;
+    const { password } = req.body;
+    
+const ACCESS_TOKEN_SECRET=process.env.ACCESS_TOKEN_SECRET;
 
 
+    try {
+        // Verify the token
+        const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET);
+        if (!decoded) {
+            return res.status(401).json({ message: "Invalid link or token expired" });
+        }
+
+        
+        const admin = await Admin.findById(id);
+        if (!admin) {
+            return res.status(404).json({ message: "Admin not found" });
+        }
+
+        
+        // const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        
+        admin.password = password;
+        await admin.save();
+
+        return res.status(200).json({ message: "Password updated successfully" });
+    } catch (error) {
+        return res.status(500).json({ message: "Internal server error", error: error.message });
+    }
+};
 
 
 
 
 export {
-    registerAdmin, adminlogin, adminlogout,getUserDescriptiveAnswers,descriptiveMark,resetPassword,userControl,editAdmin
+    registerAdmin, adminlogin, adminlogout,getUserDescriptiveAnswers,descriptiveMark,userControl,editAdmin,forgotPassword,resetPassword
 }

@@ -4,12 +4,15 @@ import { useDispatch } from 'react-redux';
 import { setLogout } from '../features/slice/authSlice';
 import Logo from '../assets/img/Logo.png';
 import "./navbar.css";
+import useAuth from '../hooks/useAuth';
+
 import studentAvatar from '../assets/img/studentavatar-removebg-preview.png'; // Add student avatar image (optional)
 
 function NavbarStudent() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { loggedInUserId, isLoggedIn } = useAuth();
 
   const handleLogout = () => {
     dispatch(setLogout()); // Dispatch the logout action
@@ -41,7 +44,7 @@ function NavbarStudent() {
           <ul>
             <li>
               <NavLink
-                to="/studentdashboard"
+                to={`/studenthomepage/${loggedInUserId}`}
                 className={({ isActive }) => (isActive ? 'active' : '')}
                 onClick={() => setDrawerOpen(false)}
               >
@@ -76,6 +79,18 @@ function NavbarStudent() {
                 }}
               >
                 Logout
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to={`/studentdashboard/${loggedInUserId}`}
+                className={({ isActive }) => (isActive ? 'active' : '')}
+                onClick={() => {
+                  // handleLogout();
+                  setDrawerOpen(false);
+                }}
+              >
+                Start Quiz
               </NavLink>
             </li>
           </ul>

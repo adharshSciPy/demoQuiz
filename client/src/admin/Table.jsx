@@ -41,7 +41,7 @@ function ReportTable() {
           user._id===id?{...user,isEnabled:response.data.isEnabled}:user
       ));
       setFilteredTable(updatedDetails);
-      // console.log("hello",filteredTable)
+      console.log("hello",filteredTable)
     } catch (error) {
       console.log(error);
     }

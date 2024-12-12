@@ -11,6 +11,7 @@ function SuperAdminDashboard() {
   const fetchAdminData=async()=>{
     try {
       const response=await axios.get(`http://localhost:8000/api/v1/superadmin/getalladmins`);
+      
       console.log("Admins list",response.data.response);
       setDetails(response.data.response)
     } catch (error) {
@@ -37,6 +38,18 @@ function SuperAdminDashboard() {
     }
 
   }
+
+  const handleDelete=async(id)=>{
+    // console.log("handle delete id",id)
+try {
+  const response=await axios.delete(`http://localhost:8000/api/v1/superadmin/deleteadmin`,{data:{id}})
+  // console.log("id",response);
+const updatedDetails=details.filter((admin)=>admin._id!==id);
+setDetails(updatedDetails)
+} catch (error) {
+  
+}
+  }
   return (
     <div>
     <SuperAdminNav/>
@@ -62,6 +75,8 @@ function SuperAdminDashboard() {
             <th>{item.email}</th>
             <th>{item.date}</th>
             <th><button onClick={()=>handleStatus(item._id)}>{item.isEnabled?"Disable":"Enable"}</button></th>
+            <th><button onClick={()=>handleDelete(item._id)}>Delete</button></th>
+
 
 
           </tr>
