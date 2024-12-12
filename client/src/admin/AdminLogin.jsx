@@ -150,7 +150,10 @@ function LandingPage() {
               <div className="btn-div">
                 <button type="submit" className="btn-submit">Sign In</button>
               </div>
+              <Link className='signup-link' to="/forgotpassword">Forgot Password</Link>
+
               <div className="signup-div">
+
                 <p className='paragraph'>Login as User</p>
                 <Link className='signup-link' to="/">Login</Link>
               </div>

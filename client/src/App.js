@@ -29,6 +29,9 @@ import SuperAdminLandingPage from "./superAdmin/SuperAdminLandingPage";
 import SuperAdminDashboard from "./superAdmin/SuperAdminDashboard";
 import AdminRegistration from "./superAdmin/AdminRegistration";
 
+import ForgotPassword from "./admin/ForgotPassword";
+import ResetPassword from "./admin/ResetPassword";
+
 function App() {
   return (
     <div className="App">
@@ -53,7 +56,9 @@ function App() {
             <Route path="/adminregister" element={<AdminRegistration/>}/>
 
 
-
+            {/* unprotected route for adminpassword reset */}
+            <Route path="/forgotpassword" element={<ForgotPassword/>}/>
+            <Route path="/resetpassword/:id/:token" element={<ResetPassword/>}/>
 
 
 
