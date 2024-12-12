@@ -28,6 +28,10 @@ import UserDescriptiveTable from './admin/UserDescriptiveTable';
 import SuperAdminLandingPage from "./superAdmin/SuperAdminLandingPage";
 import SuperAdminDashboard from "./superAdmin/SuperAdminDashboard";
 import AdminRegistration from "./superAdmin/AdminRegistration";
+import EditAdmin  from "./admin/EditAdmin";
+
+
+
 
 function App() {
   return (
@@ -46,7 +50,7 @@ function App() {
             <Route path='/userdescriptiveanswerget/:userId/:sessionId' element={<UserDescriptiveAnswerGet/>}/>
             <Route path='/descriptivepaper/:userId/:sessionId'element={<DescriptivePaperChecking/>}/>
             <Route path='/userdescriptivetable/:userId/:sessionId' element={<UserDescriptiveTable/>}/>
-
+            <Route path='/edit' element={<EditAdmin/>}/>
             {/* unprotected path for superAdmin */}
             <Route path="/superadmin" element={<SuperAdminLandingPage/>}/>
             <Route path="/superadmindash" element={<SuperAdminDashboard/>}/>

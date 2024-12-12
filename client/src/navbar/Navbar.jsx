@@ -62,6 +62,15 @@ function Navbar() {
             </li>
             <li>
               <NavLink
+                to="/edit"
+                className={({ isActive }) => (isActive ? 'active' : '')}
+                onClick={() => setDrawerOpen(false)}
+              >
+                Edit
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
                 to="/"
                 className={({ isActive }) => (isActive ? 'active' : '')}
                 onClick={() => {
