@@ -53,7 +53,7 @@ function LandingPage() {
 
   useEffect(() => {
     if (isLoggedIn && loggedInUserId) {
-      navigate(`/studentdashboard/${loggedInUserId}`);
+      navigate(`/studenthomepage/${loggedInUserId}`);
     }
   }, [isLoggedIn, loggedInUserId, navigate]);
 
