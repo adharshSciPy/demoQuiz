@@ -5,15 +5,15 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setLogout } from '../features/slice/authSlice';
 
-const DescriptiveQuiz = ({sectionId}) => {
+const DescriptiveQuiz = ({ sectionId }) => {
   const { loggedInUserId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    dispatch(setLogout()); // Dispatch the logout action
-    localStorage.removeItem('token'); // Remove the token from local storage
-    navigate('/'); // Redirect to the admin login page
+    dispatch(setLogout());
+    localStorage.removeItem('token');
+    navigate('/');
   };
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -26,17 +26,12 @@ const DescriptiveQuiz = ({sectionId}) => {
     if (!sectionId) return;
     try {
       const response = await axios.get(`http://localhost:8000/api/v1/section/getsectionsbyid/${sectionId}`);
-      console.log("response from axios ",response)
       const shuffledQuestions = response.data.data.Questions.sort(() => Math.random() - 0.5);
       setQuestions(shuffledQuestions);
-      setHours(response.data.data.timer.hours);
-      setMinutes(response.data.data.timer.minutes);
-      setSeconds(response.data.data.timer.seconds);
 
-      // Initialize the selectedAnswers with null values for each question
       const initialAnswers = shuffledQuestions.map((q) => ({
         questionId: q._id,
-        selectedOption: null, // Start as null, meaning unanswered/skipped
+        selectedOption: null,
       }));
       setSelectedAnswers(initialAnswers);
     } catch (error) {
@@ -45,15 +40,11 @@ const DescriptiveQuiz = ({sectionId}) => {
   };
 
   useEffect(() => {
-    if(sectionId){
-    fetchQuestions(); // Fetch questions when the component mounts
-    }
-    // Only add event listeners if the quiz hasn't been submitted yet
+    if (sectionId) fetchQuestions();
+
     if (!quizSubmitted) {
       const handleVisibilityChange = () => {
-        if (document.visibilityState === 'hidden') {
-          handleMalpractice();
-        }
+        if (document.visibilityState === 'hidden') handleMalpractice();
       };
 
       const handleWindowBlur = () => {
@@ -88,6 +79,11 @@ const DescriptiveQuiz = ({sectionId}) => {
     setSelectedAnswers(updatedAnswers);
   };
 
+  const insertSymbol = (symbol) => {
+    const currentAnswer = selectedAnswers[currentQuestionIndex]?.writtenAnswer || "";
+    handleAnswerSelect(currentAnswer + symbol);
+  };
+
   const handleNext = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -98,30 +94,30 @@ const DescriptiveQuiz = ({sectionId}) => {
 
   const handleSubmitQuiz = async (isDisqualified = false) => {
     try {
-        // Ensure each answer includes the sectionId, questionId, and the writtenAnswer
-        const processedAnswers = selectedAnswers.map(answer => ({
-            sectionId, // Include the sectionId for each answer
-            questionId: answer.questionId,
-            answerText: answer.writtenAnswer || 'skipped', // Send as "skipped" if unanswered
-        }));
+      const processedAnswers = selectedAnswers.map((answer) => ({
+        sectionId,
+        questionId: answer.questionId,
+        answerText: answer.writtenAnswer || 'skipped',
+      }));
 
-        // Send the answers and disqualification status to the backend
-        const response = await axios.post(`http://localhost:8000/api/v1/user/descriptivequizsubmit/${loggedInUserId}/${sectionId}`, {
-            answers: processedAnswers,
-            disqualified: isDisqualified,
-        });
+      const response = await axios.post(
+        `http://localhost:8000/api/v1/user/descriptivequizsubmit/${loggedInUserId}/${sectionId}`,
+        {
+          answers: processedAnswers,
+          disqualified: isDisqualified,
+        }
+      );
 
-        console.log('Quiz submitted successfully:', response.data);
-        setQuizSubmitted(true);
+      console.log('Quiz submitted successfully:', response.data);
+      setQuizSubmitted(true);
     } catch (error) {
-        console.error('Error submitting quiz:', error);
+      console.error('Error submitting quiz:', error);
     }
-};
+  };
 
-
-  const [hours, setHours] = useState('');
-  const [minutes, setMinutes] = useState('');
-  const [seconds, setSeconds] = useState('');
+  const [hours, setHours] = useState(0);
+  const [minutes, setMinutes] = useState(30);
+  const [seconds, setSeconds] = useState(0);
 
   useEffect(() => {
     if (hours === 0 && minutes === 0 && seconds === 0 && !quizSubmitted) {
@@ -131,12 +127,12 @@ const DescriptiveQuiz = ({sectionId}) => {
 
     const intervalId = setInterval(() => {
       if (seconds > 0) {
-        setSeconds(prevSeconds => prevSeconds - 1);
+        setSeconds((prevSeconds) => prevSeconds - 1);
       } else if (minutes > 0) {
-        setMinutes(prevMinutes => prevMinutes - 1);
+        setMinutes((prevMinutes) => prevMinutes - 1);
         setSeconds(59);
       } else if (hours > 0) {
-        setHours(prevHours => prevHours - 1);
+        setHours((prevHours) => prevHours - 1);
         setMinutes(59);
         setSeconds(59);
       }
@@ -151,7 +147,7 @@ const DescriptiveQuiz = ({sectionId}) => {
     <div className="mt-5 d-flex align-items-center justify-content-center">
       <div className="w-75 p-4 bg-light border rounded shadow">
         <header className="mb-4 text-center">
-          <h1 className="display-4" style={{color:"#4a148c"}}>Quiz</h1>
+          <h1 className="display-4" style={{ color: '#4a148c' }}>Quiz</h1>
           {quizSubmitted ? (
             <p className="text-success">Quiz submitted successfully!</p>
           ) : (
@@ -163,13 +159,34 @@ const DescriptiveQuiz = ({sectionId}) => {
           <form>
             {questions[currentQuestionIndex] && !quizSubmitted ? (
               <>
-                <div className='timerMain'>
-                  <h6 className={`${'timerHead'} ${isLastMinute ? 'timerRed' : ''}`}>
-                    {hours}:{minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+                <div className="timerMain">
+                  <h6
+                    className={`${'timerHead'} ${isLastMinute ? 'timerRed' : ''}`}
+                  >
+                    {hours}:{minutes < 10 ? `0${minutes}` : minutes}:
+                    {seconds < 10 ? `0${seconds}` : seconds}
                   </h6>
                 </div>
                 <div className="mb-4 text-center">
-                  <h4>Question {currentQuestionIndex + 1}: {questions[currentQuestionIndex]?.question}</h4>
+                  <h4>
+                    Question {currentQuestionIndex + 1}:{' '}
+                    {questions[currentQuestionIndex]?.question}
+                  </h4>
+                </div>
+
+                <div className="mb-4 d-flex flex-wrap gap-2">
+                  {/* Mathematical symbols toolbar */}
+                  {["π", "√", "^", "∞", "∑", "∫", "α", "β", "γ", "δ", "Δ", "∂", "θ", "λ", "μ", "σ", "Ω", "Σ", "∇"].map((symbol) => (
+                    <button
+                      key={symbol}
+                      type="button"
+                      className="btn btn-outline-primary"
+                      aria-label={`Insert ${symbol}`}
+                      onClick={() => insertSymbol(symbol)}
+                    >
+                      {symbol}
+                    </button>
+                  ))}
                 </div>
 
                 <div className="mb-4 d-flex flex-column align-items-start">
@@ -178,9 +195,10 @@ const DescriptiveQuiz = ({sectionId}) => {
                     placeholder="Write your answer here..."
                     value={selectedAnswers[currentQuestionIndex]?.writtenAnswer || ""}
                     onChange={(e) => handleAnswerSelect(e.target.value)}
-                    rows='4'
+                    rows="4"
                   />
                 </div>
+
               </>
             ) : quizSubmitted ? (
               <div className="text-center">Thank you for completing the quiz!</div>
@@ -192,8 +210,14 @@ const DescriptiveQuiz = ({sectionId}) => {
               <div className="d-flex justify-content-between mt-4">
                 <button
                   type="button"
-                  style={{backgroundColor:"#4a148c",padding:"5px",borderRadius:"5px",border:"none",color:"white",width:'100px'}}
-
+                  style={{
+                    backgroundColor: '#4a148c',
+                    padding: '5px',
+                    borderRadius: '5px',
+                    border: 'none',
+                    color: 'white',
+                    width: '100px',
+                  }}
                   onClick={() => setCurrentQuestionIndex(currentQuestionIndex - 1)}
                   disabled={currentQuestionIndex === 0}
                 >
@@ -201,7 +225,14 @@ const DescriptiveQuiz = ({sectionId}) => {
                 </button>
                 <button
                   type="button"
-                  style={{backgroundColor:"#4a148c",padding:"5px",borderRadius:"5px",border:"none",color:"white",width:'100px'}}
+                  style={{
+                    backgroundColor: '#4a148c',
+                    padding: '5px',
+                    borderRadius: '5px',
+                    border: 'none',
+                    color: 'white',
+                    width: '100px',
+                  }}
                   onClick={handleNext}
                 >
                   {currentQuestionIndex === questions.length - 1 ? 'Submit' : 'Next'}
