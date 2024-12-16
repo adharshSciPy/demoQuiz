@@ -37,7 +37,7 @@ const Quiz = ({ sectionId }) => { // Receive sectionId as a prop
     if (!sectionId) return;
     try {
       const response = await axios.get(`http://localhost:8000/api/v1/section/getsectionsbyid/${sectionId}`);
-      console.log("response from axios ",response.data.data)
+      console.log("response from axios ",response.data.data.MCQ)
       const shuffledQuestions = response.data.data.MCQ.sort(() => Math.random() - 0.5);
       setQuestions(shuffledQuestions);
       setHours(response.data.data.timer.hours);
