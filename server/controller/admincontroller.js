@@ -338,6 +338,27 @@ const editAdmin = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+const showAdmin = async (req, res) => {
+    try {
+      const { id } = req.params;
+  
+      // Fetch admin by ID
+      const admin = await Admin.findById(id);
+  
+      // Check if the admin exists
+      if (!admin) {
+        return res.status(404).json({ message: "Admin not found" });
+      }
+  
+      // Send the admin data as the response
+      res.status(200).json(admin);
+    } catch (error) {
+      console.error("Error fetching admin:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  };
+  
 const forgotPassword=async(req,res)=>{
    
     const{email}=req.body;
@@ -425,5 +446,5 @@ const ACCESS_TOKEN_SECRET=process.env.ACCESS_TOKEN_SECRET;
 
 
 export {
-    registerAdmin, adminlogin, adminlogout,getUserDescriptiveAnswers,descriptiveMark,userControl,editAdmin,forgotPassword,resetPassword
+    registerAdmin, adminlogin, adminlogout,getUserDescriptiveAnswers,descriptiveMark,userControl,editAdmin,forgotPassword,resetPassword,showAdmin
 }
