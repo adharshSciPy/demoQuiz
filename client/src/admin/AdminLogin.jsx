@@ -74,6 +74,8 @@ function AdminLogin() {
           navigate('/admindashboard');
         }else if(response.data.adminType==="SuperAdmin"){
           navigate('/superadmindash')
+        }else{
+          notifyError("Error while login ")
         }
 
       }

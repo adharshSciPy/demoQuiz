@@ -257,30 +257,7 @@ const descriptiveMark = async (req, res) => {
         return res.status(500).json({ message: "Internal Server Error", error });
     }
 };
-// to reset admin password
-// const resetPassword = async (req, res) => {
-//     const { email, oldPassword, newPassword } = req.body;
-//     try {
-//         const admin = await Admin.findOne({ email });
-//         if (!admin) {
-//             return res.status(400).json({ message: "Admin not found" });
-//         }
 
-//         const isOldPasswordCorrect = await admin.isPasswordCorrect(oldPassword);
-//         if (!isOldPasswordCorrect) {
-//             return res.status(400).json({ message: "Incorrect old password" });
-//         }
-
-       
-//         admin.password = newPassword;
-//         await admin.save();
-
-//         return res.status(200).json({ message: "Password reset successfully" });
-//     } catch (error) {
-//         console.error("Error resetting password:", error.message);
-//         res.status(500).json({ message: "Internal server error" });
-//     }
-// };
 // to control user login
 const userControl=async(req,res)=>{
     const{id}=req.body;

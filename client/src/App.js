@@ -64,6 +64,7 @@ function App() {
 
 
 
+
           {/* unprotected routes for student 3rd phase*/}
           <Route path='/studenthomepage/:loggedInUserId' element={<StudentDashboard/>}/>
 
