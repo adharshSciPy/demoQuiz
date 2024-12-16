@@ -10,7 +10,7 @@ adminRouter.route('/getdescriptiveAnswerfromUser').get(getUserDescriptiveAnswers
 adminRouter.route('/descriptiveMark/:userId').patch(descriptiveMark);
 // adminRouter.route('/resetadminpassword').patch(resetPassword);
 adminRouter.route('/userstatuscontrol').patch(userControl);
-adminRouter.route("/uploads/:id").patch(upload.single("image"), editAdmin);
+adminRouter.route("/editWithUpload/:id").patch(upload.single("image"), editAdmin);
 adminRouter.route('/forgotpassword').post(forgotPassword);
 adminRouter.route('/resetpassword/:id/:token').post(resetPassword);
 

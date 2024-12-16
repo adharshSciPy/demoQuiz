@@ -32,7 +32,7 @@ import AdminRegistration from "./superAdmin/AdminRegistration";
 import ForgotPassword from "./admin/ForgotPassword";
 import ResetPassword from "./admin/ResetPassword";
 import StudentDashboard from "./student/StudentDashboard";
-
+import EditAdmin from "./admin/EditAdmin";
 function App() {
   return (
     <div className="App">
@@ -51,7 +51,7 @@ function App() {
             <Route path='/descriptivepaper/:userId/:sessionId'element={<DescriptivePaperChecking/>}/>
             <Route path='/userdescriptivetable/:userId/:sessionId' element={<UserDescriptiveTable/>}/>
 
-
+            <Route path='/edit' element={<EditAdmin/>}/>
             {/* unprotected path for superAdmin */}
             <Route path="/superadmin" element={<SuperAdminLandingPage/>}/>
             <Route path="/superadmindash" element={<SuperAdminDashboard/>}/>

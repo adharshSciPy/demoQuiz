@@ -281,7 +281,7 @@ const userControl=async(req,res)=>{
 const editAdmin = async (req, res) => {
     const { id } = req.params;
     const file = req.file;
-    const { fullName} = req.body;
+    const { fullName,schoolName,phoneNumber,address} = req.body;
 
     if (!file) {
         return res.status(400).json({ error: "No file uploaded" });
@@ -293,7 +293,10 @@ const editAdmin = async (req, res) => {
             id,
             {
                 fullName,
-                image: `/uploads/${file.filename}`, // Save file path to the image field
+                image: `/uploads/${file.filename}`,
+                schoolName,
+                phoneNumber,
+                address
             },
             { new: true } // Return the updated document
         );

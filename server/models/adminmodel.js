@@ -25,6 +25,15 @@ const adminSchema = new Schema({
     },
     image:{
         type:String
+    },
+    schoolName:{
+        type:String
+    },
+    phoneNumber:{
+        type:String
+    },
+    address:{
+        type:String
     }
 }, { timestamps: true })
 
