@@ -105,8 +105,21 @@ const getAllAdmins=async (req,res)=>{
         
     }
 }
+const deleteAdmin= async(req,res)=>{
+    const{id}=req.body;
+    try {
+        if(!id){
+            return res.status(401).json({message:"Id not found"})
+        }
+        const admin=await Admin.findByIdAndDelete(id);
+        return res.status(200).json({message:"Admin delete succesfull",data:admin})
+      
+    } catch (error) {
+       return res.status(500).json({message:"Internal server error",error}) 
+    }
+}
 
 
 export{
-    registerSuperAdmin,superAdminLogin,adminLoginControl,getAllAdmins
+    registerSuperAdmin,superAdminLogin,adminLoginControl,getAllAdmins,deleteAdmin
 }
