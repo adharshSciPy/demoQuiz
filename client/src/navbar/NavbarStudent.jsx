@@ -77,6 +77,21 @@ function NavbarStudent() {
               >
                 Logout
               </NavLink>
+
+
+            </li>
+            <li>
+              <NavLink
+                to="/editUser"
+                className={({ isActive }) => (isActive ? 'active' : '')}
+                onClick={() => {
+                  setDrawerOpen(false);
+                }}
+              >
+                Edit
+              </NavLink>
+
+
             </li>
           </ul>
           <div className="drawerDiv">

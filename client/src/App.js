@@ -28,6 +28,7 @@ import UserDescriptiveTable from './admin/UserDescriptiveTable';
 import SuperAdminLandingPage from "./superAdmin/SuperAdminLandingPage";
 import SuperAdminDashboard from "./superAdmin/SuperAdminDashboard";
 import AdminRegistration from "./superAdmin/AdminRegistration";
+import EditProfile from "./student/EditProfile";
 
 function App() {
   return (
@@ -59,8 +60,8 @@ function App() {
 
 
             
-
-
+          {/* unprotected path for student */}
+          <Route path="/edituser" element={<EditProfile/>}/>
 
             {/* Protecting routes for users */}
             <Route path='/studentdashboard/:loggedInUserId' element={<ProtectedUserRoute element={<StudentPage />} />} />
