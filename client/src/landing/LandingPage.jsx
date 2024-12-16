@@ -53,9 +53,9 @@ function LandingPage() {
 
   useEffect(() => {
     if (isLoggedIn && loggedInUserId) {
-      navigate(`/studentdashboard/${loggedInUserId}`);
+      navigate(`/studenthomepage/${loggedInUserId}`);
     }
-  }, [isLoggedIn, loggedInUserId, navigate]);
+  }, [isLoggedIn,loggedInUserId,navigate]);
 
 
   const handleSignin = async (e) => {
@@ -67,7 +67,7 @@ function LandingPage() {
       // If login is successful, navigate to /studentdashboard
       if (response.status === 200) {
         dispatch(setLogin({ accessToken: response?.data?.token }))
-        // navigate(`/studentdashboard/${loggedInUserId}`);
+        navigate(`/studenthomepage/${loggedInUserId}`);
       }
 
     } catch (error) {

@@ -1,0 +1,25 @@
+
+.container {
+    width: 25%;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap:20px;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  
+  .card {
+    width: 90%;
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-top: 10px;
+  }
+  

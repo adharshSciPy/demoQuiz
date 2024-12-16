@@ -4,6 +4,7 @@ import { Question } from "../models/questionsmodel.js";
 import { Section } from "../models/sectionmodel.js";
 import jwt from "jsonwebtoken";
 import { passwordValidator } from "../utils/passwordValidator.js";
+import nodemailer from 'nodemailer';
 
 // @POST
 // user/register
@@ -86,22 +87,13 @@ const loginUser = async (req, res) => {
     }
 
     // Find the user
-    const models = [User, Admin];
-    let user = null;
-
-    for (const model of models) {
-      user = await model.findOne({ email });
-      if (user) break;
-    }
+ const user=await User.findOne({email:email});
 
     if (!user) {
       return res.status(404).json({ message: "Email doesn't exist" });
     }
 
-    // Check if the user has already logged in
-    // if (user.hasLoggedIn) {
-    //     return res.status(403).json({ message: "You have already submitted." });
-    // }
+
 
     // Verify password
     const isPasswordCorrect = await user.isPasswordCorrect(password);
@@ -1175,6 +1167,126 @@ const getUserDescriptivePerformance = async (req, res) => {
     return res.status(500).json({ message: "An error occurred", error: error.message });
   }
 };
+const forgotPassword=async(req,res)=>{
+   
+    const{email}=req.body;
+const ACCESS_TOKEN_SECRET=process.env.ACCESS_TOKEN_SECRET;
+
+    try {
+        
+        const user=await User.findOne({email:email})
+        if(!user){
+            return res.status(401).json({message:"User not found check the email"})
+        }
+
+            const token=jwt.sign({id:user._id},ACCESS_TOKEN_SECRET,{expiresIn:"1d"})
+            console.log("token",token);
+            console.log("secrect key",ACCESS_TOKEN_SECRET)
+            
+            
+            const resetLink = `http://localhost:3000/resetpassword/${user._id}/${token}`;
+            let transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                  user: 'gokulskumar2015@gmail.com',//rewrite the email and passkey with Scipy gmail and passkey
+                  pass: 'sdfoqndthpizyhhi'
+                }
+              });
+              
+              let mailOptions = {
+                from: "gokulskumar2015@gmial.com",//rewrite the email too
+                to: email,
+                subject: 'Reset your Password ',
+                html: `<p>Reset your password by clicking the link below:</p>
+                <a href="${resetLink}" target="_blank">Reset Password</a>`              };
+              
+              transporter.sendMail(mailOptions, function(error, info){
+                if (error) {
+                  console.log(error);
+                } else {
+                    console.log('Email sent: ' + info.response);
+                    return res.status(200).json({message:"Email sent succesful"})
+                
+                }
+              });
+        
+    } catch (error) {
+        return res.status(500).json({message:"Internal server error",error})
+
+    }
+
+}
+
+const resetPassword = async (req, res) => {
+    const { id, token } = req.params;
+    const { password } = req.body;
+    
+const ACCESS_TOKEN_SECRET=process.env.ACCESS_TOKEN_SECRET;
+
+
+    try {
+        // Verify the token
+        const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET);
+        if (!decoded) {
+            return res.status(401).json({ message: "Invalid link or token expired" });
+        }
+
+        
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        
+        // const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        
+        user.password = password;
+        await user.save();
+
+        return res.status(200).json({ message: "Password updated successfully" });
+    } catch (error) {
+        return res.status(500).json({ message: "Internal server error", error: error.message });
+    }
+};
+const editUser = async (req, res) => {
+  const { id } = req.params;
+  const file = req.file;
+  const { fullName,address,phone,batch} = req.body;
+
+  if (!file) {
+      return res.status(400).json({ error: "No file uploaded" });
+  }
+
+  try {
+      // Update admin record with the provided data
+      const editResult = await User.findByIdAndUpdate(
+          id,
+          {
+              fullName,
+              address,
+              batch,
+              phone,
+              image: `/uploads/${file.filename}`, // Save file path to the image field
+          },
+          { new: true } // Return the updated document
+      );
+
+      if (!editResult) {
+          return res.status(404).json({ error: "User not found" });
+      }
+
+      res.status(200).json({
+          message: "Updated successfully",
+          data: editResult,
+      });
+
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: error.message });
+  }
+};
+
 
 export {
   registerUser,
@@ -1196,5 +1308,8 @@ export {
   getSingleDescriptiveAnswers,
   getUserWiseDescriptive,
   getUserMcqPerformance,
-  getUserDescriptivePerformance
+  getUserDescriptivePerformance,
+  editUser,
+  forgotPassword,
+  resetPassword
 };

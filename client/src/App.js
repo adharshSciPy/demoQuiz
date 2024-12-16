@@ -28,7 +28,12 @@ import UserDescriptiveTable from './admin/UserDescriptiveTable';
 import SuperAdminLandingPage from "./superAdmin/SuperAdminLandingPage";
 import SuperAdminDashboard from "./superAdmin/SuperAdminDashboard";
 import AdminRegistration from "./superAdmin/AdminRegistration";
+import EditProfile from "./student/EditProfile";
 
+import ForgotPassword from "./admin/ForgotPassword";
+import ResetPassword from "./admin/ResetPassword";
+import StudentDashboard from "./student/StudentDashboard";
+import EditAdmin from "./admin/EditAdmin";
 function App() {
   return (
     <div className="App">
@@ -47,20 +52,26 @@ function App() {
             <Route path='/descriptivepaper/:userId/:sessionId'element={<DescriptivePaperChecking/>}/>
             <Route path='/userdescriptivetable/:userId/:sessionId' element={<UserDescriptiveTable/>}/>
 
+            <Route path='/edit' element={<EditAdmin/>}/>
             {/* unprotected path for superAdmin */}
             <Route path="/superadmin" element={<SuperAdminLandingPage/>}/>
             <Route path="/superadmindash" element={<SuperAdminDashboard/>}/>
             <Route path="/adminregister" element={<AdminRegistration/>}/>
 
 
+            {/* unprotected route for adminpassword reset */}
+            <Route path="/forgotpassword" element={<ForgotPassword/>}/>
+            <Route path="/resetpassword/:id/:token" element={<ResetPassword/>}/>
 
 
 
 
+          {/* unprotected routes for student 3rd phase*/}
+          <Route path='/studenthomepage/:loggedInUserId' element={<StudentDashboard/>}/>
 
             
-
-
+          {/* unprotected path for student */}
+          <Route path="/edituser" element={<EditProfile/>}/>
 
             {/* Protecting routes for users */}
             <Route path='/studentdashboard/:loggedInUserId' element={<ProtectedUserRoute element={<StudentPage />} />} />
