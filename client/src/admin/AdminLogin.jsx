@@ -21,7 +21,7 @@ import { Grid } from "@mui/material";
 
 
 
-function LandingPage() {
+function AdminLogin() {
 
   const [showPassword, setShowPassword] = React.useState(false);
 
@@ -53,23 +53,28 @@ function LandingPage() {
   const [errorMessage, setErrorMessage] = useState(""); // State to track error message
   const navigate = useNavigate(); // Initialize the useNavigate hook
 
-  useEffect(() => {
-    if (isLoggedIn && loggedInUserId) {
-      navigate(`/admindashboard`);
-    }
-  }, [isLoggedIn, loggedInUserId, navigate]);
+  // useEffect(() => {
+  //   if (isLoggedIn && loggedInUserId) {
+  //     navigate(`/admindashboard`);
+  //   }
+  // }, [isLoggedIn, loggedInUserId, navigate]);
 
 
   const handleSignin = async (e) => {
     e.preventDefault(); // Prevent the form from submitting the traditional way
     try {
       const response = await axios.post(`http://localhost:8000/api/v1/admin/login`, form);
-      console.log(response);
+      console.log("hai",response.data.adminType);
 
 
       if (response.status === 200) {
         dispatch(setLogin({ accessToken: response?.data?.token }))
-        navigate('/admindashboard');
+        if(response.data.adminType==="Admin"){
+
+          navigate('/admindashboard');
+        }else if(response.data.adminType==="SuperAdmin"){
+          navigate('/superadmindash')
+        }
 
       }
 
@@ -181,4 +186,4 @@ function LandingPage() {
   );
 }
 
-export default LandingPage;
+export default AdminLogin;

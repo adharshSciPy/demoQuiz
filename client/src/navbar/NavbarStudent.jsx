@@ -44,7 +44,7 @@ function NavbarStudent() {
           <ul>
             <li>
               <NavLink
-                to={`/studenthomepage${loggedInUserId}`}
+                to={`/studenthomepage/${loggedInUserId}`}
                 className={({ isActive }) => (isActive ? 'active' : '')}
                 onClick={() => setDrawerOpen(false)}
               >

@@ -8,6 +8,7 @@ function AttentedSession() {
   const [sessionCount, setSessionCount] = useState([]); 
   const [sessionDetails, setSessionDetails] = useState([]); // To store detailed session info
   const { loggedInUserId } = useParams();
+  console.log("gokul",loggedInUserId)
 
   const getUserdetails = async () => {
     try {

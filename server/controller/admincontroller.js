@@ -1,5 +1,6 @@
 import { Admin } from '../models/adminmodel.js'
 import { User } from '../models/usermodel.js';
+import {SuperAdmin} from '../models/superadminmodel.js'
 import { passwordValidator } from '../utils/passwordValidator.js';
 import { Section } from '../models/sectionmodel.js';
 import  bcrypt from 'bcryptjs'
@@ -52,46 +53,62 @@ const registerAdmin = async (req, res) => {
 
 // POST /admin/login
 const adminlogin = async (req, res) => {
-    const { email, password } = req.body
+    const { email, password } = req.body;
     try {
         const isEmptyField = [email, password].some(
-            (field) => field.trim() === '' || field === undefined
-        )
+            (field) => !field || field.trim() === '' 
+        );
         if (isEmptyField) {
-            return res.status(401).json({ message: 'All fields required' });
+            return res.status(400).json({ message: 'All fields are required' });
         }
-        const admin = await Admin.findOne({ email: email });
+
+        let admin = await Admin.findOne({ email: email });
+        let adminType = "Admin";
+
         if (!admin) {
-            return res.status(401).json({ message: 'Admin Doesnt exist' });
+            admin = await SuperAdmin.findOne({ email: email });
+            adminType = "SuperAdmin";
         }
-        const isPasswordCorrect = await admin.isPasswordCorrect(password)
+
+        if (!admin) {
+            return res.status(404).json({ message: 'No user found' });
+        }
+
+        const isPasswordCorrect = await admin.isPasswordCorrect(password);
         if (!isPasswordCorrect) {
             return res.status(401).json({ message: 'Incorrect Password' });
-          
         }
-        
-      
-        if(!admin.isEnabled){
-            return res.status(401).json({ message: 'Admin Login has been disabled' });
 
+        if (!admin.isEnabled) {
+            return res.status(401).json({ message: 'Admin login has been disabled' });
         }
-        //generate access token
+
         const accessToken = await admin.generateAccessToken();
 
-        //generate refresh token
         const refreshToken = await admin.generateRefreshToken();
-        //store refresh token in cookie
+
+        // Store refresh token in a cookie
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
-            secure: false, // when going to production change boolean to true
+            secure: process.env.NODE_ENV === 'production', // Set to true in production
             sameSite: "None",
-            maxAge: 7 * 24 * 60 * 60 * 1000,
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
         });
-        return res.status(200).json({ message: "Admin Login Successfull", token: accessToken })
+
+        return res.status(200).json({
+            message: `${adminType} login successful`,
+            adminType,
+
+            token: accessToken,
+            admin,
+        });
+
     } catch (error) {
-        return res.status(500).json({ message: `Internal server due to ${error.message}` })
+        console.error(error);
+        return res.status(500).json({ message: `Internal server error: ${error.message}` });
     }
-}
+};
+
 
 //admin logout
 

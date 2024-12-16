@@ -37,7 +37,8 @@ function LandingPage() {
 
   const dispatch = useDispatch()
   const { loggedInUserId, isLoggedIn } = useAuth();
-  console.log("loginid", loggedInUserId)
+  
+  console.log("loginidhhhhhhh", loggedInUserId)
 
 
   const notifyError = (message) => toast.error(message);
@@ -67,7 +68,7 @@ function LandingPage() {
       // If login is successful, navigate to /studentdashboard
       if (response.status === 200) {
         dispatch(setLogin({ accessToken: response?.data?.token }))
-        // navigate(`/studentdashboard/${loggedInUserId}`);
+        navigate(`/studenthomepage/${loggedInUserId}`);
       }
 
     } catch (error) {
