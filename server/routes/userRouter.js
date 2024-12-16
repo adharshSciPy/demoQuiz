@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { registerUser, loginUser, refreshAccessToken, logoutUser, getMcquestions,getDescriptiveQuestions, submitQuiz,submitQuizMcq, getAllUsers,submitQuizDescriptive ,descriptiveQuizSubmit, checkUserQuizSubmit,getUserById, getUserWiseMcq, getSingleMcquestions, getSingleDescriptiveQuestions, getSingleDescriptiveAnswers, getUserWiseDescriptive,getUserMcqPerformance, getUserDescriptivePerformance} from '../controller/usercontroller.js'
+import { registerUser, loginUser, refreshAccessToken, logoutUser, getMcquestions,getDescriptiveQuestions, submitQuiz,submitQuizMcq, getAllUsers,submitQuizDescriptive ,descriptiveQuizSubmit, checkUserQuizSubmit,getUserById, getUserWiseMcq, getSingleMcquestions, getSingleDescriptiveQuestions, getSingleDescriptiveAnswers, getUserWiseDescriptive,getUserMcqPerformance, getUserDescriptivePerformance, forgotPassword, resetPassword} from '../controller/usercontroller.js'
 import { getUserDescriptiveAnswers } from '../controller/admincontroller.js'
 
 const userRouter = Router()
@@ -30,6 +30,11 @@ userRouter.route('/getsingledescriptiveanswers').get(getSingleDescriptiveAnswers
 userRouter.route('/getuserwisedescriptive/:userId/:sessionId').get(getUserWiseDescriptive)
 userRouter.route('/getusermcqperfomance/:userId/:sessionId').get(getUserMcqPerformance)
 userRouter.route('/getuserdescriptiveperfomance/:userId/:sessionId').get(getUserDescriptivePerformance)
+userRouter.route('/forgotpassword').post(forgotPassword)
+userRouter.route('/resetpassword/:id/:token').post(resetPassword);
+
+
+
 
 
 

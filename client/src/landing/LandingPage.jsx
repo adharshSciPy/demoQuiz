@@ -37,8 +37,7 @@ function LandingPage() {
 
   const dispatch = useDispatch()
   const { loggedInUserId, isLoggedIn } = useAuth();
-  
-  console.log("loginidhhhhhhh", loggedInUserId)
+  console.log("loginid", loggedInUserId)
 
 
   const notifyError = (message) => toast.error(message);
@@ -56,7 +55,7 @@ function LandingPage() {
     if (isLoggedIn && loggedInUserId) {
       navigate(`/studenthomepage/${loggedInUserId}`);
     }
-  }, [isLoggedIn, loggedInUserId, navigate]);
+  }, [isLoggedIn,loggedInUserId,navigate]);
 
 
   const handleSignin = async (e) => {
