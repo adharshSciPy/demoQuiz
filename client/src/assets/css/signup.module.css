@@ -203,13 +203,21 @@
     text-decoration: underline;
   }
   .passwordValidation {
-    list-style: none;
-    padding-left: 10px;
-    margin-top: 5px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 8px; 
+    list-style: none; 
+    padding: 0; 
+    margin: 0; 
   }
+  
   .passwordValidation li {
-    text-align: left; /* Ensure alignment to the left */
+    font-size: 12px;
+    text-align: left;
+    color: red; 
+    margin-left: 18px;
   }
+  
   
   
   /* Footer Styling */
