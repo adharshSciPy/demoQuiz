@@ -33,6 +33,8 @@ import ForgotPassword from "./admin/ForgotPassword";
 import ResetPassword from "./admin/ResetPassword";
 import StudentDashboard from "./student/StudentDashboard";
 import EditAdmin from "./admin/EditAdmin";
+import ForgotPasswordStudent from "./student/ForgotPasswordStudent";
+import ResetPasswordStudent from "./student/ResetPasswordStudent";
 function App() {
   return (
     <div className="App">
@@ -58,10 +60,12 @@ function App() {
             <Route path="/adminregister" element={<AdminRegistration/>}/>
 
 
-            {/* unprotected route for adminpassword reset */}
+            {/* unprotected route for Admin password reset */}
             <Route path="/forgotpassword" element={<ForgotPassword/>}/>
             <Route path="/resetpassword/:id/:token" element={<ResetPassword/>}/>
-
+{/* unprotected route for Student password reset */}
+<Route path="/forgotpassworduser" element={<ForgotPasswordStudent/>}/>
+            <Route path="/resetpassworduser/:id/:token" element={<ResetPasswordStudent/>}/>
 
 
 
