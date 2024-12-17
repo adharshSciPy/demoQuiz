@@ -149,9 +149,9 @@ const Quiz = ({ sectionId }) => {
       style={{
         width: "20%",
         height: "80vh",
-        overflowY: "auto", // Enables vertical scrolling if the content exceeds the height
-        borderRadius: "10px", // Added border radius for rounded corners
-        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Optional: added shadow for sidebar
+        overflowY: "auto", 
+        borderRadius: "10px", 
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", 
       }}
     >
       <h5 className="mb-3" style={{ color: "#4a148c" }}>
