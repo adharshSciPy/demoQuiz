@@ -30,6 +30,6 @@ app.use('/api/v1/user', userRouter)
 app.use('/api/v1/question', questionRouter)
 app.use('/api/v1/section', sectionRoute)
 app.use('/api/v1/superadmin', superAdminRouter)
-app.use("/uploads", express.static(path.join(__dirname, "uploads")))
+app.use("/uploads", express.static(path.join(__dirname, "User_Upload")))
 
 export { app }

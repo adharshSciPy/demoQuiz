@@ -74,6 +74,10 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    phone: {
+        type: Number,
+        required: true
+    },
     role: {
         type: Number,
         default: defaultRole
@@ -92,6 +96,9 @@ const userSchema = new Schema({
     date: {
         type: Date,
         default: Date.now
+    },
+    image:{
+        type:String
     },
     isEnabled:{
         type:Boolean,

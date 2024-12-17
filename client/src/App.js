@@ -28,6 +28,7 @@ import UserDescriptiveTable from './admin/UserDescriptiveTable';
 import SuperAdminLandingPage from "./superAdmin/SuperAdminLandingPage";
 import SuperAdminDashboard from "./superAdmin/SuperAdminDashboard";
 import AdminRegistration from "./superAdmin/AdminRegistration";
+import EditProfile from "./student/EditProfile";
 
 import ForgotPassword from "./admin/ForgotPassword";
 import ResetPassword from "./admin/ResetPassword";
@@ -73,8 +74,8 @@ function App() {
           <Route path='/studenthomepage/:loggedInUserId' element={<StudentDashboard/>}/>
 
             
-
-
+          {/* unprotected path for student */}
+          <Route path="/edituser" element={<EditProfile/>}/>
 
             {/* Protecting routes for users */}
             <Route path='/studentdashboard/:loggedInUserId' element={<ProtectedUserRoute element={<StudentPage />} />} />
