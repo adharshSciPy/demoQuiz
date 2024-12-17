@@ -202,6 +202,14 @@
     color:rgb(127, 24, 200);;
     text-decoration: underline;
   }
+  .passwordValidation {
+    list-style: none;
+    padding-left: 10px;
+    margin-top: 5px;
+  }
+  .passwordValidation li {
+    text-align: left; /* Ensure alignment to the left */
+  }
   
   
   /* Footer Styling */
