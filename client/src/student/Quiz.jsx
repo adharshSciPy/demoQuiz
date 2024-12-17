@@ -16,6 +16,8 @@ const Quiz = ({ sectionId }) => {
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [disqualified, setDisqualified] = useState(false);
 
+
+
   const fetchQuestions = async () => {
     if (!sectionId) return;
     try {
@@ -27,6 +29,9 @@ const Quiz = ({ sectionId }) => {
         () => Math.random() - 0.5
       );
       setQuestions(shuffledQuestions);
+      setHours(response.data.data.timer.hours);
+      setMinutes(response.data.data.timer.minutes);
+      setSeconds(response.data.data.timer.seconds);
 
       const initialAnswers = shuffledQuestions.map((q) => ({
         questionId: q._id,
@@ -51,7 +56,10 @@ const Quiz = ({ sectionId }) => {
       window.addEventListener("blur", handleWindowBlur);
 
       return () => {
-        document.removeEventListener("visibilitychange", handleVisibilityChange);
+        document.removeEventListener(
+          "visibilitychange",
+          handleVisibilityChange
+        );
         window.removeEventListener("blur", handleWindowBlur);
       };
     }
@@ -74,25 +82,15 @@ const Quiz = ({ sectionId }) => {
 
   const handleAnswerSelect = (option) => {
     const questionId = questions[currentQuestionIndex]._id;
+    const optionKey = Object.keys(questions[currentQuestionIndex]).find(
+      (key) => questions[currentQuestionIndex][key] === option
+    );
 
     const updatedAnswers = [...selectedAnswers];
-
-    // Unselect if the same option is clicked
-    if (updatedAnswers[currentQuestionIndex].selectedOption === option) {
-      updatedAnswers[currentQuestionIndex] = {
-        questionId,
-        selectedOption: null,
-      };
-    } else {
-      const optionKey = Object.keys(questions[currentQuestionIndex]).find(
-        (key) => questions[currentQuestionIndex][key] === option
-      );
-      updatedAnswers[currentQuestionIndex] = {
-        questionId,
-        selectedOption: optionKey || null,
-      };
-    }
-
+    updatedAnswers[currentQuestionIndex] = {
+      questionId,
+      selectedOption: optionKey || null,
+    };
     setSelectedAnswers(updatedAnswers);
   };
 
@@ -116,120 +114,176 @@ const Quiz = ({ sectionId }) => {
       console.error("Error submitting quiz:", error);
     }
   };
-
+  const [hours, setHours] = useState("");
+  const [minutes, setMinutes] = useState("");
+  const [seconds, setSeconds] = useState("");
+    useEffect(() => {
+      if (hours === 0 && minutes === 0 && seconds === 0 && !quizSubmitted) {
+        handleSubmitQuiz();
+        return;
+      }
+  
+      const intervalId = setInterval(() => {
+        if (seconds > 0) {
+          setSeconds((prevSeconds) => prevSeconds - 1);
+        } else if (minutes > 0) {
+          setMinutes((prevMinutes) => prevMinutes - 1);
+          setSeconds(59);
+        } else if (hours > 0) {
+          setHours((prevHours) => prevHours - 1);
+          setMinutes(59);
+          setSeconds(59);
+        }
+      }, 1000);
+  
+      return () => clearInterval(intervalId);
+    }, [hours, minutes, seconds, quizSubmitted]);
+  
+    const isLastMinute = hours === 0 && minutes === 0 && seconds <= 60;
   const handleCardClick = (index) => setCurrentQuestionIndex(index);
 
   return (
-    <div className="quiz-container d-flex">
-      {quizSubmitted ? (
-        <div className="text-center text-success w-100">
-          <h2>Quiz submitted successfully!</h2>
-        </div>
-      ) : (
-        <>
-          {/* Sidebar for question cards */}
-          <aside className="sidebar bg-light p-3" style={{ width: "20%" }}>
-            <h5 className="mb-3" style={{ color: "#4a148c" }}>Questions</h5>
-            {questions.map((_, index) => {
-              const status = selectedAnswers[index]?.selectedOption
-                ? "answered"
-                : "unanswered";
-
-              return (
-                <div
-                  key={index}
-                  className={`card mb-2 p-2 text-center ${
-                    status === "answered"
-                      ? "bg-success text-white"
-                      : "bg-secondary text-white"
-                  } ${currentQuestionIndex === index ? "border border-dark" : ""}`}
-                  style={{
-                    cursor: "pointer",
-                    borderRadius: "5px",
-                  }}
-                  onClick={() => handleCardClick(index)}
-                >
-                  Q{index + 1}
-                </div>
-              );
-            })}
-          </aside>
-
-          {/* Main quiz area */}
-          <main className="w-75 p-4">
-            <h1 className="text-center mb-4" style={{ color: "#4a148c" }}>
-              Quiz
-            </h1>
-
-            <div className="text-center mb-3">
-              <h4>
-                Question {currentQuestionIndex + 1}:{" "}
-                {questions[currentQuestionIndex]?.question}
-              </h4>
+    <div className="mt-5 d-flex align-items-start justify-content-center">
+    <aside
+      className="sidebar bg-light p-3"
+      style={{
+        width: "20%",
+        height: "80vh",
+        overflowY: "auto", // Enables vertical scrolling if the content exceeds the height
+        borderRadius: "10px", // Added border radius for rounded corners
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Optional: added shadow for sidebar
+      }}
+    >
+      <h5 className="mb-3" style={{ color: "#4a148c" }}>
+        Questions
+      </h5>
+      <div className="row">
+        {questions.map((_, index) => {
+          const status = selectedAnswers[index]?.selectedOption
+            ? "answered"
+            : "unanswered";
+  
+          return (
+            <div key={index} className="col-4 mb-3">
+              <div
+                className={`card p-2 text-center ${
+                  status === "answered"
+                    ? "bg-success text-white"
+                    : status === "unanswered"
+                    ? "bg-secondary text-white"
+                    : "bg-warning"
+                } ${currentQuestionIndex === index ? "border border-dark" : ""}`}
+                style={{
+                  cursor: "pointer",
+                  borderRadius: "5px",
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", // Adding box shadow to cards
+                }}
+                onClick={() => handleCardClick(index)}
+              >
+                Q{index + 1}
+              </div>
             </div>
-
-            <div className="mb-4">
-  {Object.keys(questions[currentQuestionIndex] || {})
-    .filter((key) => key.startsWith("option"))
-    .map((optionKey, index) => (
-      <div
-        key={index}
-        className="form-check mb-3 d-flex justify-content-center align-items-center"
-        style={{ textAlign: "center" }}
-      >
-        <input
-          className="form-check-input me-2"
-          type="radio"
-          name="options"
-          id={`option${index}`}
-          // style={{ transform: "scale(1.5)" }} // Enlarge the radio button
-          checked={
-            selectedAnswers[currentQuestionIndex]?.selectedOption === optionKey
-          }
-          onChange={() =>
-            handleAnswerSelect(questions[currentQuestionIndex][optionKey])
-          }
-        />
-        <label
-          className="form-check-label"
-          htmlFor={`option${index}`}
-          style={{ fontSize: "1.1rem" }}
-        >
-          {questions[currentQuestionIndex][optionKey]}
-        </label>
+          );
+        })}
       </div>
-    ))}
-</div>
-
-
-            {/* Navigation Buttons */}
-            <div className="d-flex justify-content-between">
-              <button
-                className="btn btn-secondary"
-                onClick={() =>
-                  setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0))
-                }
-                disabled={currentQuestionIndex === 0}
-              >
-                Previous
-              </button>
-              <button
-                className="btn btn-primary"
-                onClick={() =>
-                  currentQuestionIndex === questions.length - 1
-                    ? handleSubmitQuiz()
-                    : setCurrentQuestionIndex((prev) => prev + 1)
-                }
-              >
-                {currentQuestionIndex === questions.length - 1
-                  ? "Submit"
-                  : "Next"}
-              </button>
+    </aside>
+  
+    <div
+      className="w-75 p-4 bg-light border rounded shadow overflow-auto ms-4"
+      style={{ height: "80vh" }}
+    >
+      <div className="quiz-container d-flex">
+        {/* Main quiz area */}
+        <main className="w-100 p-4">
+          <h1 className="text-center mb-4" style={{ color: "#4a148c" }}>
+            Quiz
+          </h1>
+  
+          {quizSubmitted ? (
+            <div className="text-center text-success">
+              Quiz submitted successfully!
             </div>
-          </main>
-        </>
-      )}
+          ) : (
+            <>
+              <div
+                className="text-center mb-3"
+                style={{
+                  backgroundColor: "#fff",
+                  padding: "20px",
+                  borderRadius: "8px",
+                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)", // Box shadow for the question area
+                }}
+              >
+                 <div className="timerMain">
+                  <h6
+                    className={`${'timerHead'} ${isLastMinute ? 'timerRed' : ''}`}
+                  >
+                    {hours}:{minutes < 10 ? `0${minutes}` : minutes}:
+                    {seconds < 10 ? `0${seconds}` : seconds}
+                  </h6>
+                </div>
+                <h4>
+                  Question {currentQuestionIndex + 1}:{" "}
+                  {questions[currentQuestionIndex]?.question}
+                </h4>
+
+                <div className="mb-4 d-flex flex-column align-items-start lft">
+                  {Object.keys(questions[currentQuestionIndex] || {})
+                    .filter((key) => key.startsWith("option"))
+                    .map((optionKey, index) => (
+                      <div key={index} className="form-check d-flex align-items-center mb-2">
+                        <input
+                          className="form-check-input me-2"
+                          type="radio"
+                          name="options"
+                          id={`option${index}`}
+                          checked={
+                            selectedAnswers[currentQuestionIndex]?.selectedOption === optionKey
+                          }
+                          onChange={() =>
+                            handleAnswerSelect(questions[currentQuestionIndex][optionKey])
+                          }
+                        />
+                        <label className="form-check-label" htmlFor={`option${index}`}>
+                          {questions[currentQuestionIndex][optionKey]}
+                        </label>
+                      </div>
+                    ))}
+                </div>
+  
+                {/* Navigation Buttons */}
+                <div className="d-flex justify-content-between">
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() =>
+                      setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0))
+                    }
+                    disabled={currentQuestionIndex === 0}
+                  >
+                    Previous
+                  </button>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() =>
+                      currentQuestionIndex === questions.length - 1
+                        ? handleSubmitQuiz()
+                        : setCurrentQuestionIndex((prev) => prev + 1)
+                    }
+                  >
+                    {currentQuestionIndex === questions.length - 1
+                      ? "Submit"
+                      : "Next"}
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+        </main>
+      </div>
     </div>
+  </div>
+  
+  
   );
 };
 
