@@ -24,7 +24,7 @@ function UserDescriptiveTable() {
             // console.log("perfo",score)
             setDetails(questionDetails);
             setScore(score)
-            // console.log("question details",questionDetails)
+            console.log("question details",questions)
 
 
 
@@ -70,8 +70,48 @@ function UserDescriptiveTable() {
         fetchSectionName();
     }, []); // Empty dependency array to ensure it runs only once on mount
 
-    // console.log("haiiiiiii",details)
-    // console.log("hellllooo",questions)
+    const downloadCSV = () => {
+        const headers = [
+            "Sl.No",
+            "Question",
+            "Mark Obtained",
+            "Total Mark",
+            "Status",
+        ];
+
+        const csvRows = [];
+        csvRows.push(`Total Score: ${score}`);
+        csvRows.push(' ');
+        csvRows.push(headers.join(',')); // Add header row
+
+        questions.forEach((item, index) => {
+            const status = item.markObtained !== undefined && item.markObtained > 0
+            ? "Answered"
+            : "Skipped";
+
+            const row = [
+                index + 1,
+                `"${item.question}"`, // Wrap question in quotes to handle commas
+                item.markObtained,
+                item.totalMark,
+                status
+            ];
+            csvRows.push(row.join(',')); // Add row
+        });
+
+        const csvString = csvRows.join('\n');
+        const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'descriptive_table_report.csv';
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    };
+
     return (
         <div>
             <Navbar />
@@ -81,13 +121,14 @@ function UserDescriptiveTable() {
                     <div className={styles.mainDetailsDiv}>
                         <div className={styles.detailsDiv}>
                             <p>Section Name: {sectionName}</p>
-                            {/* <p>Start Time: 12:35</p>
-                        <p>End Time: 12:20</p> */}
                         </div>
                         <div className={styles.totalScoreDiv}>
                             <h6 className={styles.totalScore}>Total Score:{score}</h6>
                         </div>
                     </div>
+                    <button onClick={downloadCSV} className={styles.downloadButton}>
+                        Download CSV
+                    </button>
                     <table className={styles.table}>
                         <thead className={styles.thead}>
                             <tr>
