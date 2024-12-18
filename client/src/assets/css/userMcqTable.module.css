@@ -1,113 +1,116 @@
-.mainDetailsDiv{
+.mainDetailsDiv {
   display: flex;
   justify-content: space-between;
 }
 .mainDiv {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
   background: linear-gradient(to bottom, rgb(255, 255, 255), #4a148c);
+  min-height: 100vh;
+}
 
-  }
-  
-  .subDiv {
-    width: 90%;
-    /* max-width: 800px; */
-    margin: 20px auto;
-    background-color:#e6e8ea;
-    border-radius: 8px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-bottom: 2rem;
-  }
-  
-  .userHead {
-    text-align: start;
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 15px;
-  }
-  
-  .detailsDiv {
-    display: flex;
-    flex-direction: column;
-    /* gap: 5px; */
-    font-size: 1rem;
-    margin-bottom: 5px;
-    align-items: flex-start;
-  }
-  .perfomanceDiv{
-    display: flex;
-    flex-direction: column;
-    /* gap: 5px; */
-    font-size: 1rem;
-    margin-bottom: 5px;
-    align-items: flex-end;
-  }
-  
-  .table {
+.subDiv {
+  width: 90%;
+  margin: 0px auto;
+  background-color: #e6e8ea;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 2rem;
+}
+
+.userHead {
+  text-align: start;
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.detailsDiv {
+  display: flex;
+  flex-direction: column;
+  /* gap: 5px; */
+  font-size: 1rem;
+  margin-bottom: 5px;
+  align-items: flex-start;
+}
+.perfomanceDiv {
+  display: flex;
+  flex-direction: column;
+  /* gap: 5px; */
+  font-size: 1rem;
+  margin-bottom: 5px;
+  align-items: flex-end;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.thead {
+  background-color: #4a148c;
+  color: white;
+}
+
+.thead th {
+  padding: 10px;
+  text-align: left;
+}
+
+.tbody tr {
+  border-bottom: 1px solid #ddd;
+}
+
+.tbody td {
+  padding: 10px;
+}
+
+@media (max-width: 600px) {
+  .table,
+  .thead,
+  .tbody,
+  .table tr,
+  .table th,
+  .table td {
+    display: block;
     width: 100%;
-    border-collapse: collapse;
   }
-  
+
   .thead {
-    background-color:#4a148c ;
-    color: white;
+    display: none;
   }
-  
-  .thead th {
-    padding: 10px;
-    text-align: left;
-  }
-  
+
   .tbody tr {
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .tbody td {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    border-radius: 8px;
     padding: 10px;
   }
-  
-  @media (max-width: 600px) {
-    .table, .thead, .tbody, .table tr, .table th, .table td {
-      display: block;
-      width: 100%;
-    }
-    
-    .thead {
-      display: none;
-    }
-  
-    .tbody tr {
-      margin-bottom: 10px;
-      display: flex;
-      flex-direction: column;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 10px;
-    }
-    
-    .tbody td {
-      display: flex;
-      justify-content: space-between;
-      padding: 8px 10px;
-      font-weight: bold;
-    }
-    
-    .tbody td::before {
-      content: attr(data-label);
-      flex-basis: 50%;
-      text-align: left;
-      color: #666;
-      font-weight: normal;
-    }
-    .mainDetailsDiv{
-      display: block;
-    }
-    .perfomanceDiv{
-      align-items: self-start;
-      margin-top: 10px;
-    }
+
+  .tbody td {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 10px;
+    font-weight: bold;
   }
-  
+
+  .tbody td::before {
+    content: attr(data-label);
+    flex-basis: 50%;
+    text-align: left;
+    color: #666;
+    font-weight: normal;
+  }
+  .mainDetailsDiv {
+    display: block;
+  }
+  .perfomanceDiv {
+    align-items: self-start;
+    margin-top: 10px;
+  }
+}

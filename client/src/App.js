@@ -41,48 +41,48 @@ function App() {
     <div className="App">
       <Provider store={store}>
         <BrowserRouter>
-        
+
           <Routes>
             <Route path='/' element={<LandingPage />} />
             <Route path='/signup' element={<SignUp />} />
             <Route path='/adminlogin' element={<AdminLogin />} />
             {/* unprotected route */}
-            <Route path='/descriptivequiz' element={<DescriptiveQuiz/>}/>
-            <Route path='/userwisedetails/:userId' element={<UserwiseDetails/>}/>
-            <Route path='/usermcqtable/:userId/:sessionId' element={<UserMcqTable/>}/>
-            <Route path='/userdescriptiveanswerget/:userId/:sessionId' element={<UserDescriptiveAnswerGet/>}/>
-            <Route path='/descriptivepaper/:userId/:sessionId'element={<DescriptivePaperChecking/>}/>
-            <Route path='/userdescriptivetable/:userId/:sessionId' element={<UserDescriptiveTable/>}/>
+            <Route path='/descriptivequiz' element={<DescriptiveQuiz />} />
+            <Route path='/userwisedetails/:userId' element={<UserwiseDetails />} />
+            <Route path='/usermcqtable/:userId/:sessionId' element={<UserMcqTable />} />
+            <Route path='/userdescriptiveanswerget/:userId/:sessionId' element={<UserDescriptiveAnswerGet />} />
+            <Route path='/descriptivepaper/:userId/:sessionId' element={<DescriptivePaperChecking />} />
+            <Route path='/userdescriptivetable/:userId/:sessionId' element={<UserDescriptiveTable />} />
 
-            <Route path='/edit' element={<EditAdmin/>}/>
+            <Route path='/edit' element={<EditAdmin />} />
             {/* unprotected path for superAdmin */}
-            <Route path="/superadmin" element={<SuperAdminLandingPage/>}/>
-            <Route path="/superadmindash" element={<SuperAdminDashboard/>}/>
-            <Route path="/adminregister" element={<AdminRegistration/>}/>
+            <Route path="/superadmin" element={<SuperAdminLandingPage />} />
+            <Route path="/superadmindash" element={<SuperAdminDashboard />} />
+            <Route path="/adminregister" element={<AdminRegistration />} />
 
 
             {/* unprotected route for Admin password reset */}
-            <Route path="/forgotpassword" element={<ForgotPassword/>}/>
-            <Route path="/resetpassword/:id/:token" element={<ResetPassword/>}/>
-{/* unprotected route for Student password reset */}
-<Route path="/forgotpassworduser" element={<ForgotPasswordStudent/>}/>
-            <Route path="/resetpassworduser/:id/:token" element={<ResetPasswordStudent/>}/>
+            <Route path="/forgotpassword" element={<ForgotPassword />} />
+            <Route path="/resetpassword/:id/:token" element={<ResetPassword />} />
+            {/* unprotected route for Student password reset */}
+            <Route path="/forgotpassworduser" element={<ForgotPasswordStudent />} />
+            <Route path="/resetpassworduser/:id/:token" element={<ResetPasswordStudent />} />
 
 
 
-          {/* unprotected routes for student 3rd phase*/}
-          <Route path='/studenthomepage/:loggedInUserId' element={<StudentDashboard/>}/>
+            {/* unprotected routes for student 3rd phase*/}
+            <Route path='/studenthomepage/:loggedInUserId' element={<StudentDashboard />} />
 
-            
-          {/* unprotected path for student */}
-          <Route path="/edituser" element={<EditProfile/>}/>
+
+            {/* unprotected path for student */}
+            <Route path="/edituser" element={<EditProfile />} />
 
             {/* Protecting routes for users */}
             <Route path='/studentdashboard/:loggedInUserId' element={<ProtectedUserRoute element={<StudentPage />} />} />
             <Route path='/instructions' element={<ProtectedUserRoute element={<Instructions />} />} />
             <Route path='/disqualified' element={<ProtectedUserRoute element={<DisQuallified />} />} />
 
-           
+
 
             {/* Protecting routes for admins */}
             <Route path='/admindashboard' element={<ProtectedAdminRoute element={<AdminDashboard />} />} />
