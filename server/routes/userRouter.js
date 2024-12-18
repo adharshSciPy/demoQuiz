@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { registerUser, loginUser, refreshAccessToken, logoutUser, getMcquestions,getDescriptiveQuestions, submitQuiz,submitQuizMcq, getAllUsers,submitQuizDescriptive ,descriptiveQuizSubmit, checkUserQuizSubmit,getUserById, getUserWiseMcq, getSingleMcquestions, getSingleDescriptiveQuestions, getSingleDescriptiveAnswers, getUserWiseDescriptive,getUserMcqPerformance, getUserDescriptivePerformance, forgotPassword, resetPassword, editUser} from '../controller/usercontroller.js'
+import { registerUser, loginUser, refreshAccessToken, logoutUser, getMcquestions,getDescriptiveQuestions, submitQuiz,submitQuizMcq, getAllUsers,submitQuizDescriptive ,descriptiveQuizSubmit, checkUserQuizSubmit,getUserById, getUserWiseMcq, getSingleMcquestions, getSingleDescriptiveQuestions, getSingleDescriptiveAnswers, getUserWiseDescriptive,getUserMcqPerformance, getUserDescriptivePerformance, forgotPassword, resetPassword, editUser,} from '../controller/usercontroller.js'
 import { getUserDescriptiveAnswers } from '../controller/admincontroller.js'
 import upload from '../multer/multer.js'
 
@@ -11,7 +11,6 @@ userRouter.route('/refresh').get(refreshAccessToken)
 userRouter.route('/logout').post(logoutUser)
 userRouter.route('/getMcquestions/:sectionId').get(getMcquestions)
 userRouter.route('/getDescriptiveQuestions/:sectionId').get(getDescriptiveQuestions)
-
 userRouter.route('/quizSubmit/:userId').patch(submitQuiz)
 userRouter.route('/quizsubmitmcq/:userId/:sectionId').patch(submitQuizMcq)
 userRouter.route('/quizsubmitdescriptive/:userId').post(submitQuizDescriptive)

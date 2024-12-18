@@ -1286,7 +1286,25 @@ const editUser = async (req, res) => {
       res.status(500).json({ error: error.message });
   }
 };
+// const showUser = async (req, res) => {
+//   try {
+//     const { id } = req.params;
 
+//     // Fetch admin by ID
+//     const admin = await User.findById(id);
+
+//     // Check if the admin exists
+//     if (!admin) {
+//       return res.status(404).json({ message: "Admin not found" });
+//     }
+
+//     // Send the admin data as the response
+//     res.status(200).json(admin);
+//   } catch (error) {
+//     console.error("Error fetching admin:", error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
 
 export {
   registerUser,
@@ -1311,5 +1329,5 @@ export {
   getUserDescriptivePerformance,
   editUser,
   forgotPassword,
-  resetPassword
+  resetPassword,
 };
