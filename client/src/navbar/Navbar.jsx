@@ -19,9 +19,9 @@ function Navbar() {
 
   return (
     <div>
-      <nav className="navbar">
+      <nav className="navbar" onMouseLeave={()=>setDrawerOpen(false)}>
         <div className="navbar-header">
-          <img src={Logo} width={100} alt="logo" onClick={() => setDrawerOpen(!drawerOpen)} />
+          <img src={Logo} width={100} alt="logo" onMouseEnter={() => setDrawerOpen(!drawerOpen)} />
         </div>
 
         <div className={`drawer ${drawerOpen ? 'open' : ''}`}>
