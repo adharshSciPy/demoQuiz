@@ -28,7 +28,7 @@ function NavbarStudent() {
             src={Logo}
             width={100}
             alt="logo"
-            onClick={() => setDrawerOpen(!drawerOpen)} // Toggle drawer on logo click
+            onMouseEnter={() => setDrawerOpen(!drawerOpen)} // Toggle drawer on logo click
           />
         </div>
 
@@ -51,37 +51,18 @@ function NavbarStudent() {
                 Home
               </NavLink>
             </li>
-            {/* <li>
+            
+           <li>
               <NavLink
-                to="/instructions"
-                className={({ isActive }) => (isActive ? 'active' : '')}
-                onClick={() => setDrawerOpen(false)}
-              >
-                Instructions
-              </NavLink>
-            </li> */}
-            {/* <li>
-              <NavLink
-                to="/disqualified"
-                className={({ isActive }) => (isActive ? 'active' : '')}
-                onClick={() => setDrawerOpen(false)}
-              >
-                Disqualified
-              </NavLink>
-            </li> */}
-            <li>
-              <NavLink
-                to="/"
+                to={`/studentdashboard/${loggedInUserId}`}
                 className={({ isActive }) => (isActive ? 'active' : '')}
                 onClick={() => {
-                  handleLogout();
+                  // handleLogout();
                   setDrawerOpen(false);
                 }}
               >
-                Logout
+                Start Quiz
               </NavLink>
-
-
             </li>
             <li>
               <NavLink
@@ -96,17 +77,20 @@ function NavbarStudent() {
 
 
             </li>
+            
             <li>
               <NavLink
-                to={`/studentdashboard/${loggedInUserId}`}
+                to="/"
                 className={({ isActive }) => (isActive ? 'active' : '')}
                 onClick={() => {
-                  // handleLogout();
+                  handleLogout();
                   setDrawerOpen(false);
                 }}
               >
-                Start Quiz
+                Logout
               </NavLink>
+
+
             </li>
           </ul>
           <div className="drawerDiv">

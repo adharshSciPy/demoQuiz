@@ -8,9 +8,11 @@ import { useParams, useLocation } from 'react-router-dom';
 function UserMcqTable() {
     const [details, setDetails] = useState([]);
     const [questions, setQuestions] = useState([]);
-    const[sectionName,setSectionName]=useState([]);
-    const [performance,setPerformance]=useState('');
-    const [score,setScore]=useState();
+    const [sectionName, setSectionName] = useState([]);
+    const [performance, setPerformance] = useState('');
+    const [score, setScore] = useState();
+
+
 
     const { userId, sessionId } = useParams();
     const location = useLocation();
@@ -22,15 +24,15 @@ function UserMcqTable() {
             const response = await axios.get(`http://localhost:8000/api/v1/user/getusermcqperfomance/${userId}/${sessionId}`);
             const questionDetails = response.data.data.sessionDetails.mcqAnswers;
             // console.log("question details response",response.data.data.sessionDetails)
-            const performanceDetails=response.data.data;
-            const scoreDetails=response.data.data.score;
-            console.log("score details",scoreDetails)
+            const performanceDetails = response.data.data;
+            const scoreDetails = response.data.data.score;
+            console.log("score details", scoreDetails)
             // console.log("perfomance details ghbhj",performanceDetails)
             setPerformance(performanceDetails.performance);
-            
+
             setScore(scoreDetails)
             setDetails(questionDetails);
-            
+
             // console.log("state",performance)
             // Fetch each question based on its questionId
             const questionPromises = questionDetails.map(async (item) => {
@@ -40,14 +42,14 @@ function UserMcqTable() {
                 );
 
                 // Include the question text and status (isCorrect) in the final data
-                return { 
-                    ...item, 
-                    question: questionResponse.data.data.question, 
+                return {
+                    ...item,
+                    question: questionResponse.data.data.question,
                     isCorrect: item.isCorrect // Preserve isCorrect from the original response
                 };
-             
+
             });
-            
+
 
             const questionsWithText = await Promise.all(questionPromises);
             setQuestions(questionsWithText);
@@ -55,15 +57,15 @@ function UserMcqTable() {
             console.error("Error fetching data:", error);
         }
     };
-    const fetchSectionName=async()=>{
+    const fetchSectionName = async () => {
         try {
-            const response=await axios.get(`http://localhost:8000/api/v1/section/getsectionsbyid/${sectionDetails.sectionId}`)
-            
+            const response = await axios.get(`http://localhost:8000/api/v1/section/getsectionsbyid/${sectionDetails.sectionId}`)
+
             setSectionName(response.data.data.sectionName);
-            console.log("response aaaaaaaaaaa",response.data)
-            
+            console.log("response aaaaaaaaaaa", response.data)
+
         } catch (error) {
-            console.log("Error",error)
+            console.log("Error", error)
         }
     }
 
@@ -72,6 +74,49 @@ function UserMcqTable() {
         fetchSectionName();
     }, []);
 
+    const downloadCSV = () => {
+        const headers = [
+            "Sl.No",
+            "Question",
+            "Selected Option",
+            "Status",
+        ];
+
+        const csvRows = [];
+        csvRows.push(`Performance: ${performance}`);
+        csvRows.push(`Total Score: ${score}`);
+        csvRows.push(' ');
+        csvRows.push(headers.join(','));
+
+        questions.forEach((item, index) => {
+            const status = item.selectedOption === "skipped"
+                ? "Skipped"
+                : item.isCorrect
+                    ? "Correct"
+                    : "Incorrect";
+
+            const row = [
+                index + 1,
+                `"${item.question}"`, // Wrap question in quotes to handle commas
+                item.selectedOption,
+                status
+            ];
+            csvRows.push(row.join(',')); // Add row
+        });
+
+        const csvString = csvRows.join('\n');
+        const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'mcq_table_report.csv';
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    };
+
     return (
         <div>
             <Navbar />
@@ -79,17 +124,18 @@ function UserMcqTable() {
                 <div className={styles.subDiv}>
                     <h1 className={styles.userHead}>User MCQ Table</h1>
                     <div className={styles.mainDetailsDiv}>
-                    <div className={styles.detailsDiv}>
-                        <p>Section Name:{sectionName}</p>
-                        <p>Start Time: 12:35</p>
-                        <p>End Time: 12:20</p>
-                       
+                        <div className={styles.detailsDiv}>
+                            <p>Section Name:{sectionName}</p>
+
+                        </div>
+                        <div className={styles.perfomanceDiv}>
+                            <h6>Perfomance:{performance}</h6>
+                            <p>Total Score:{score}</p>
+                        </div>
                     </div>
-                    <div className={styles.perfomanceDiv}>
-                    <h6>Perfomance:{performance}</h6>
-                    <p>Total Score:{score}</p>
-                    </div>
-                    </div>
+                    <button onClick={downloadCSV} className={styles.downloadButton}>
+                        Download CSV
+                    </button>
                     <table className={styles.table}>
                         <thead className={styles.thead}>
                             <tr>
@@ -105,7 +151,7 @@ function UserMcqTable() {
                                     <td>{index + 1}</td>
                                     <td>{item.question}</td>
                                     <td>{item.selectedOption}</td>
-                                    <td>{item.selectedOption==="skipped"?"Skipped":item.isCorrect?"Correct":"InCorrect"}</td>
+                                    <td>{item.selectedOption === "skipped" ? "Skipped" : item.isCorrect ? "Correct" : "InCorrect"}</td>
                                 </tr>
                             ))}
                         </tbody>

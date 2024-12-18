@@ -30,7 +30,7 @@ const mcqAnswersSchema = new Schema({
     questionId: {
         type: Schema.Types.ObjectId,
         ref: "Questions",
-        required: false
+        // required: false
     },
     selectedOption: {
         type: String
@@ -45,7 +45,7 @@ const sessionSchema = new Schema({
     sectionId: {
         type: Schema.Types.ObjectId,
         ref: "Section",
-        required: true
+        // required: true
     },
     mcqAnswers: [mcqAnswersSchema],
     descriptiveAnswers: [descriptiveAnswersSchema],
@@ -68,15 +68,15 @@ const userSchema = new Schema({
     email: {
         type: String,
         unique: true,
-        // required: true
+        // 
     },
     password: {
         type: String,
-        // required: true
+        // 
     },
     phone: {
         type: Number,
-        // required: true
+        // 
     },
     role: {
         type: Number,
