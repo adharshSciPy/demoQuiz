@@ -3,6 +3,10 @@ import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import styles from '../assets/css/Password.module.css'
+import Footer from "../footer/Footer";
+import FilledInput from '@mui/material/FilledInput';
+
 
 function ForgotPasswordStudent() {
   let field = {
@@ -53,27 +57,31 @@ function ForgotPasswordStudent() {
         pauseOnFocusLoss
         pauseOnHover 
       />
-      <div className="main">
+     <div className={styles.main}>
+        <div className={styles.container}>
+        <form className={styles.form} onSubmit={handleSignin}>
         <h3>Password Reset</h3>
-        <form className="landingForm" onSubmit={handleSignin}>
-          <div className="subdiv">
-            <label htmlFor="email">Email</label>
-            <input 
-              type="email" 
-              id="email" 
-              value={form.email} 
-              name="email" 
-              onChange={handleChange} 
-              required 
-            />
+          <div className={styles.subdiv}>
+            {/* <label htmlFor="email">Email</label> */}
+            <FilledInput
+                    id="filled-adornment-email"
+                    type="email"
+                    name="email"
+                    value={form.email}
+                            className={styles.passwordField}
+                    placeholder="Enter your Email Here"
+                    onChange={handleChange}
+                  />
           </div>
-          <div className="subdiv">
+          <div className={styles.subDiv}>
             <button type="submit" disabled={isLoading}>
               {isLoading ? "Sending..." : "Send Link"}
             </button>
           </div>
         </form>
+        </div>
       </div>
+      <Footer/>
     </div>
   );
 }
