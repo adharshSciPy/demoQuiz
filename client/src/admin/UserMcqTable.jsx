@@ -81,8 +81,6 @@ function UserMcqTable() {
                     <div className={styles.mainDetailsDiv}>
                     <div className={styles.detailsDiv}>
                         <p>Section Name:{sectionName}</p>
-                        <p>Start Time: 12:35</p>
-                        <p>End Time: 12:20</p>
                        
                     </div>
                     <div className={styles.perfomanceDiv}>
