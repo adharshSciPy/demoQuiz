@@ -1184,7 +1184,7 @@ const ACCESS_TOKEN_SECRET=process.env.ACCESS_TOKEN_SECRET;
             console.log("secrect key",ACCESS_TOKEN_SECRET)
             
             
-            const resetLink = `http://localhost:3000/resetpassword/${user._id}/${token}`;
+            const resetLink = `http://localhost:3000/resetpassworduser/${user._id}/${token}`;
             let transporter = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {

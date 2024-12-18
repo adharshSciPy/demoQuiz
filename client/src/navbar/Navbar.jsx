@@ -27,13 +27,13 @@ function Navbar() {
   }
   return (
     <div>
-      <nav className="navbar">
+      <nav className="navbar" onMouseLeave={()=>setDrawerOpen(false)}>
         <div className="navbar-header">
           <img
             src={Logo}
             width={100}
             alt="logo"
-            onClick={() => setDrawerOpen(!drawerOpen)}
+            onMouseEnter={() => setDrawerOpen(!drawerOpen)}
           />
           <div className="profileButton">
             <Space wrap size={16}>

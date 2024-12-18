@@ -118,7 +118,7 @@
     font-weight: bold;
     margin-bottom: 2px;
     display: block;
-    color: rgb(127, 24, 200);;
+    color: rgb(127, 24, 200);
   }
   
   /* Input Fields */
@@ -202,6 +202,22 @@
     color:rgb(127, 24, 200);;
     text-decoration: underline;
   }
+  .passwordValidation {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 8px; 
+    list-style: none; 
+    padding: 0; 
+    margin: 0; 
+  }
+  
+  .passwordValidation li {
+    font-size: 12px;
+    text-align: left;
+    color: red; 
+    margin-left: 18px;
+  }
+  
   
   
   /* Footer Styling */

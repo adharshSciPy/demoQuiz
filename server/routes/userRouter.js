@@ -31,8 +31,8 @@ userRouter.route('/getsingledescriptiveanswers').get(getSingleDescriptiveAnswers
 userRouter.route('/getuserwisedescriptive/:userId/:sessionId').get(getUserWiseDescriptive)
 userRouter.route('/getusermcqperfomance/:userId/:sessionId').get(getUserMcqPerformance)
 userRouter.route('/getuserdescriptiveperfomance/:userId/:sessionId').get(getUserDescriptivePerformance)
-userRouter.route('/forgotpassword').post(forgotPassword)
-userRouter.route('/resetpassword/:id/:token').post(resetPassword);
+userRouter.route('/forgotpassworduser').post(forgotPassword)
+userRouter.route('/resetpassworduser/:id/:token').post(resetPassword);
 
 
 
