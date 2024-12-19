@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import styles from "./../assets/css/userwiseDetails.module.css";
 import Navbar from "../navbar/Navbar";
 import Footer from "../footer/Footer";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate ,Link} from "react-router-dom";
 import axios from "axios";
+import { Breadcrumb } from "react-bootstrap";
+
 
 function UserwiseDetails() {
   const { userId } = useParams();
@@ -91,12 +93,33 @@ function UserwiseDetails() {
         console.error("Invalid button type");
     }
   };
+
+  // breadcrumbs styling
+  
   
 
   return (
     <div>
       <Navbar />
       <div className={styles.main}>
+      <Breadcrumb>
+        <Breadcrumb.Item style={{fontWeight:"700", padding: "10px 15px",
+        backgroundColor: "#f0f0f0",
+        borderRadius: "5px",
+        marginLeft:"17px",
+        fontSize: "16px",
+        boxShadow: "0 2px 5px rgba(70, 67, 67, 0.1)"}} ><Link to ="/report"
+        style={{
+          textDecoration: "none",
+          color:"#4a148c",
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "5px",
+          fontSize: "16px",
+        }}
+
+        >Back</Link></Breadcrumb.Item>
+        </Breadcrumb>
         {/* <h1 className={styles.mainHead}>User Details</h1> */}
         <div className={styles.subDiv}>
           <h3 className={styles.userName}>Name: {details.fullName}</h3>

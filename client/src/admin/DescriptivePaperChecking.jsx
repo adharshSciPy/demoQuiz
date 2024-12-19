@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import styles from "./../assets/css/descriptivePaperChecking.module.css";
 import Navbar from "../navbar/Navbar";
 import Footer from "../footer/Footer";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { useParams, useLocation, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import styles for toastify
+import { Breadcrumb } from "react-bootstrap";
 
 function DescriptivePaperChecking() {
   const [question, setQuestion] = useState({});
@@ -13,8 +14,17 @@ function DescriptivePaperChecking() {
   const [mark, setMark] = useState("");
   const { userId, sessionId } = useParams();
   const location = useLocation();
-  const { sectionDetails, answerId, questionId } = location.state || {};
   const navigate = useNavigate();
+  const { sectionDetails, answerId, questionId } = location.state || {};
+
+  useEffect(() => {
+    if (!sectionDetails || !answerId || !questionId) {
+      toast.error("Missing data for descriptive paper checking.");
+      navigate(-1); // Navigate back if state is missing
+      return;
+    }
+    fetchDescriptiveData();
+  }, [sectionDetails, answerId, questionId]);
 
   // Fetch question and answer data
   const fetchDescriptiveData = async () => {
@@ -53,25 +63,54 @@ function DescriptivePaperChecking() {
         }
       );
       toast.success("Mark submitted successfully!");
-      setTimeout(()=>{
+      setTimeout(() => {
         navigate(`/userdescriptiveanswerget/${userId}/${sessionId}`, {
           state: { sectionDetails },
         });
-        
-      },1000) 
+      }, 1000);
     } catch (error) {
       console.error("Error submitting marks:", error);
       toast.error("Failed to submit marks. Please try again.");
     }
   };
 
-  useEffect(() => {
-    fetchDescriptiveData();
-  }, []);
-
   return (
     <div className={styles.outerDivMain}>
       <Navbar />
+      <Breadcrumb>
+        <Breadcrumb.Item
+          style={{
+            fontWeight: "700",
+            padding: "10px 15px",
+            backgroundColor: "#f0f0f0",
+            borderRadius: "5px",
+            position: "relative",
+            left: "20px",
+            top: "20px",
+            fontSize: "16px",
+            boxShadow: "0 2px 5px rgba(70, 67, 67, 0.1)",
+          }}
+        >
+          <Link
+            to={`/userdescriptiveanswerget/${userId}/${sessionId}`}
+            state={{
+              sectionDetails,
+              answerId: answers.id,
+              questionId: question.id,
+            }}
+            style={{
+              textDecoration: "none",
+              color: "#4a148c",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "5px",
+              fontSize: "16px",
+            }}
+          >
+            Back
+          </Link>
+        </Breadcrumb.Item>
+      </Breadcrumb>
       <div className={styles.main}>
         <h2 className={styles.sectionName}>
           Section Name: {sectionDetails?.sectionName || "Section"}
@@ -97,7 +136,6 @@ function DescriptivePaperChecking() {
                     id="markInput"
                     value={mark}
                     onChange={(e) => setMark(e.target.value)}
-                    // placeholder="Enter marks"
                   />
                 </div>
                 <div className={styles.buttonDiv}>
@@ -111,15 +149,17 @@ function DescriptivePaperChecking() {
         </div>
       </div>
       <Footer />
-      {/* toast container to show the errors */}
-      <ToastContainer position="bottom-right"
+      {/* Toast container to show the errors */}
+      <ToastContainer
+        position="bottom-right"
         autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
         rtl={false}
         pauseOnFocusLoss
-        pauseOnHover />
+        pauseOnHover
+      />
     </div>
   );
 }
