@@ -16,7 +16,9 @@
   width: 100%;
   cursor: pointer; /* Add pointer cursor for logo */
 }
-
+.navbar-header .profileButton{
+  padding-right:1rem ;
+}
 .navbar-header img {
   width: 100px; /* Default logo size */
   transition: width 0.3s ease; /* Smooth size adjustments */

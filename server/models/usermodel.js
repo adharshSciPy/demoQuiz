@@ -68,15 +68,15 @@ const userSchema = new Schema({
     email: {
         type: String,
         unique: true,
-        
+        // 
     },
     password: {
         type: String,
-        
+        // 
     },
     phone: {
         type: Number,
-        
+        // 
     },
     role: {
         type: Number,

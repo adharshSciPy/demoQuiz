@@ -11,7 +11,7 @@ adminRouter.route('/descriptiveMark/:userId').patch(descriptiveMark);
 // adminRouter.route('/resetadminpassword').patch(resetPassword);
 adminRouter.route('/userstatuscontrol').patch(userControl);
 adminRouter.route("/editWithUpload/:id").patch(upload.single("image"), editAdmin);
-adminRouter.route("/showAdmin/:id").get(showAdmin);
+adminRouter.route("/showAdmin/:id").get(showAdmin);     
 adminRouter.route('/forgotpassword').post(forgotPassword);
 adminRouter.route('/resetpassword/:id/:token').post(resetPassword);
 
