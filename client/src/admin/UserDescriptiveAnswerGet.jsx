@@ -6,7 +6,8 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import styles for toastify
 
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
+import { Breadcrumb } from "react-bootstrap";
 
 function UserDescriptiveAnswerGet() {
   const [data, setData] = useState([]); // Data state
@@ -45,6 +46,35 @@ function UserDescriptiveAnswerGet() {
   return (
     <div>
       <Navbar />
+      <Breadcrumb>
+        <Breadcrumb.Item
+          style={{
+            fontWeight: "700",
+            padding: "10px 15px",
+            backgroundColor: "#f0f0f0",
+            borderRadius: "5px",
+            position: "relative",
+            left: "20px",
+            top: "20px",
+            fontSize: "16px",
+            boxShadow: "0 2px 5px rgba(70, 67, 67, 0.1)",
+          }}
+        >
+          <Link
+            to={`/userwisedetails/${userId}`}
+            style={{
+              textDecoration: "none",
+              color: "#4a148c",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "5px",
+              fontSize: "16px",
+            }}
+          >
+            Back
+          </Link>
+        </Breadcrumb.Item>
+      </Breadcrumb>
       <div className={styles.main}>
         <div className={styles.subDiv}>
           <h1 className={styles.userHead}> Descriptive Answers</h1>

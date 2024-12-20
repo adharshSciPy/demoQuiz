@@ -4,7 +4,9 @@ import "../assets/css/table.css";
 import axios from "axios";
 import Navbar from "../navbar/Navbar";
 import { DeleteOutlined } from "@ant-design/icons";
-import { useParams } from "react-router-dom";
+import { useParams,Link } from "react-router-dom";
+import { Breadcrumb } from "react-bootstrap";
+
 
 function AdminTable() {
   const [questions, setQuestions] = useState([]);
@@ -43,8 +45,39 @@ function AdminTable() {
   };
 
   return (
-    <div>
+    <div className="main">
+      
       <Navbar />
+      <Breadcrumb>
+        <Breadcrumb.Item
+          style={{
+            fontWeight: "700",
+            padding: "10px 15px",
+            backgroundColor: "#f0f0f0",
+            borderRadius: "5px",
+            position: "relative",
+            left: "2px",
+            top: "20px",
+            fontSize: "16px",
+            marginBottom:"15px",
+            boxShadow: "0 2px 5px rgba(70, 67, 67, 0.1)",
+          }}
+        >
+          <Link
+            to={`/session`}
+            style={{
+              textDecoration: "none",
+              color: "#4a148c",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "5px",
+              fontSize: "16px",
+            }}
+          >
+            Back
+          </Link>
+        </Breadcrumb.Item>
+      </Breadcrumb>
 <div className="tableMain">
       <Table striped>
         <thead>

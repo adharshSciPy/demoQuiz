@@ -4,7 +4,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Navbar from '../navbar/Navbar';
 import Footer from '../footer/Footer';
-import { useParams } from 'react-router-dom';
+import { useParams,Link } from 'react-router-dom';
+import { Breadcrumb } from "react-bootstrap";
+
 
 const Question = () => {
   const { sectionId } = useParams();
@@ -78,6 +80,35 @@ const Question = () => {
   }}
 >
       <Navbar />
+      <Breadcrumb>
+        <Breadcrumb.Item
+          style={{
+            fontWeight: "700",
+            padding: "10px 15px",
+            backgroundColor: "#f0f0f0",
+            borderRadius: "5px",
+            position: "relative",
+            left: "20px",
+            top: "20px",
+            fontSize: "16px",
+            boxShadow: "0 2px 5px rgba(70, 67, 67, 0.1)",
+          }}
+        >
+          <Link
+            to={`/session`}
+            style={{
+              textDecoration: "none",
+              color: "#4a148c",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "5px",
+              fontSize: "16px",
+            }}
+          >
+            Back
+          </Link>
+        </Breadcrumb.Item>
+      </Breadcrumb>
       <div className="container mt-5 pb-5">
         <ToastContainer
           position="bottom-right"
