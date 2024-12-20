@@ -78,6 +78,9 @@ const userSchema = new Schema({
         type: Number,
         // 
     },
+    address: {
+        type: String,
+    },
     role: {
         type: Number,
         default: defaultRole
