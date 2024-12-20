@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import useAuth from "../hooks/useAuth";
 import "react-toastify/dist/ReactToastify.css";
 import axios from 'axios'
- 
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import FilledInput from "@mui/material/FilledInput";
+import styles from "../assets/css/signup.module.css";
+import Navbar from '../navbar/Navbar';
+import Footer from '../footer/Footer';
 
 function EditProfile() {
   const { loggedInUserId } = useAuth();
@@ -64,68 +69,113 @@ function EditProfile() {
       console.error("Error submitting form:", error.message || error);
     }
   };
-
   return (
-    <div>
-      <form onSubmit={submitHandler} encType="multipart/form-data">
-          <label htmlFor="schoolName" className="form-label" style={{ color: "black" }}>
-            School Name
-          </label>
-          <div>
-              <label>fullName:</label>
-              <textarea
-                name="fullName"
-                value={form.fullName}
-                onChange={formChange}
-                placeholder="Enter your fullName"
-                required
-              />
-            </div>
-            <div>
-              <label>Photo URL:</label>
-              <input
-                 id="image"
-                 type="file"
-                 name="image"
-                 onChange={handleFileChange}
-                 className="form-control"
-              />
-            </div>
-            <div>
-              <label>Address:</label>
-              <textarea
-                name="address"
-                value={form.address}
-                onChange={formChange}
-                placeholder="Enter your address"
-                required
-              />
-            </div>
-            <div>
-              <label>Phone Number:</label>
-              <input
-                type="tel"
-                name="phone"
-                value={form.phone}
-                onChange={formChange}
-                placeholder="Enter your phone number"
-                required
-              />
-            </div>
-            <div>
-              <label>batch:</label>
-              <textarea
-                name="batch"
-                value={form.batch}
-                onChange={formChange}
-                placeholder="Enter your batch"
-                required
-              />
-            </div>
-            <button onClick={submitHandler} type="submit">Submit</button>
-      </form>
-    </div>
-  );
+    
+    <div className={styles.body}>
+      <Navbar />
+<div className={styles.container}>
+  <div className={styles.dashboard}>
+    <div className={styles.button}>
+  <form className={styles.landingForm} onSubmit={submitHandler} encType="multipart/form-data">
+    <FormControl
+      sx={{
+        m: 1,
+        width: { xs: "50%" },
+      }}
+      variant="filled"
+    >
+      <InputLabel htmlFor="filled-adornment-email">FullName</InputLabel>
+      <FilledInput
+        id="fullName"
+        type="text"
+        name="fullName"
+        value={form.fullName}
+        onChange={formChange}
+      />
+    </FormControl>
+    <FormControl
+      sx={{
+        m: 1,
+        width: { xs: "50%" },
+      }}
+      variant="filled"
+    >
+      <InputLabel htmlFor="filled-adornment-email">Address</InputLabel>
+      <FilledInput
+        id="address"
+        multiline
+        rows={3}
+        name="address"
+        value={form.address}
+        onChange={formChange}
+      />
+    </FormControl>
+    <FormControl
+      sx={{
+        m: 1,
+        width: { xs: "50%" },
+      }}
+      variant="filled"
+    >
+      <InputLabel htmlFor="filled-adornment-email">PhoneNumber</InputLabel>
+      <FilledInput
+        id="phone"
+        type="text"
+        name="phone"
+        value={form.phone}
+        onChange={formChange}
+      />
+    </FormControl>
+    <FormControl
+      sx={{
+        m: 1,
+        width: { xs: "50%" },
+      }}
+      variant="filled"
+    >
+      <InputLabel htmlFor="filled-adornment-email">Batch</InputLabel>
+      <FilledInput
+        id="batch"
+        type="text"
+        name="batch"
+        value={form.batch}
+        onChange={formChange}
+      />
+    </FormControl>
+    <FormControl
+      sx={{
+        m: 1,
+        width: { xs: "50%" },
+      }}
+      variant="filled"
+    >
+      <FilledInput
+        id="image"
+        type="file"
+        name="image"
+        onChange={handleFileChange} 
+      />
+    </FormControl>
+    <FormControl
+      sx={{
+        m: 1,
+        width: { xs: "50%" },
+      }}
+      variant="filled"
+    >
+      <button onClick={submitHandler} type="submit">Submit</button>
+    </FormControl>
+  </form>
+  
+</div>
+
+</div>
+
+</div>
+<Footer/>
+</div>
+);
+  
 }
 
 
