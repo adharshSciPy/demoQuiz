@@ -36,16 +36,17 @@ import EditAdmin from "./admin/EditAdmin";
 import ProfileView from "./admin/ProfileViewAdmin";
 import ForgotPasswordStudent from "./student/ForgotPasswordStudent";
 import ResetPasswordStudent from "./student/ResetPasswordStudent";
+import ProtectedRouteSuperAdmin from "./ProtectedRoutes/ProtectedRouteSuperAdmin";
 function App() {
   return (
     <div className="App">
       <Provider store={store}>
         <BrowserRouter>
-
           <Routes>
             <Route path='/' element={<LandingPage />} />
             <Route path='/signup' element={<SignUp />} />
             <Route path='/adminlogin' element={<AdminLogin />} />
+            
             {/* unprotected route */}
             <Route path='/descriptivequiz' element={<DescriptiveQuiz />} />
             <Route path='/userwisedetails/:userId' element={<UserwiseDetails />} />
@@ -53,13 +54,12 @@ function App() {
             <Route path='/userdescriptiveanswerget/:userId/:sessionId' element={<UserDescriptiveAnswerGet />} />
             <Route path='/descriptivepaper/:userId/:sessionId' element={<DescriptivePaperChecking />} />
             <Route path='/userdescriptivetable/:userId/:sessionId' element={<UserDescriptiveTable />} />
-
             <Route path='/edit' element={<EditAdmin/>}/>
             <Route path='/viewProfile' element={<ProfileView/>}/>
-            {/* unprotected path for superAdmin */}
-            <Route path="/superadmin" element={<SuperAdminLandingPage />} />
-            <Route path="/superadmindash" element={<SuperAdminDashboard />} />
-            <Route path="/adminregister" element={<AdminRegistration />} />
+
+            {/* protected path for superAdmin */}
+            <Route path="/superadmindash" element={<ProtectedRouteSuperAdmin element={<SuperAdminDashboard/>}/>}/>
+            <Route path="/adminregister" element={<ProtectedRouteSuperAdmin element={<AdminRegistration/>} />} />
 
 
             {/* unprotected route for Admin password reset */}
@@ -72,7 +72,7 @@ function App() {
 
 
             {/* unprotected routes for student 3rd phase*/}
-            <Route path='/studenthomepage/:loggedInUserId' element={<StudentDashboard />} />
+            {/* <Route path='/studenthomepage/:loggedInUserId' element={<StudentDashboard />} /> */}
 
 
             {/* unprotected path for student */}
@@ -82,6 +82,8 @@ function App() {
             <Route path='/studentdashboard/:loggedInUserId' element={<ProtectedUserRoute element={<StudentPage />} />} />
             <Route path='/instructions' element={<ProtectedUserRoute element={<Instructions />} />} />
             <Route path='/disqualified' element={<ProtectedUserRoute element={<DisQuallified />} />} />
+            <Route path='/studenthomepage/:loggedInUserId' element={<ProtectedUserRoute element={<StudentDashboard />}/>} />
+
 
 
 
