@@ -1,0 +1,47 @@
+/* SuperAdminDash.module.css */
+
+/* Global font styles */
+body {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+  
+  /* Table Styling */
+  .table-center {
+    text-align: center;
+    vertical-align: middle;
+    
+  }
+  
+  .table-header {
+    text-align: center;
+    font-weight: bold; /* Make table headers bold */
+    font-size: 16px;   /* Increase header font size */
+  }
+  
+  .main {
+    margin: 20px;
+  }
+  
+  /* Button Styling */
+  button {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 500; /* Make buttons have a medium font weight */
+  }
+  
+  /* Modal Styling */
+  .modal-body {
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+  }
+  
+  .modal-footer button {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  

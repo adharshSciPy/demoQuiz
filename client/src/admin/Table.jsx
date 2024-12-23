@@ -6,7 +6,8 @@ import 'font-awesome/css/font-awesome.min.css';
 import {useNavigate} from "react-router-dom"
 
 
-function ReportTable() {
+function 
+ReportTable() {
   const [table, setTable] = useState([]);
   const [filteredTable, setFilteredTable] = useState([]); // State for filtered data
   // const [selectedRating, setSelectedRating] = useState(''); // State for selected rating

@@ -7,7 +7,6 @@ import "./navbar.css";
 import adminAvatar from "../assets/img/admin-removebg-preview.png";
 import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Space } from "antd";
-import useAuth from "../hooks/useAuth";
 
 function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -19,8 +18,6 @@ function Navbar() {
     localStorage.removeItem("token");
     navigate("/");
   };
-  const { loggedInUserId } = useAuth();
-    
   const profileHandle= async(e)=>{
     navigate("/viewProfile")
     
@@ -82,15 +79,7 @@ function Navbar() {
                 Report
               </NavLink>
             </li>
-            <li>
-              <NavLink
-                to="/edit"
-                className={({ isActive }) => (isActive ? "active" : "")}
-                onClick={() => setDrawerOpen(false)}
-              >
-                Edit
-              </NavLink>
-            </li>
+            
             <li>
               <NavLink
                 to="/"

@@ -7,12 +7,14 @@ import InputLabel from "@mui/material/InputLabel";
 import FilledInput from "@mui/material/FilledInput";
 import { Button } from "@mui/material";
 import styles from "../assets/css/signup.module.css";
-import Navbar from '../navbar/Navbar';
-import Footer from '../footer/Footer';
+import Navbar from "../navbar/Navbar";
+import Footer from "../footer/Footer";
+import { ToastContainer, toast } from "react-toastify";
 
 function EditAdmin() {
   const { loggedInUserId } = useAuth();
-  console.log("User ID:", loggedInUserId);
+  const notifyError = (message) => toast.error(message);
+  const notifySucess = (message) => toast.success(message);
 
   const [file, setFile] = useState(null);
   const initialFormState = {
@@ -53,8 +55,8 @@ function EditAdmin() {
         }
       );
 
-      if (response.status >= 200 && response.status < 300) {
-        console.log("Form submitted successfully!");
+      if (response.status === 200) {
+        notifySucess("Profile updated successfully");
         setForm({
           fullName: "",
           schoolName: "",
@@ -63,124 +65,151 @@ function EditAdmin() {
         });
         document.getElementById("image").value = "";
       } else {
+        
         throw new Error(`Failed to submit form: ${response.statusText}`);
+
+       
       }
     } catch (error) {
+      notifyError("Error submitting form");
       console.error("Error submitting form:", error.message || error);
     }
   };
 
   return (
-    
-        <div className={styles.body}>
-          <Navbar />
-    <div className={styles.container}>
-      <div className={styles.dashboard}>
-        <div className={styles.button}>
-      <form className={styles.landingForm} onSubmit={submitHandler} encType="multipart/form-data">
-        <FormControl
-          sx={{
-            m: 1,
-            width: { xs: "50%" },
-          }}
-          variant="filled"
-        >
-          <InputLabel htmlFor="filled-adornment-email">FullName</InputLabel>
-          <FilledInput
-            id="FullName"
-            type="text"
-            name="fullName"
-            value={form.fullName}
-            onChange={formChange}
-          />
-        </FormControl>
-        <FormControl
-          sx={{
-            m: 1,
-            width: { xs: "50%" },
-          }}
-          variant="filled"
-        >
-          <InputLabel htmlFor="filled-adornment-email">Address</InputLabel>
-          <FilledInput
-            id="Address"
-            multiline
-            rows={3}
-            name="address"
-            value={form.address}
-            onChange={formChange}
-          />
-        </FormControl>
-        <FormControl
-          sx={{
-            m: 1,
-            width: { xs: "50%" },
-          }}
-          variant="filled"
-        >
-          <InputLabel htmlFor="filled-adornment-email">PhoneNumber</InputLabel>
-          <FilledInput
-            id="phoneNumber"
-            type="text"
-            name="phoneNumber"
-            value={form.phoneNumber}
-            onChange={formChange}
-          />
-        </FormControl>
-        <FormControl
-          sx={{
-            m: 1,
-            width: { xs: "50%" },
-          }}
-          variant="filled"
-        >
-          <InputLabel htmlFor="filled-adornment-email">SchoolName</InputLabel>
-          <FilledInput
-            id="schoolname"
-            type="text"
-            name="schoolName"
-            value={form.schoolName}
-            onChange={formChange}
-          />
-        </FormControl>
-        <FormControl
-          sx={{
-            m: 1,
-            width: { xs: "50%" },
-          }}
-          variant="filled"
-        >
-          <FilledInput
-            id="image"
-            type="file"
-            name="image"
-            onChange={handleFileChange} 
-          />
-        </FormControl>
-        <FormControl
-          sx={{
-            m: 1,
-            width: { xs: "50%" },
-          }}
-          variant="filled"
-        >
-           <Button
-        type="submit"
-        variant="contained"
-        color="primary"
-        sx={{ m: 1 }}
-      > 
-        Submit
-      </Button> 
-        </FormControl>
-      </form>
-      
-    </div>
-    
-    </div>
-    
-    </div>
-    <Footer/>
+    <div className={styles.body}>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        pauseOnHover
+      />
+      <Navbar />
+      <div className={styles.container}>
+        <div className={styles.dashboard}>
+          <div className={styles.button}>
+            <form
+              className={styles.landingForm}
+              onSubmit={submitHandler}
+              encType="multipart/form-data"
+            >
+              <FormControl
+                sx={{
+                  m: 1,
+                  width: { xs: "80%" },
+                }}
+                variant="filled"
+              >
+                <InputLabel htmlFor="filled-adornment-email">
+                  FullName
+                </InputLabel>
+                <FilledInput
+                  id="FullName"
+                  type="text"
+                  name="fullName"
+                  value={form.fullName}
+                  onChange={formChange}
+                  required="true"
+                />
+              </FormControl>
+              <FormControl
+                sx={{
+                  m: 1,
+                  width: { xs: "80%" },
+                }}
+                variant="filled"
+              >
+                <InputLabel htmlFor="filled-adornment-email">
+                  Address
+                </InputLabel>
+                <FilledInput
+                  id="Address"
+                  multiline
+                  rows={3}
+                  name="address"
+                  value={form.address}
+                  onChange={formChange}
+                  required="true"
+                />
+              </FormControl>
+              <FormControl
+                sx={{
+                  m: 1,
+                  width: { xs: "80%" },
+                }}
+                variant="filled"
+              >
+                <InputLabel htmlFor="filled-adornment-email">
+                  PhoneNumber
+                </InputLabel>
+                <FilledInput
+                  id="phoneNumber"
+                  type="text"
+                  name="phoneNumber"
+                  value={form.phoneNumber}
+                  onChange={formChange}
+                  required="true"
+                />
+              </FormControl>
+              <FormControl
+                sx={{
+                  m: 1,
+                  width: { xs: "80%" },
+                }}
+                variant="filled"
+              >
+                <InputLabel htmlFor="filled-adornment-email">
+                  SchoolName
+                </InputLabel>
+                <FilledInput
+                  id="schoolname"
+                  type="text"
+                  name="schoolName"
+                  value={form.schoolName}
+                  onChange={formChange}
+                  required="true"
+                />
+              </FormControl>
+              <FormControl
+                sx={{
+                  m: 1,
+                  width: { xs: "80%" },
+                }}
+                variant="filled"
+              >
+                <FilledInput
+                  id="image"
+                  type="file"
+                  name="image"
+                  onChange={handleFileChange}
+                  required="true"
+                />
+              </FormControl>
+              <FormControl
+                sx={{
+                  m: 1,
+                  width: { xs: "80%" },
+                }}
+                variant="filled"
+              >
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  sx={{ m: 1 }}
+                >
+                  Submit
+                </Button>
+              </FormControl>
+            </form>
+          </div>
+        </div>
+      </div>
+      <Footer />
     </div>
   );
 }

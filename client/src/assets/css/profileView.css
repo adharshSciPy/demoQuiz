@@ -4,25 +4,44 @@
     box-sizing: border- box;
 }
 .main-container{
+    height: 100%;   
+    width: 100%;
+    padding: 20px;
+}
+.main-container .edit-container{
+    display: flex;
+    justify-content: flex-end;
+}
+.main-container .edit-container button{
+    background-color: #8743da;
+}
+.main-container .sub-container{
     height: 100%;
     width: 100%;
     display: flex;
     gap: 20px;
     padding: 20px;
+    margin-top: 30px;
 }
 .main-container .image-container{
     width: 70%;
+.main-container .sub-container .image-container{
+    width: 40%;
     
 }
-.main-container .image-container div{
+.main-container .sub-container .image-container div{
     height: 100%;
     width: 100%;
 }
 
 .main-container .contents{
     width: 80%;
+.main-container .sub-container .contents{
+    width: 50%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+}
+.main-container .sub-container .contents p{
     text-align: left;
 }
