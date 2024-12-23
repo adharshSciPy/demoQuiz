@@ -8,10 +8,12 @@ const useAuth = () => {
     // Role values
     const ADMIN_ROLE = roles.ADMIN_ROLE;
     const USER_ROLE = roles.USER_ROLE;
+    const SUPER_ADMIN_ROLE=roles.SUPER_ADMIN_ROLE;
 
     let status = '';
     let isAdmin = false;
     let isUser = false;
+    let isSuperAdmin=false;
     let isLoggedIn = false;
     let firstName = '';
     let role = null;
@@ -30,16 +32,18 @@ const useAuth = () => {
 
             isAdmin = role === ADMIN_ROLE;
             isUser = role === USER_ROLE;
+            isSuperAdmin=role===SUPER_ADMIN_ROLE
 
             if (isAdmin) status = 'Admin';
             if (isUser) status = 'User';
+            if(isSuperAdmin) status="SuperAdmin"
             if (role) isLoggedIn = true;
         } catch (error) {
             console.error("Token decoding error:", error);
         }
     }
 
-    return { firstName, role, status, isAdmin, isUser, isLoggedIn, loggedInUserId, logId,token };
+    return { firstName, role, status, isAdmin, isUser,isSuperAdmin, isLoggedIn, loggedInUserId, logId,token };
 };
 
 export default useAuth;

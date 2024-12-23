@@ -1,13 +1,19 @@
 /* studentDashboard.module.css */
+.contentsDiv{
+  display: flex;
+  justify-content: space-between;
+}
 .profileFeature {
-    max-width: 540px;
+    /* max-width: 540px; */
+    width: 65%;
     padding: 30px;
-    margin: 40px auto;
+    margin: 20px;
     background-color: black;
     border-radius: 12px;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     text-align: center;
     font-family: "Arial", sans-serif;
+  
   }
   
   .profileFeature h1 {
