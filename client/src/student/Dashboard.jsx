@@ -1,7 +1,8 @@
 import useAuth from "../hooks/useAuth";
 import axios from "axios";
 import React, { useState,useEffect } from "react";
-import styles  from '../assets/css/studentDashboard.module.css';
+import "../assets/css/profileView.css";
+import styles from "../assets/css/signup.module.css";
 
 
 function StDashboard(){
@@ -42,33 +43,55 @@ function StDashboard(){
     }
     const SERVER_BASE_URL = "http://localhost:8000"; 
     return (
-        <div className={styles.profileFeature}>
-            <h1>Profile Details</h1>
-            {profileData ? (
-                <div className={styles.mainContainer}>
-                    
-                    <p><strong>FullName:</strong> {profileData.fullName}</p>
-                    <p><strong>Email:</strong> {profileData.email}</p>
-                    <p><strong>Phone:</strong> {profileData.phone}</p> 
-                    <p><strong>Batch:</strong> {profileData.batch}</p> 
-
-                    
-                    {profileData.image && (
-                        <div className={styles.imageContainer}>
-                            <img 
-                                src={`${SERVER_BASE_URL}${profileData.image}`} 
-                                alt={`${profileData.image}'s Profile`} 
-                                style={{ width: '150px', height: '150px', borderRadius: '50%' }} 
-                            />
+      <div className={styles.body}>
+              <div className={styles.container}>
+                <div className={styles.dashboard}>
+                  <div className={styles.button}>
+                    {profileData ? (
+                      <div className="main-container">
+                        <div className="image-container">
+                          {profileData.image && (
+                            <div>
+                              <img
+                                src={`${SERVER_BASE_URL}${profileData.image}`}
+                                alt={`${profileData.image}'s Profile`}
+                                style={{
+                                  width: "100%",
+                                  height: "100%",
+                                  borderRadius: "10px",
+                                  objectFit:"cover"
+                                }}
+                              />
+                            </div>
+                          )}
                         </div>
+                        <div className="contents">
+                          <p>
+                            <strong>Fullname:</strong> {profileData.fullName}
+                          </p>
+                          <p>
+                      <strong>Email:</strong> {profileData.email}
+                    </p>
+                    <p>
+                      <strong>PhoneNumber:</strong> {profileData.phone}
+                    </p>
+                    <p>
+                      <strong>Batch:</strong> {profileData.batch}
+                    </p>
+                    <p>
+                      <strong>Address:</strong> {profileData.address}
+                    </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div>No profile data found.</div>
                     )}
+                  </div>
                 </div>
-            ) : (
-                <div>No profile data found.</div>
-            )}
-        </div>
-    );
-};
+              </div>
+            </div>
+        );
+      }
 
 
 export default StDashboard

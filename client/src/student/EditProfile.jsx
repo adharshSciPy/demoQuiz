@@ -6,7 +6,7 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import FilledInput from "@mui/material/FilledInput";
 import styles from "../assets/css/signup.module.css";
-import Navbar from '../navbar/Navbar';
+import NavbarStudent from "../navbar/NavbarStudent";
 import Footer from '../footer/Footer';
 
 function EditProfile() {
@@ -72,7 +72,8 @@ function EditProfile() {
   return (
     
     <div className={styles.body}>
-      <Navbar />
+      <NavbarStudent
+       />
 <div className={styles.container}>
   <div className={styles.dashboard}>
     <div className={styles.button}>
