@@ -6,7 +6,7 @@
 .main-container{
     height: 100%;   
     width: 100%;
-    padding: 20px;
+    padding: 20px
 }
 .main-container .edit-container{
     display: flex;
@@ -26,6 +26,7 @@
 .main-container .image-container{
     width: 70%;
     margin-left: 80px;
+    margin-bottom: 30px;
 }
 .main-container .sub-container .image-container{
     width: 40%;

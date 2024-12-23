@@ -1,7 +1,7 @@
 import useAuth from "../hooks/useAuth";
 import axios from "axios";
 import React, { useState,useEffect } from "react";
-import "../assets/css/profileView.css";
+import "../assets/css/userProfileView.css";
 import styles from "../assets/css/signup.module.css";
 
 
@@ -56,7 +56,7 @@ function StDashboard(){
                                 src={`${SERVER_BASE_URL}${profileData.image}`}
                                 alt={`${profileData.image}'s Profile`}
                                 style={{
-                                  width: "100%",
+                                  width: "200px",
                                   height: "100%",
                                   borderRadius: "10px",
                                   objectFit:"cover"
