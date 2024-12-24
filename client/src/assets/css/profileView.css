@@ -23,13 +23,9 @@
     padding: 20px;
     margin-top: 30px;
 }
-.main-container .image-container{
-    width: 70%;
-    margin-left: 80px;
-}
+
 .main-container .sub-container .image-container{
-    width: 40%;
-    
+    width: 50%;
 }
 .main-container .sub-container .image-container div{
     height: 100%;
@@ -45,4 +41,21 @@
 }
 .main-container .sub-container .contents p{
     text-align: left;
+}
+
+@media(max-width:900px){
+.main-container .sub-container{
+    flex-direction: column;
+}
+.main-container .sub-container .image-container{
+    width: 100%;
+}
+.main-container .sub-container .contents{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+
+
 }

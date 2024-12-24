@@ -1,8 +1,7 @@
 import useAuth from "../hooks/useAuth";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom"; 
 import "../assets/css/profileView.css";
 import Navbar from "../navbar/Navbar";
 import styles from "../assets/css/signup.module.css";
