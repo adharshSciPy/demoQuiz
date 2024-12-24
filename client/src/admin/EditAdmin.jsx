@@ -65,7 +65,7 @@ function EditAdmin() {
         });
         document.getElementById("image").value = "";
       } else {
-        
+        notifyError("Error submitting form");
         throw new Error(`Failed to submit form: ${response.statusText}`);
 
        
