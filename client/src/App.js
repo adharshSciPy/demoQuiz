@@ -36,6 +36,7 @@ import ProfileView from "./admin/ProfileViewAdmin";
 import ForgotPasswordStudent from "./student/ForgotPasswordStudent";
 import ResetPasswordStudent from "./student/ResetPasswordStudent";
 import ProtectedRouteSuperAdmin from "./ProtectedRoutes/ProtectedRouteSuperAdmin";
+import UserDisplay from "./superAdmin/UserDisplay";
 function App() {
   return (
     <div className="App">
@@ -84,7 +85,13 @@ function App() {
                 <ProtectedRouteSuperAdmin element={<AdminRegistration />} />
               }
             />
-
+            
+            <Route
+              path="/userreport"
+              element={
+                <ProtectedRouteSuperAdmin element={< UserDisplay/>} />
+              }
+            />
             {/* unprotected route for Admin password reset */}
             <Route path="/forgotpassword" element={<ForgotPassword />} />
             <Route
@@ -124,6 +131,7 @@ function App() {
               path="/studenthomepage/:loggedInUserId"
               element={<ProtectedUserRoute element={<StudentDashboard />} />}
             />
+            <Route path="/edituser" element={<ProtectedUserRoute element={<EditProfile />} />}/>
 
             {/* Protecting routes for admins */}
             <Route

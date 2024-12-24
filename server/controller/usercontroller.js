@@ -39,9 +39,10 @@ const registerUser = async (req, res) => {
 
     // Prevent duplicate accounts
     const existingUser = await User.findOne({ email });
-    const existingAdmin = await Admin.findOne({ email });
-    if (existingUser || existingAdmin) {
-      return res.status(409).json({ message: "Email is already in use" });
+    // const existingAdmin = await Admin.findOne({ email });
+    if (existingUser ) {
+      
+      return res.status(400).json({ message: "Email is already in use" });
     }
 
     // User creation
@@ -64,7 +65,7 @@ const registerUser = async (req, res) => {
       .status(201)
       .json({ message: "User Registration Successful", data: createdUser });
   } catch (err) {
-    if (err.code === 11000) {
+    if (err) {
       return res.status(409).json({ message: "Email is already in use" });
     }
     console.error("Error during registration:", err);
