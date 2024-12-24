@@ -11,6 +11,8 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import FilledInput from "@mui/material/FilledInput";
 import Footer from "../footer/Footer";
 import { Grid } from "@mui/material";
+import { ToastContainer, toast } from 'react-toastify';
+
 
 function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
@@ -25,7 +27,8 @@ function SignUp() {
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleMouseDownPassword = (event) => event.preventDefault();
-
+    const notifyError = (message) => toast.error(message);
+  
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -34,7 +37,7 @@ function SignUp() {
     date: "",
   });
 
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate(); 
 
   const validatePassword = (password) => {
     const validation = {
@@ -53,23 +56,35 @@ function SignUp() {
     }
     setForm({ ...form, [name]: value });
   };
-
   const handleSignup = async (e) => {
-    e.preventDefault(); // Prevent form submission from reloading the page
-
+    e.preventDefault(); 
+  
     try {
       const response = await axios.post(
         "http://localhost:8000/api/v1/user/register",
         form
       );
-      if (response) navigate("/"); // Navigate to login page after successful signup
+      if (response.status === 201) {
+        toast.success("User Registration Successful");
+        navigate("/"); 
+      }
     } catch (error) {
-      alert(error);
+      const errorMessage = error.response?.data?.message || "Registration failed";
+      notifyError(errorMessage); 
     }
   };
+  
 
   return (
     <div className={styles.body}>
+         <ToastContainer position="bottom-right"
+              autoClose={2000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              pauseOnHover />
       <div className={styles.container}>
         <div className={styles.dashboard}>
           <div className={styles.button}>

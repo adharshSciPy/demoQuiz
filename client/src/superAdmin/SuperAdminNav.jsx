@@ -42,6 +42,7 @@ function SuperAdminNav() {
                   Home
                 </NavLink>
               </li>
+
               <li>
                 <NavLink
                   to="/adminregister"
@@ -49,6 +50,15 @@ function SuperAdminNav() {
                   onClick={() => setDrawerOpen(false)}
                 >
                   Register Admin
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/userreport"
+                  className={({ isActive }) => (isActive ? 'active' : '')}
+                  onClick={() => setDrawerOpen(false)}
+                >
+                  User Report
                 </NavLink>
               </li>
               {/* <li>
