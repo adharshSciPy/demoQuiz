@@ -1,10 +1,13 @@
-
+*{
+  margin: 0;
+  padding: 0;
+}
 .main {
   padding: 20px;
   font-family: Arial, sans-serif;
   background: linear-gradient(to bottom, rgb(255, 255, 255), #4a148c);
   width: 100%;
-  height: 120vh ;
+  min-height: 100vh ;
 }
 
 .mainHead {
@@ -129,6 +132,15 @@
 
 .evaluate:hover {
   background-color: #a1c2d3;
+}
+.detailspage{
+  height: auto;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+.image{
+  width: 30%;
 }
 
 /* Responsive Styles */

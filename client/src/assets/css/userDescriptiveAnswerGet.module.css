@@ -6,7 +6,7 @@
     align-items: center;
     /* background-color: white; */
     background: linear-gradient(to bottom, rgb(255, 255, 255), #4a148c);
-    height: 150vh;
+    min-height: 100vh;
   }
   
   .subDiv {
