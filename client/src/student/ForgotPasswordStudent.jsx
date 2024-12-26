@@ -74,7 +74,7 @@ function ForgotPasswordStudent() {
                   />
           </div>
           <div className={styles.subDiv}>
-            <button type="submit" disabled={isLoading}>
+            <button className={styles.psdBtn} type="submit" disabled={isLoading}>
               {isLoading ? "Sending..." : "Send Link"}
             </button>
           </div>

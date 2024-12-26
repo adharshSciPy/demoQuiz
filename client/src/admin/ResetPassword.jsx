@@ -155,7 +155,7 @@ function ResetPassword() {
             </div>
 
             <div className={styles.subDiv}>
-              <button type="submit" disabled={isLoading}>
+              <button className={styles.psdBtn} type="submit" disabled={isLoading}>
               {isLoading ? "Resetting..." : "Reset Password"}
 
               </button>
