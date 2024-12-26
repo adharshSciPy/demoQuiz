@@ -8,10 +8,13 @@ import FilledInput from "@mui/material/FilledInput";
 import styles from "../assets/css/signup.module.css";
 import NavbarStudent from "../navbar/NavbarStudent";
 import Footer from '../footer/Footer';
+import { ToastContainer, toast } from "react-toastify";
 
 function EditProfile() {
   const { loggedInUserId } = useAuth();
   console.log("User ID:", loggedInUserId);
+  const notifyError = (message) => toast.error(message);
+  const notifySucess = (message) => toast.success(message);
 
   const [file, setFile] = useState('');
   const initialFormState = {
@@ -52,8 +55,9 @@ function EditProfile() {
         }
       );
     
-      if (response.status >= 200 && response.status < 300) {
+      if (response.status === 200 ) {
         console.log("Form submitted successfully!");
+        notifySucess("Profile updated successfully");
         setForm({
           fullName:"",
           photo: "",
@@ -63,16 +67,28 @@ function EditProfile() {
         });
         setFile('');
       } else {
+        notifyError("Please fill out all the fields");
         throw new Error(`Failed to submit form: ${response.statusText}`);
       }
     } catch (error) {
+      notifyError("Please fill out all the fields");
       console.error("Error submitting form:", error.message || error);
     }
   };
   return (
     
     <div className={styles.body}>
-      <NavbarStudent
+         <ToastContainer
+                 position="bottom-right"
+                 autoClose={2000}
+                 hideProgressBar={false}
+                 newestOnTop={false}
+                 closeOnClick
+                 rtl={false}
+                 pauseOnFocusLoss
+                 pauseOnHover
+               />
+          <NavbarStudent
        />
 <div className={styles.container}>
   <div className={styles.dashboard}>
@@ -87,6 +103,7 @@ function EditProfile() {
     >
       <InputLabel htmlFor="filled-adornment-email">FullName</InputLabel>
       <FilledInput
+        required="true"
         id="fullName"
         type="text"
         name="fullName"
@@ -103,6 +120,7 @@ function EditProfile() {
     >
       <InputLabel htmlFor="filled-adornment-email">Address</InputLabel>
       <FilledInput
+        required="true"
         id="address"
         multiline
         rows={3}
@@ -120,6 +138,8 @@ function EditProfile() {
     >
       <InputLabel htmlFor="filled-adornment-email">PhoneNumber</InputLabel>
       <FilledInput
+        
+        required="true"
         id="phone"
         type="text"
         name="phone"
@@ -141,6 +161,7 @@ function EditProfile() {
         name="batch"
         value={form.batch}
         onChange={formChange}
+        required="true"
       />
     </FormControl>
     <FormControl
@@ -154,7 +175,8 @@ function EditProfile() {
         id="image"
         type="file"
         name="image"
-        onChange={handleFileChange} 
+        onChange={handleFileChange}
+        required="true" 
       />
     </FormControl>
     <FormControl

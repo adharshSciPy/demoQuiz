@@ -1,0 +1,53 @@
+/* Container to align the dropdown to the right */
+.dropdownDiv {
+    display: flex;
+    justify-content: flex-end; /* Aligns the dropdown to the right */
+    margin-bottom: 1.5rem; 
+  }
+  
+  /* Styling the label */
+  .formLabel {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+    margin-right: 1rem; /* Adds space between the label and the dropdown */
+    align-self: center; 
+  }
+  
+  /* Styling the dropdown (select) */
+  .formSelect {
+    width: auto;
+    margin-right: 20px;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    transition: border-color 0.3s;
+    text-align: center; /* Centers text in the dropdown itself */
+  }
+  
+  /* Styling the options inside the dropdown */
+  .selectOptions {
+    padding: 10px;
+    margin: 10px;
+    text-align: center; /* Centers text in each option */
+  }
+  
+  /* Focus state for the dropdown */
+  .formSelect:focus {
+    border-color: #4a148c;
+    /* box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); */
+  }
+  
+  /* Styling options inside the dropdown */
+  .formSelect option {
+    font-size: 1rem;
+    text-align: center; /* Centers text inside each option */
+  }
+  
+  /* Focus state for options inside the dropdown */
+  .formSelect option:focus {
+    background-color: #f1f1f1;
+  }
+  
