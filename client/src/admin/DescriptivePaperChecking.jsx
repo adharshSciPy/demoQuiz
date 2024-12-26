@@ -34,6 +34,7 @@ function DescriptivePaperChecking() {
         { params: { questionId } }
       );
       setQuestion(questionResponse.data.data);
+      // console.log("helloo",questionResponse.data.data)
 
       const answerResponse = await axios.get(
         `http://localhost:8000/api/v1/user/getsingledescriptiveanswers`,
@@ -117,6 +118,7 @@ function DescriptivePaperChecking() {
         </h2>
         <div className={styles.subDiv}>
           <div className={styles.displayField}>
+            <h5 className={styles.markDisplay}>{`Maximum Mark: ${question.mark}`}</h5>
             <h5 className={styles.questionHead}>Question</h5>
             <p className={styles.questionDisplay}>
               {question.question || "Loading question..."}

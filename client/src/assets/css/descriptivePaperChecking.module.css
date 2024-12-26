@@ -101,6 +101,14 @@
   display: flex;
   justify-content: flex-end;
 }
+.markDisplay{
+  display: flex;
+  justify-content: flex-end;
+  font-size: 18px;
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 10px;
+}
 /* Responsive Design */
 
 /* Small screens (phones) */
