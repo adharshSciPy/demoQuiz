@@ -152,7 +152,7 @@ function LandingPage() {
               )} */}
 
               <div className="btn-div">
-                <button type="submit" className="btn-submit">Sign In</button>
+                <button type="submit" className="btn-submit">Log In</button>
               </div>
               <Link className='signup-link' to="/forgotpassworduser">Forgot Password</Link>
               
