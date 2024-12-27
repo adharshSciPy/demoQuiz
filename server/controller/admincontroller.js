@@ -357,7 +357,7 @@ const ACCESS_TOKEN_SECRET=process.env.ACCESS_TOKEN_SECRET;
             let transporter = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
-                  user: 'insightassessmentscipy@gmail.com',//rewrite the email and passkey with Scipy gmail and passkey
+                  user: 'insightassessmentscipy@gmail.com',//rewrite the email and passkey with Scipy gmail and passkey when in production
                   pass: 'kfbxnpmaydqlaxju'
                 }
               });
