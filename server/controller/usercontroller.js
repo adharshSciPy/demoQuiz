@@ -1189,13 +1189,13 @@ const ACCESS_TOKEN_SECRET=process.env.ACCESS_TOKEN_SECRET;
             let transporter = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
-                  user: 'gokulskumar2015@gmail.com',//rewrite the email and passkey with Scipy gmail and passkey
-                  pass: 'sdfoqndthpizyhhi'
+                  user: 'insightassessmentscipy@gmail.com',//rewrite the email and passkey with Scipy gmail and passkey
+                  pass: 'kfbxnpmaydqlaxju'
                 }
               });
               
               let mailOptions = {
-                from: "gokulskumar2015@gmial.com",//rewrite the email too
+                from: "insightassessmentscipy@gmail.com",//rewrite the email too
                 to: email,
                 subject: 'Reset your Password ',
                 html: `<p>Reset your password by clicking the link below:</p>
